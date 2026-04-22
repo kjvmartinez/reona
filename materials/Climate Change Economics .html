@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Climate Change Economics | BS Environmental Science</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0a2f2f;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* Slide container */
+        .slide {
+            scroll-snap-align: start;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            background: #fef9e8;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Alternate slide backgrounds for readability */
+        .slide:nth-child(odd) {
+            background: #ffffff;
+        }
+        .slide:nth-child(even) {
+            background: #f4f7f2;
+        }
+
+        /* Title slide specific */
+        .title-slide {
+            background: linear-gradient(135deg, #0f3b2c 0%, #1b4e3a 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        .title-slide h1 {
+            font-size: 2.6rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .title-slide p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #1b4e3a;
+            border-left: 5px solid #e67e22;
+            padding-left: 0.8rem;
+        }
+        .title-slide h2 {
+            border-left: none;
+            color: white;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin: 1rem 0 0.5rem;
+            color: #2c3e2f;
+        }
+
+        /* text */
+        p, li, .text-block {
+            font-size: 1.05rem;
+            line-height: 1.45;
+            color: #1e2a2e;
+            margin-bottom: 0.75rem;
+        }
+        .small-note {
+            font-size: 0.85rem;
+            color: #5a6e6e;
+            margin-top: 0.5rem;
+        }
+
+        /* cards / diagrams simulation */
+        .diagram-box {
+            background: #e9f0e6;
+            padding: 1rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: monospace;
+            font-weight: 500;
+            border: 1px solid #cbd5c0;
+        }
+
+        .two-col {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .col {
+            flex: 1;
+            background: #fff3e0;
+            padding: 1rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .price-tag {
+            background: #e67e22;
+            color: white;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* navigation dots */
+        .nav-controls {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            padding: 8px 14px;
+            border-radius: 40px;
+        }
+        .nav-btn {
+            background: white;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: 0.1s ease;
+            touch-action: manipulation;
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+            background: #f0f0f0;
+        }
+        .slide-counter {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            align-self: center;
+        }
+
+        /* list styles */
+        ul, ol {
+            padding-left: 1.4rem;
+            margin: 0.75rem 0;
+        }
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* responsive tables */
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 0.5rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .slide {
+                padding: 2rem 1.2rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .title-slide h1 {
+                font-size: 2rem;
+            }
+            .two-col {
+                flex-direction: column;
+            }
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 2rem;
+            color: #8f9e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous slide">←</button>
+        <span class="slide-counter" id="slideCounter">1 / 17</span>
+        <button class="nav-btn" id="nextBtn" aria-label="Next slide">→</button>
+    </div>
+
+    <!-- SLIDES (total 17, matching original structure) -->
+    <div class="slide title-slide">
+        <h1>🌍 The Economics of a Warming Planet</h1>
+        <p>Climate Change Economics for <strong>BS Environmental Science</strong></p>
+        <p style="margin-top: 2rem;">📘 Your ENVI SCI degree + economics = real climate solutions</p>
+        <footer>Lecture | Environmental Economics</footer>
+    </div>
+
+    <div class="slide">
+        <h2>📈 The Core Problem in One Image</h2>
+        <div class="diagram-box">
+            💰 Damages ▲ &nbsp;&nbsp;&nbsp; vs &nbsp;&nbsp;&nbsp; 🛠️ Abatement costs ▲<br>
+            <span style="font-size:0.9rem;">[Marginal damage curve ↑ with temperature]</span><br>
+            <span style="font-weight:bold;">→ Efficient point where both meet</span>
+        </div>
+        <p><strong>Greatest market failure in history</strong> (Nicholas Stern).<br>
+        You measure biophysical impact (e.g., 2°C = 1m sea rise).<br>
+        Economics asks: <em>How much should we spend to stop it?</em></p>
+    </div>
+
+    <div class="slide">
+        <h2>3 Foundational Truths</h2>
+        <ul>
+            <li><strong>Stock pollutant:</strong> CO₂ stays centuries → emissions today matter in 2100.</li>
+            <li><strong>Global & irreversible:</strong> Emissions anywhere → damage everywhere.</li>
+            <li><strong>Deep uncertainty:</strong> Tipping points (Amazon dieback, ice sheet collapse).</li>
+        </ul>
+        <div class="diagram-box">🌡️ 420 ppm CO₂ → locked-in warming for decades</div>
+    </div>
+
+    <div class="slide">
+        <h2>🏭 The GHG Externality</h2>
+        <p><strong>Negative production externality:</strong> Emitters pay nothing for climate damages.</p>
+        <div class="diagram-box">
+            📉 Marginal Private Cost (MPC) &lt; Marginal Social Cost (MSC)<br>
+            ⚖️ Without policy: Q_market (high emissions)<br>
+            🎯 Efficient outcome: Q_social (lower emissions)
+        </div>
+        <p>Result: massive overproduction of fossil fuels → too much CO₂.</p>
+    </div>
+
+    <div class="slide">
+        <h2>⏳ Discounting – The Most Controversial Number</h2>
+        <p>Future $1M damage – how much to pay today?</p>
+        <div class="diagram-box">Present Value = Future Damage / (1+r)<sup>t</sup></div>
+        <div class="two-col">
+            <div class="col"><strong>🔴 High r (5-7%)</strong><br>Future looks cheap → act slowly (Nordhaus, DICE)</div>
+            <div class="col"><strong>🟢 Low r (1.4%)</strong><br>Future matters → act now (Stern Review)</div>
+        </div>
+        <p class="small-note">ENVI SCI reality: Low r is ethical for climate – your grandchildren matter as much as you.</p>
+    </div>
+
+    <div class="slide">
+        <h2>💰 Social Cost of Carbon (SCC)</h2>
+        <p><strong>Definition:</strong> Dollar damage from emitting <strong>1 additional ton</strong> CO₂ today.</p>
+        <ul>
+            <li>US EPA (2024): ~<span class="price-tag">$190/ton CO₂</span></li>
+            <li>Academic range: $50 – $1,000/ton</li>
+        </ul>
+        <p>How it's built: Integrated Assessment Models (IAMs) → climate + economic modules.</p>
+        <div class="diagram-box">⚠️ $190/ton means gas should be ~$1.70/gal more expensive.</div>
+    </div>
+
+    <div class="slide">
+        <h2>⚙️ IAMs – The Scientists’ Hammer</h2>
+        <p>Famous: DICE (Nordhaus), PAGE (Stern), FUND.</p>
+        <p><strong>What they do:</strong> Emissions → concentration → temperature → economic damages.</p>
+        <p><strong>Criticism for ENVI SCI:</strong> Damage functions assume smooth losses → they <strong>cannot capture tipping points</strong> (ice sheet collapse, mass extinction).<br>➡️ SCC is likely <em>severely underestimated</em>.</p>
+    </div>
+
+    <div class="slide">
+        <h2>🛡️ Mitigation vs. Adaptation</h2>
+        <div class="two-col">
+            <div class="col"><strong>✅ Mitigation</strong><br>Reduce emissions (solar, EVs)<br>Global public good<br>High upfront cost, delayed benefit</div>
+            <div class="col"><strong>🏝️ Adaptation</strong><br>Sea walls, drought crops<br>Local private benefit<br>Immediate protection</div>
+        </div>
+        <p><strong>Econ principle:</strong> Need both. Underinvest in mitigation → adaptation becomes impossibly expensive.</p>
+    </div>
+
+    <div class="slide">
+        <h2>💰 Policy Tool #1 – Carbon Pricing</h2>
+        <ul>
+            <li><strong>Carbon tax:</strong> Set price, let quantity adjust (cost certainty).</li>
+            <li><strong>Cap-and-trade:</strong> Set quantity, let price adjust (emissions certainty).</li>
+        </ul>
+        <p>Where revenue goes? <strong>Carbon dividend</strong> (check to households) or green infrastructure.</p>
+        <p>Real-world: EU ETS ~€80/ton, Canada carbon tax ~CAD $65/ton.</p>
+    </div>
+
+    <div class="slide">
+        <h2>📜 Policy Tool #2 – Beyond Pricing</h2>
+        <ul>
+            <li>Regulations: fuel economy standards, coal bans</li>
+            <li>Subsidies: solar tax credits, EV rebates (best paired with carbon tax)</li>
+            <li><strong>R&D spending:</strong> Climate tech is a public good → markets underinvest</li>
+        </ul>
+        <p><em>No single policy works – you need a policy mix tailored to political reality.</em></p>
+    </div>
+
+    <div class="slide">
+        <h2>🚫 The Free Rider Problem</h2>
+        <p>Game theory: Each country gains 100% of abatement costs but avoids only 1/200th of global damages.</p>
+        <div class="diagram-box">🧩 Nash equilibrium: Everyone free rides → catastrophic warming.</div>
+        <p><strong>Solutions:</strong> Paris Agreement (pledge & review), Carbon Border Adjustments (CBAM).</p>
+    </div>
+
+    <div class="slide">
+        <h2>⚖️ Distributional Justice</h2>
+        <p>Top 10% emitters (global North) cause most problem. Bottom 50% (global South) face 90% of impacts.</p>
+        <div class="diagram-box">🌍 Loss & Damage finance (COP28) | Differentiated targets: Developed countries net-zero earlier.</div>
+        <p>Equity is not optional – it's central to climate economics.</p>
+    </div>
+
+    <div class="slide">
+        <h2>📚 Case Study: Stern vs. Nordhaus</h2>
+        <ul>
+            <li><strong>Stern (2006):</strong> Act now – inaction = 5-20% GDP loss. Discount rate 1.4%.</li>
+            <li><strong>Nordhaus (2018 Nobel):</strong> Gradual warming to 3.5°C. Discount rate 5%.</li>
+        </ul>
+        <p>Who was right? Stern’s ethics won in policy (Paris 1.5-2°C).<br> 
+        <strong>Lesson:</strong> Economics is not value-free – your discount rate is a moral statement.</p>
+    </div>
+
+    <div class="slide">
+        <h2>🎓 What ENVI SCI Graduates Need to Know</h2>
+        <ul>
+            <li>Talk to economists – bridge biophysics & incentives.</li>
+            <li>SCC is used in real regulation (infrastructure permits, clean air rules).</li>
+            <li>Carbon markets need verification → your skills in measuring soil carbon, forest biomass = directly monetizable.</li>
+            <li>Jobs: Policy analyst, sustainability consultant, carbon project developer.</li>
+        </ul>
+    </div>
+
+    <div class="slide">
+        <h2>💬 Discussion Question (10 min)</h2>
+        <div class="diagram-box">
+            <em>"You rich nations got wealthy by burning fossil fuels. We refuse to stop coal until we reach your GDP per capita."</em>
+        </div>
+        <p>As an environmental economist, how do you respond?</p>
+        <p><strong>Prompts:</strong> Just transition finance? Carbon border adjustments? Technology transfer?</p>
+    </div>
+
+    <div class="slide">
+        <h2>📌 Summary & Key Equations</h2>
+        <ul>
+            <li><strong>Externality:</strong> MSC > MPC → Pigouvian tax = SCC</li>
+            <li><strong>Discounting:</strong> Low r = act fast, high r = delay</li>
+            <li><strong>Policy trinity:</strong> Price carbon + regulate + invest in R&D</li>
+            <li>Final truth: Avoid catastrophic, not just optimal temperature.</li>
+        </ul>
+        <footer>📖 Readings: Stern Review exec summary, Nordhaus "The Climate Casino", IPCC WGIII SPM</footer>
+    </div>
+
+    <div class="slide title-slide" style="background: linear-gradient(135deg, #1e4a3b, #0b2b21);">
+        <h2>🌱 Thank you</h2>
+        <p>Questions? Connect climate science + economic tools to drive change.</p>
+        <p style="margin-top: 2rem; font-size: 1rem;">📱 Swipe up/down or use arrow buttons → </p>
+    </div>
+
+    <script>
+        // Smooth slide navigation with buttons & track current slide
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counterSpan = document.getElementById('slideCounter');
+
+        function updateCounter() {
+            counterSpan.innerText = `${currentIndex+1} / ${slides.length}`;
+        }
+
+        function scrollToSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= slides.length) index = slides.length - 1;
+            currentIndex = index;
+            slides[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            updateCounter();
+        }
+
+        function nextSlide() {
+            if (currentIndex + 1 < slides.length) {
+                scrollToSlide(currentIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex - 1 >= 0) {
+                scrollToSlide(currentIndex - 1);
+            }
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Observe which slide is currently in view to update counter (for swipe/scroll)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = Array.from(slides).indexOf(entry.target);
+                    if (idx !== -1) {
+                        currentIndex = idx;
+                        updateCounter();
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        slides.forEach(slide => observer.observe(slide));
+
+        // initial counter
+        updateCounter();
+
+        // swipe support (touch events) for horizontal swipe? but vertical scroll is natural.
+        // optional: add keyboard left/right
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

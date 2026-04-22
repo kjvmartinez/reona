@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Insight Maker · Offline Tutorial | Environmental System Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f4f7fc;
+            color: #1a2c3e;
+            line-height: 1.45;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header & tutorial intro */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e6f5c, #289672);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e9f0f5;
+            color: #1e6f5c;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 20, 30, 0.08);
+            padding: 1.8rem;
+            margin-bottom: 2.5rem;
+            transition: all 0.1s ease;
+            border: 1px solid #e2edf2;
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 650;
+            border-left: 6px solid #289672;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            color: #0f3b2f;
+        }
+
+        .subhead {
+            font-weight: 500;
+            color: #2c6e5a;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .insight-highlight {
+            background: #eef9f3;
+            padding: 1rem 1.4rem;
+            border-radius: 20px;
+            margin: 1.2rem 0;
+            border-left: 4px solid #289672;
+        }
+
+        .model-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .model-card {
+            flex: 1;
+            min-width: 300px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            border: 1px solid #dee9ef;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .model-header {
+            background: #f0f6fa;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #d9e4ea;
+        }
+
+        .model-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f5e4d;
+            margin-bottom: 0.3rem;
+        }
+
+        .model-diagram {
+            background: #fefef7;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #ecf3f7;
+        }
+
+        .controls-area {
+            padding: 1.4rem 1.5rem;
+            background: #ffffff;
+        }
+
+        .slider-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f4e3f;
+            letter-spacing: -0.2px;
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #289672;
+        }
+
+        .param-value {
+            font-family: 'SF Mono', monospace;
+            background: #ecf3f0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .canvas-wrapper {
+            background: #fbfefd;
+            padding: 0.8rem;
+            border-radius: 20px;
+            margin: 1rem 0 0.5rem 0;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e0ecef;
+        }
+
+        .reset-btn {
+            background: #eef2f5;
+            border: none;
+            padding: 0.45rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: #1e6f5c;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.6rem;
+            width: 100%;
+        }
+
+        .reset-btn:hover {
+            background: #dbe8e8;
+            color: #0b4a3b;
+        }
+
+        .footnote {
+            font-size: 0.8rem;
+            color: #5f7f8c;
+            margin-top: 1rem;
+            text-align: center;
+            border-top: 1px solid #dce6ec;
+            padding-top: 1.5rem;
+        }
+
+        hr {
+            margin: 1.2rem 0;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, #cbdde5, transparent);
+        }
+
+        @media (max-width: 860px) {
+            body { padding: 1rem; }
+            .card { padding: 1.2rem; }
+            .model-header h3 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌿 Insight Maker · Interactive Tutorial</h1>
+        <div class="badge">Offline ready · System Dynamics for Environmental Science</div>
+        <p style="margin-top: 1rem; max-width: 750px; margin-left: auto; margin-right: auto; color: #2c5a4b;">
+            Build mental models like a pro. Insight Maker combines stocks, flows, and feedback loops.
+            Below you'll find <strong>two environmental science examples</strong> — fully interactive simulations that mimic how you’d model in Insight Maker.
+            Adjust sliders, watch dynamics, and learn system thinking.
+        </p>
+    </div>
+
+    <!-- Insight Maker Core Concept Block -->
+    <div class="card">
+        <div class="section-title">🧠 What is Insight Maker?</div>
+        <p>Insight Maker is a free, web-based simulation environment for <strong>system dynamics</strong>, agent-based models, and causal loop diagrams. It uses intuitive building blocks: <strong>stocks</strong> (accumulations), <strong>flows</strong> (rates), <strong>converters</strong> (auxiliary variables) and <strong>connectors</strong>. You can simulate complex environmental systems — from carbon cycles to wildlife populations — without writing code.</p>
+        <div class="insight-highlight">
+            🔄 <strong>System dynamics in a nutshell:</strong> Stocks change through inflows and outflows. Feedback loops (reinforcing / balancing) drive behavior. The interactive models below reproduce this logic with real-time graphs — exactly like a mini Insight Maker playground.
+        </div>
+    </div>
+
+    <!-- TWO INTERACTIVE ENVIRONMENTAL MODELS -->
+    <div class="model-grid">
+        <!-- MODEL 1: Lake Eutrophication (Phosphorus) -->
+        <div class="model-card">
+            <div class="model-header">
+                <h3>💧 Lake Phosphorus · Eutrophication Control</h3>
+                <p style="font-size: 0.85rem; color: #3f7868;">Excess phosphorus fuels algal blooms — a classic environmental challenge</p>
+            </div>
+            <div class="model-diagram">
+                <svg width="100%" height="100" viewBox="0 0 420 90" style="max-width: 380px; font-family: monospace;">
+                    <rect x="150" y="25" width="100" height="40" fill="#cbe4de" stroke="#1e6f5c" stroke-width="1.5" rx="6" />
+                    <text x="200" y="52" text-anchor="middle" fill="#1e4a3b" font-size="11" font-weight="bold">Phosphorus<br/>Stock (P)</text>
+                    <path d="M70 45 L140 45" stroke="#2c7a5e" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                    <text x="100" y="35" fill="#1f6e58" font-size="9">Loading (L)</text>
+                    <path d="M260 45 L330 45" stroke="#b5654a" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                    <text x="290" y="35" fill="#b1624a" font-size="9">Outflow + Sediment</text>
+                    <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0 0, 8 4, 0 8" fill="#2c7a5e"/></marker></defs>
+                </svg>
+                <div style="font-size: 0.7rem; margin-top: 5px;">🔁 Balancing feedback: higher P increases outflow, reducing accumulation</div>
+            </div>
+            <div class="controls-area">
+                <div class="slider-group">
+                    <label>🌊 External Loading (L) <span id="loadingVal" class="param-value">0.30</span> mg/L/yr</label>
+                    <input type="range" id="loadingSlider" min="0.05" max="1.2" step="0.01" value="0.30">
+                </div>
+                <div class="slider-group">
+                    <label>💧 Outflow rate (flushing) <span id="outflowVal" class="param-value">0.40</span> 1/yr</label>
+                    <input type="range" id="outflowSlider" min="0.05" max="1.5" step="0.01" value="0.40">
+                </div>
+                <div class="slider-group">
+                    <label>🧫 Sedimentation rate <span id="sedVal" class="param-value">0.20</span> 1/yr</label>
+                    <input type="range" id="sedSlider" min="0.02" max="0.9" step="0.01" value="0.20">
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="lakeCanvas" width="600" height="280" style="width:100%; height:auto; max-width:600px; border-radius: 12px;"></canvas>
+                </div>
+                <button id="resetLakeBtn" class="reset-btn">↺ Reset to default scenario</button>
+                <div style="font-size: 0.7rem; margin-top: 0.7rem; background:#F5F9F7; padding: 8px; border-radius: 14px;">
+                    📘 <strong>Model equation:</strong> dP/dt = L - (k_out + k_sed) · P. P = phosphorus concentration (mg/L). <br>
+                    ⚡ <em>Insight Maker equivalent:</em> Stock "P", inflow "Loading", outflow "Loss". Sliders tune converter values.
+                </div>
+            </div>
+        </div>
+
+        <!-- MODEL 2: Invasive Species Management (Logistic + Control) -->
+        <div class="model-card">
+            <div class="model-header">
+                <h3>🌾 Invasive Plant Spread · Adaptive Control</h3>
+                <p style="font-size: 0.85rem; color: #3f7868;">Logistic growth + human intervention — balancing feedback loops</p>
+            </div>
+            <div class="model-diagram">
+                <svg width="100%" height="100" viewBox="0 0 420 90" style="max-width: 380px;">
+                    <rect x="150" y="25" width="100" height="40" fill="#e2d7c6" stroke="#b97f44" stroke-width="1.5" rx="6" />
+                    <text x="200" y="52" text-anchor="middle" fill="#7a562e" font-size="11" font-weight="bold">Infested Area (N)</text>
+                    <path d="M70 45 L140 45" stroke="#3f8b6b" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="95" y="35" fill="#2e7a5a" font-size="9">Growth (rN(1-N/K))</text>
+                    <path d="M260 45 L330 45" stroke="#b5654a" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="290" y="35" fill="#b1624a" font-size="9">Control (u·N)</text>
+                    <defs><marker id="arrow2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0 0, 8 4, 0 8" fill="#b5654a"/></marker></defs>
+                </svg>
+                <div style="font-size: 0.7rem; margin-top: 5px;">🌀 Reinforcing: growth (more N → faster spread) | Balancing: carrying capacity & control</div>
+            </div>
+            <div class="controls-area">
+                <div class="slider-group">
+                    <label>📈 Growth rate (r) <span id="rVal" class="param-value">0.50</span> 1/yr</label>
+                    <input type="range" id="rSlider" min="0.1" max="1.2" step="0.01" value="0.50">
+                </div>
+                <div class="slider-group">
+                    <label>🌍 Carrying capacity (K) <span id="kVal" class="param-value">1000</span> acres</label>
+                    <input type="range" id="kSlider" min="300" max="2000" step="10" value="1000">
+                </div>
+                <div class="slider-group">
+                    <label>✂️ Control intensity (u) <span id="uVal" class="param-value">0.10</span> 1/yr</label>
+                    <input type="range" id="uSlider" min="0" max="0.85" step="0.01" value="0.10">
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="invasiveCanvas" width="600" height="280" style="width:100%; height:auto; max-width:600px; border-radius: 12px;"></canvas>
+                </div>
+                <button id="resetInvasiveBtn" class="reset-btn">↺ Reset to baseline</button>
+                <div style="font-size: 0.7rem; margin-top: 0.7rem; background:#F5F9F7; padding: 8px; border-radius: 14px;">
+                    📘 <strong>Model equation:</strong> dN/dt = r·N·(1 - N/K) - u·N. Initial N₀ = 10 acres.<br>
+                    🧩 <em>Insight Maker structure:</em> Stock "Infested area", inflow "Recruitment", outflow "Removal", converters r, K, u.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXTRA INSIGHT MAKER TIPS + FEEDBACK EXPLANATION -->
+    <div class="card" style="margin-top: 0.2rem;">
+        <div class="section-title">⚙️ How these models work in Insight Maker</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem;">
+            <div style="flex:1; min-width: 200px;">
+                <strong>🔵 Stocks & Flows:</strong> In both models, the main stock (phosphorus or infested acres) accumulates or depletes. Insight Maker uses “stock” nodes and “flow” pipes. Our interactive sliders represent converters that directly influence flow rates.
+            </div>
+            <div style="flex:1; min-width: 200px;">
+                <strong>🔄 Feedback at work:</strong> In the lake model, higher P accelerates outflow (balancing). In invasive species, density-dependent growth (carrying capacity) creates a balancing loop, while control effort adds another balancing intervention.
+            </div>
+            <div style="flex:1; min-width: 200px;">
+                <strong>📊 Real-time simulation:</strong> Insight Maker runs simulations instantly. Our tutorial reproduces this using numerical integration (Euler) — you adjust parameters and the graph updates live, showing trajectories over 50 years.
+            </div>
+        </div>
+        <hr>
+        <p style="font-size: 0.9rem;"><strong>🌎 Environmental science application:</strong> Eutrophication management (reduce P loading) & invasive species prevention (increase control or reduce growth) are classic policy scenarios. Use the sliders to explore trade-offs: lower loading → cleaner lakes; higher control intensity → faster eradication of invasives.</p>
+    </div>
+    <div class="footnote">
+        🧪 Interactive tutorial | Offline ready · All simulations run locally in your browser. Built with pure HTML/CSS/JS — inspired by Insight Maker system dynamics.  
+        Models use Euler integration (Δt = 0.1 yr). Experiment to see how stocks respond to policy changes.
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ---------- LAKE PHOSPHORUS MODEL ----------
+        const lakeCanvas = document.getElementById('lakeCanvas');
+        const ctxLake = lakeCanvas.getContext('2d');
+        const loadingSlider = document.getElementById('loadingSlider');
+        const outflowSlider = document.getElementById('outflowSlider');
+        const sedSlider = document.getElementById('sedSlider');
+        const loadingVal = document.getElementById('loadingVal');
+        const outflowVal = document.getElementById('outflowVal');
+        const sedVal = document.getElementById('sedVal');
+        const resetLakeBtn = document.getElementById('resetLakeBtn');
+
+        let lakeParams = { L: 0.30, k_out: 0.40, k_sed: 0.20 };
+        const P0 = 0.05;      // initial P mg/L
+        const tMax = 50;      // years
+        const dt = 0.1;
+        const steps = Math.floor(tMax / dt);
+
+        function updateLakeLabels() {
+            loadingVal.innerText = lakeParams.L.toFixed(2);
+            outflowVal.innerText = lakeParams.k_out.toFixed(2);
+            sedVal.innerText = lakeParams.k_sed.toFixed(2);
+        }
+
+        function runLakeSimulation() {
+            let P = P0;
+            const timeArray = [];
+            const PArray = [];
+            for (let i = 0; i <= steps; i++) {
+                let t = i * dt;
+                timeArray.push(t);
+                PArray.push(Math.max(0, P));
+                let dPdt = lakeParams.L - (lakeParams.k_out + lakeParams.k_sed) * P;
+                P += dPdt * dt;
+                if (P < 0) P = 0;
+            }
+            return { timeArray, PArray };
+        }
+
+        function drawLakeGraph() {
+            const { timeArray, PArray } = runLakeSimulation();
+            const w = lakeCanvas.width, h = lakeCanvas.height;
+            ctxLake.clearRect(0, 0, w, h);
+            if (!w || !h) return;
+            // margins
+            const leftMargin = 52, rightMargin = 28, topMargin = 28, bottomMargin = 42;
+            const graphW = w - leftMargin - rightMargin;
+            const graphH = h - topMargin - bottomMargin;
+            if (graphW <= 0 || graphH <= 0) return;
+
+            let maxP = Math.max(...PArray, 0.2) * 1.05;
+            if (maxP <= 0.01) maxP = 0.5;
+            
+            // axis
+            ctxLake.save();
+            ctxLake.strokeStyle = "#6f8f9c";
+            ctxLake.fillStyle = "#1e3b33";
+            ctxLake.font = "11px 'Segoe UI'";
+            // draw axes lines
+            ctxLake.beginPath();
+            ctxLake.moveTo(leftMargin, topMargin);
+            ctxLake.lineTo(leftMargin, h - bottomMargin);
+            ctxLake.lineTo(w - rightMargin, h - bottomMargin);
+            ctxLake.stroke();
+            
+            // X axis ticks
+            for (let yr = 0; yr <= tMax; yr += 10) {
+                let x = leftMargin + (yr / tMax) * graphW;
+                ctxLake.fillText(yr, x - 5, h - bottomMargin + 15);
+                ctxLake.beginPath();
+                ctxLake.moveTo(x, h - bottomMargin - 3);
+                ctxLake.lineTo(x, h - bottomMargin + 3);
+                ctxLake.stroke();
+            }
+            // Y axis ticks
+            const ySteps = 5;
+            for (let i = 0; i <= ySteps; i++) {
+                let val = (maxP / ySteps) * i;
+                let y = h - bottomMargin - (i / ySteps) * graphH;
+                ctxLake.fillText(val.toFixed(2), leftMargin - 38, y + 3);
+                ctxLake.beginPath();
+                ctxLake.moveTo(leftMargin - 3, y);
+                ctxLake.lineTo(leftMargin + 3, y);
+                ctxLake.stroke();
+            }
+            ctxLake.fillStyle = "#215d4c";
+            ctxLake.fillText("Time (years)", w/2 - 35, h - 12);
+            ctxLake.save();
+            ctxLake.translate(22, h/2);
+            ctxLake.rotate(-Math.PI/2);
+            ctxLake.fillText("Phosphorus (mg/L)", -20, 0);
+            ctxLake.restore();
+            ctxLake.fillStyle = "#208b6e";
+            ctxLake.font = "bold 12px 'Segoe UI'";
+            ctxLake.fillText("Lake Phosphorus Dynamics", w/2 - 90, topMargin - 6);
+            
+            // draw line
+            ctxLake.beginPath();
+            ctxLake.strokeStyle = "#1c7c62";
+            ctxLake.lineWidth = 2.5;
+            let first = true;
+            for (let i = 0; i < timeArray.length; i++) {
+                let x = leftMargin + (timeArray[i] / tMax) * graphW;
+                let y = h - bottomMargin - (PArray[i] / maxP) * graphH;
+                if (first) { ctxLake.moveTo(x, y); first = false; }
+                else ctxLake.lineTo(x, y);
+            }
+            ctxLake.stroke();
+            
+            // final value annotation
+            let finalP = PArray[PArray.length-1];
+            ctxLake.fillStyle = "#1a6b58";
+            ctxLake.font = "italic 10px system-ui";
+            ctxLake.fillText(`Final P: ${finalP.toFixed(2)} mg/L`, w - rightMargin - 85, h - bottomMargin - 5);
+            ctxLake.restore();
+        }
+        
+        function syncLakeFromSliders() {
+            lakeParams.L = parseFloat(loadingSlider.value);
+            lakeParams.k_out = parseFloat(outflowSlider.value);
+            lakeParams.k_sed = parseFloat(sedSlider.value);
+            updateLakeLabels();
+            drawLakeGraph();
+        }
+        
+        function resetLakeDefault() {
+            loadingSlider.value = "0.30";
+            outflowSlider.value = "0.40";
+            sedSlider.value = "0.20";
+            syncLakeFromSliders();
+        }
+        
+        loadingSlider.addEventListener('input', syncLakeFromSliders);
+        outflowSlider.addEventListener('input', syncLakeFromSliders);
+        sedSlider.addEventListener('input', syncLakeFromSliders);
+        resetLakeBtn.addEventListener('click', resetLakeDefault);
+        
+        // ---------- INVASIVE SPECIES MODEL ----------
+        const invasiveCanvas = document.getElementById('invasiveCanvas');
+        const ctxInv = invasiveCanvas.getContext('2d');
+        const rSlider = document.getElementById('rSlider');
+        const kSlider = document.getElementById('kSlider');
+        const uSlider = document.getElementById('uSlider');
+        const rValSpan = document.getElementById('rVal');
+        const kValSpan = document.getElementById('kVal');
+        const uValSpan = document.getElementById('uVal');
+        const resetInvBtn = document.getElementById('resetInvasiveBtn');
+        
+        let invParams = { r: 0.50, K: 1000, u: 0.10 };
+        const N0 = 10;       // initial acres
+        const tMaxInv = 50;
+        const dtInv = 0.1;
+        const stepsInv = Math.floor(tMaxInv / dtInv);
+        
+        function updateInvLabels() {
+            rValSpan.innerText = invParams.r.toFixed(2);
+            kValSpan.innerText = Math.round(invParams.K);
+            uValSpan.innerText = invParams.u.toFixed(2);
+        }
+        
+        function runInvSimulation() {
+            let N = N0;
+            const timeArr = [];
+            const NArr = [];
+            for (let i = 0; i <= stepsInv; i++) {
+                let t = i * dtInv;
+                timeArr.push(t);
+                NArr.push(Math.max(0, N));
+                let growth = invParams.r * N * (1 - N / invParams.K);
+                let control = invParams.u * N;
+                let dNdt = growth - control;
+                N += dNdt * dtInv;
+                if (N < 0) N = 0;
+                if (N > invParams.K * 1.5) N = invParams.K * 1.5; // prevent numeric explosion
+            }
+            return { timeArr, NArr };
+        }
+        
+        function drawInvasiveGraph() {
+            const { timeArr, NArr } = runInvSimulation();
+            const w = invasiveCanvas.width, h = invasiveCanvas.height;
+            ctxInv.clearRect(0, 0, w, h);
+            const leftMargin = 52, rightMargin = 28, topMargin = 28, bottomMargin = 42;
+            const graphW = w - leftMargin - rightMargin;
+            const graphH = h - topMargin - bottomMargin;
+            if (graphW <= 0 || graphH <= 0) return;
+            
+            let maxN = Math.max(...NArr, invParams.K * 1.02, 50) * 1.05;
+            if (maxN <= 5) maxN = 100;
+            ctxInv.save();
+            ctxInv.strokeStyle = "#8f6e4b";
+            ctxInv.fillStyle = "#4c3a28";
+            ctxInv.font = "11px 'Segoe UI'";
+            // axes
+            ctxInv.beginPath();
+            ctxInv.moveTo(leftMargin, topMargin);
+            ctxInv.lineTo(leftMargin, h - bottomMargin);
+            ctxInv.lineTo(w - rightMargin, h - bottomMargin);
+            ctxInv.stroke();
+            for (let yr = 0; yr <= tMaxInv; yr += 10) {
+                let x = leftMargin + (yr / tMaxInv) * graphW;
+                ctxInv.fillText(yr, x - 5, h - bottomMargin + 15);
+                ctxInv.beginPath();
+                ctxInv.moveTo(x, h - bottomMargin - 3);
+                ctxInv.lineTo(x, h - bottomMargin + 3);
+                ctxInv.stroke();
+            }
+            const ySteps = 5;
+            for (let i = 0; i <= ySteps; i++) {
+                let val = (maxN / ySteps) * i;
+                let y = h - bottomMargin - (i / ySteps) * graphH;
+                ctxInv.fillText(Math.round(val), leftMargin - 40, y + 3);
+                ctxInv.beginPath();
+                ctxInv.moveTo(leftMargin - 3, y);
+                ctxInv.lineTo(leftMargin + 3, y);
+                ctxInv.stroke();
+            }
+            ctxInv.fillStyle = "#5a4330";
+            ctxInv.fillText("Time (years)", w/2 - 35, h - 12);
+            ctxInv.save();
+            ctxInv.translate(22, h/2);
+            ctxInv.rotate(-Math.PI/2);
+            ctxInv.fillText("Infested Area (acres)", -25, 0);
+            ctxInv.restore();
+            ctxInv.fillStyle = "#b87a44";
+            ctxInv.font = "bold 12px 'Segoe UI'";
+            ctxInv.fillText("Invasive Species Spread", w/2 - 85, topMargin - 6);
+            
+            // draw curve
+            ctxInv.beginPath();
+            ctxInv.strokeStyle = "#c1813b";
+            ctxInv.lineWidth = 2.5;
+            let first = true;
+            for (let i = 0; i < timeArr.length; i++) {
+                let x = leftMargin + (timeArr[i] / tMaxInv) * graphW;
+                let y = h - bottomMargin - (NArr[i] / maxN) * graphH;
+                if (first) { ctxInv.moveTo(x, y); first = false; }
+                else ctxInv.lineTo(x, y);
+            }
+            ctxInv.stroke();
+            let finalN = NArr[NArr.length-1];
+            ctxInv.fillStyle = "#9b5e2c";
+            ctxInv.font = "italic 10px system-ui";
+            ctxInv.fillText(`Final area: ${Math.round(finalN)} acres`, w - rightMargin - 100, h - bottomMargin - 5);
+            // show carrying capacity as reference line
+            ctxInv.beginPath();
+            ctxInv.setLineDash([5, 5]);
+            ctxInv.strokeStyle = "#ae8b6b";
+            ctxInv.lineWidth = 1.2;
+            let yK = h - bottomMargin - (invParams.K / maxN) * graphH;
+            if (yK >= topMargin && yK <= h-bottomMargin) {
+                ctxInv.moveTo(leftMargin, yK);
+                ctxInv.lineTo(w - rightMargin, yK);
+                ctxInv.stroke();
+                ctxInv.fillStyle = "#8b694a";
+                ctxInv.fillText("K (carrying cap.)", leftMargin + 5, yK - 3);
+            }
+            ctxInv.setLineDash([]);
+            ctxInv.restore();
+        }
+        
+        function syncInvFromSliders() {
+            invParams.r = parseFloat(rSlider.value);
+            invParams.K = parseFloat(kSlider.value);
+            invParams.u = parseFloat(uSlider.value);
+            updateInvLabels();
+            drawInvasiveGraph();
+        }
+        
+        function resetInvDefault() {
+            rSlider.value = "0.50";
+            kSlider.value = "1000";
+            uSlider.value = "0.10";
+            syncInvFromSliders();
+        }
+        
+        rSlider.addEventListener('input', syncInvFromSliders);
+        kSlider.addEventListener('input', syncInvFromSliders);
+        uSlider.addEventListener('input', syncInvFromSliders);
+        resetInvBtn.addEventListener('click', resetInvDefault);
+        
+        // initial draw both
+        syncLakeFromSliders();
+        syncInvFromSliders();
+        
+        // handle canvas size adaptation if needed (retina safe)
+        function handleCanvasResize() {
+            // preserve actual dimensions: canvas already has width/600, no extra scaling issues
+            drawLakeGraph();
+            drawInvasiveGraph();
+        }
+        window.addEventListener('resize', () => { setTimeout(handleCanvasResize, 20); });
+    })();
+</script>
+</body>
+</html>
