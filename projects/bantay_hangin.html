@@ -1,187 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bantay Hangin | CHED-Style Proposal</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Bantay Hangin | Dr. Ronald Edilberto A. Ona</title>
+  <meta content="Bantay Hangin: A Proof-of-Concept IoT System for Real-Time Indoor Air Quality Monitoring — College of Sciences, Palawan State University." name="description">
+  <meta content="Bantay Hangin, IoT, air quality, Palawan State University, indoor air quality monitoring" name="keywords">
 
-<style>
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        margin: 0;
-        background-color: #f4f6f7;
-        color: #2c3e50;
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.png" rel="icon">
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <style>
+    .page-content {
+    padding: 40px 0 60px;
+    max-width: 860px;
+    margin: 0 auto;
     }
 
-    header {
-        background-color: #0b3d91;
-        color: white;
-        padding: 20px 40px;
+    /* ── Project hero banner ── */
+    .project-hero {
+      background: linear-gradient(135deg, #0f2a5e 0%, #149ddd 100%);
+      color: #fff;
+      padding: 60px 40px 50px;
+      border-radius: 12px;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-hero::after {
+      content: '\f7cd'; /* bi-cpu */
+      font-family: "bootstrap-icons";
+      position: absolute;
+      right: -20px;
+      bottom: -30px;
+      font-size: 180px;
+      opacity: 0.06;
+      line-height: 1;
+    }
+    .project-hero h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.5px;
+    }
+    .project-hero .subtitle {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-bottom: 1.5rem;
+    }
+    .project-hero .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .project-hero .meta-badges span {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.85rem;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
     }
 
-    header h1 {
-        margin: 0;
-        font-size: 26px;
+    /* ── Section headings ── */
+    .proposal-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #149ddd;
+      border-bottom: 2px solid #149ddd22;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.4rem;
+      margin-top: 0;
     }
 
-    header p {
-        margin: 5px 0 0;
-        font-size: 14px;
+    /* ── Content cards ── */
+    .proposal-card {
+      background: #fff;
+      border: 1px solid #e8f0f7;
+      border-left: 4px solid #149ddd;
+      border-radius: 0 10px 10px 0;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 12px rgba(20, 157, 221, 0.07);
+    }
+    .proposal-card p {
+      font-size: 0.92rem;
+      color: #444;
+      line-height: 1.75;
+      margin-bottom: 0.6rem;
+    }
+    .proposal-card p:last-child { margin-bottom: 0; }
+    .proposal-card ul {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+    .proposal-card ul li {
+      font-size: 0.91rem;
+      color: #444;
+      margin-bottom: 0.4rem;
+      line-height: 1.6;
     }
 
-    .container {
-        max-width: 1000px;
-        margin: 30px auto;
-        background: white;
-        padding: 40px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* ── Component / output chips ── */
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      background: #e8f5fc;
+      color: #149ddd;
+      border: 1px solid #c2e4f5;
+    }
+    .chip.green  { background: #eaf7ee; color: #28a745; border-color: #b7e4c3; }
+    .chip.navy   { background: #eef1f8; color: #173b6c; border-color: #c5cfdf; }
+    .chip.orange { background: #fff4e5; color: #e07b00; border-color: #ffd9a0; }
+
+    /* ── Alignment callout ── */
+    .callout-card {
+      background: #f5f9fd;
+      border: 1px solid #d0e6f5;
+      border-top: 4px solid #149ddd;
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .callout-card p, .callout-card li {
+      font-size: 0.91rem;
+      color: #444;
+      line-height: 1.7;
+    }
+    .callout-card ul { padding-left: 1.2rem; margin: 0; }
+    .callout-card li { margin-bottom: 0.4rem; }
+
+    /* ── Methodology steps ── */
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .step-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f4f8;
+      font-size: 0.91rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: #149ddd;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 1px;
     }
 
-    h2 {
-        color: #0b3d91;
-        border-bottom: 2px solid #0b3d91;
-        padding-bottom: 5px;
-        margin-top: 30px;
+    /* ── Responsive tweaks ── */
+    @media (max-width: 768px) {
+      .project-hero h1 { font-size: 1.5rem; }
+      .project-hero { padding: 40px 24px 36px; }
     }
-
-    h3 {
-        margin-top: 20px;
-        color: #34495e;
-    }
-
-    p {
-        text-align: justify;
-    }
-
-    ul {
-        margin-left: 20px;
-    }
-
-    .meta {
-        background: #eef3f9;
-        padding: 15px;
-        margin-bottom: 30px;
-        border-left: 5px solid #0b3d91;
-    }
-
-    .meta p {
-        margin: 5px 0;
-    }
-
-    footer {
-        text-align: center;
-        font-size: 13px;
-        color: #7f8c8d;
-        margin: 40px 0;
-    }
-</style>
+  </style>
 </head>
 
-<body>
+<body class="index-page">
 
-<header>
-    <h1>Bantay Hangin Project</h1>
-    <p>CHED-Style Concept Proposal | Palawan State University</p>
-</header>
+  <!-- ═══════════════════════════════════════
+       SIDEBAR (identical to portfolio)
+  ═══════════════════════════════════════ -->
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
 
-<div class="container">
-
-    <div class="meta">
-        <p><strong>Project Title:</strong> Bantay Hangin: A Proof-of-Concept IoT System for Real-Time Indoor Air Quality Monitoring</p>
-        <p><strong>Proponent:</strong> College of Sciences, Palawan State University</p>
-        <p><strong>Project Type:</strong> Research and Development (Proof-of-Concept)</p>
-        <p><strong>Implementation Period:</strong> 6–12 Months</p>
-        <p><strong>Priority Area:</strong> Environmental Monitoring, Smart Systems, Public Health</p>
+    <div class="profile-img">
+      <img src="../assets/img/profile_pic.jpg" alt="Dr. Ronald Edilberto A. Ona" class="img-fluid rounded-circle">
     </div>
 
-    <h2>1. Rationale and Background</h2>
-    <p>
-        Indoor air quality (IAQ) is a critical determinant of human health, productivity, and environmental safety. In enclosed environments such as classrooms, laboratories, offices, and healthcare facilities, poor air quality contributes to respiratory illnesses, reduced cognitive performance, and increased long-term health risks.
-    </p>
-    <p>
-        In the Philippine context, particularly in geographically isolated and climate-vulnerable regions such as Palawan, access to real-time, affordable IAQ monitoring systems remains limited. Existing commercial solutions are often cost-prohibitive and lack adaptability for localized deployment and academic research applications.
-    </p>
-    <p>
-        The Bantay Hangin Project addresses this gap through the development of a low-cost, scalable Internet of Things (IoT) system for real-time monitoring of indoor air quality. The project aligns with national priorities on digital transformation, environmental sustainability, and public health resilience.
-    </p>
+    <a href="../index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Ronald Edilberto Ona</h1>
+    </a>
 
-    <h2>2. Project Description</h2>
-    <p>
-        The project involves the design, development, and deployment of a prototype IoT-based indoor air quality monitoring system using a Raspberry Pi platform integrated with environmental sensors.
-    </p>
+    <div class="social-links text-center">
+      <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+      <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="mailto:redilberto@psu.palawan.edu.ph" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
 
-    <h3>Core Components</h3>
-    <ul>
-        <li>Raspberry Pi as edge computing unit</li>
-        <li>Air quality sensors (PM2.5/PM10, CO₂, VOCs)</li>
-        <li>Environmental sensors (temperature, humidity)</li>
-        <li>Wireless connectivity (Wi-Fi/cellular)</li>
-        <li>Web-based monitoring dashboard</li>
-    </ul>
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../index.html#hero"><i class="bi bi-house navicon"></i> Home</a></li>
+        <li><a href="../index.html#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../index.html#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../index.html#research"><i class="bi bi-journal-richtext navicon"></i> Research</a></li>
+        <li class="dropdown"><a href="#" class="active"><i class="bi bi-menu-button navicon"></i> <span>Projects</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="bantay_hangin.html" class="active">Bantay Hangin</a></li>
+            <li><a href="bantay_klima.html">Bantay Klima</a></li>
+          </ul>
+        </li>
+        <li><a href="../index.html#services"><i class="bi bi-hdd-stack navicon"></i> Expertise</a></li>
+        <li><a href="../index.html#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+        <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Courses</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="../environmental_economics.html">Environmental Economics</a></li>
+            <li><a href="#">Ecotourism</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-    <p>
-        The system will enable real-time data acquisition, processing, visualization, and alert generation, supporting evidence-based environmental management.
-    </p>
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════ -->
+  <main class="main">
+    <div class="container page-content">
 
-    <h2>3. Objectives</h2>
-    <ul>
+      <!-- ── Project Hero ── -->
+      <div class="project-hero" data-aos="fade-up">
+        <h1><i class="bi bi-wind me-2"></i>Bantay Hangin</h1>
+        <p class="subtitle">A Proof-of-Concept IoT System for Real-Time Indoor Air Quality Monitoring</p>
+        <div class="meta-badges">
+          <span><i class="bi bi-building me-1"></i>College of Sciences, PSU</span>
+          <span><i class="bi bi-tag me-1"></i>Research &amp; Development</span>
+          <span><i class="bi bi-clock me-1"></i>6–12 Months</span>
+          <span><i class="bi bi-geo me-1"></i>Environmental Monitoring</span>
+          <span><i class="bi bi-heart-pulse me-1"></i>Public Health</span>
+          <span><i class="bi bi-cpu me-1"></i>Smart Systems</span>
+        </div>
+      </div>
+
+      <div class="row">
+  <div class="col-12" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Rationale -->
+    <h3 class="proposal-section-title">1. Rationale and Background</h3>
+    <div class="proposal-card">
+      <p>Indoor air quality (IAQ) is a critical determinant of human health, productivity, and environmental safety. In enclosed environments such as classrooms, laboratories, offices, and healthcare facilities, poor air quality contributes to respiratory illnesses, reduced cognitive performance, and increased long-term health risks.</p>
+      <p>In the Philippine context — particularly in geographically isolated and climate-vulnerable regions such as Palawan — access to real-time, affordable IAQ monitoring systems remains limited. Existing commercial solutions are often cost-prohibitive and lack adaptability for localized deployment and academic research applications.</p>
+      <p>The Bantay Hangin Project addresses this gap through a low-cost, scalable IoT system for real-time indoor air quality monitoring, aligned with national priorities on digital transformation, environmental sustainability, and public health resilience.</p>
+    </div>
+
+    <!-- Description -->
+    <h3 class="proposal-section-title">2. Project Description</h3>
+    <div class="proposal-card">
+      <p>The project involves the design, development, and deployment of a prototype IoT-based indoor air quality monitoring system using a Raspberry Pi platform integrated with environmental sensors. The system enables real-time data acquisition, processing, visualization, and alert generation to support evidence-based environmental management.</p>
+      <h6 class="mt-3 mb-2" style="font-weight:700; color:#173b6c; font-size:0.88rem; text-transform:uppercase; letter-spacing:0.07em;">Core Components</h6>
+      <div class="chip-grid">
+        <span class="chip"><i class="bi bi-cpu"></i> Raspberry Pi (Edge Computing)</span>
+        <span class="chip"><i class="bi bi-cloud-haze2"></i> PM2.5 / PM10 Sensors</span>
+        <span class="chip"><i class="bi bi-cloud-haze"></i> CO₂ &amp; VOC Sensors</span>
+        <span class="chip"><i class="bi bi-thermometer-half"></i> Temp &amp; Humidity Sensors</span>
+        <span class="chip"><i class="bi bi-wifi"></i> Wi-Fi / Cellular Connectivity</span>
+        <span class="chip"><i class="bi bi-bar-chart-line"></i> Web-Based Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Objectives -->
+    <h3 class="proposal-section-title">3. Objectives</h3>
+    <div class="proposal-card">
+      <ul>
         <li>Develop a functional IoT-based prototype for indoor air quality monitoring</li>
         <li>Enable real-time data collection and visualization</li>
         <li>Demonstrate feasibility of low-cost environmental monitoring systems</li>
-        <li>Support research, instruction, and extension initiatives</li>
-    </ul>
+        <li>Support research, instruction, and extension initiatives at PSU</li>
+      </ul>
+    </div>
 
-    <h2>4. Methodology</h2>
-    <ul>
-        <li><strong>Design and Integration:</strong> Hardware assembly and sensor calibration</li>
-        <li><strong>System Development:</strong> Software programming and dashboard creation</li>
-        <li><strong>Pilot Deployment:</strong> Installation in selected indoor environments</li>
-        <li><strong>Testing and Validation:</strong> Performance benchmarking</li>
-        <li><strong>Data Analysis:</strong> Visualization and interpretation</li>
-    </ul>
+    <!-- Methodology -->
+    <h3 class="proposal-section-title">4. Methodology</h3>
+    <div class="proposal-card">
+      <ol class="step-list">
+        <li><span class="step-num">1</span><div><strong>Design and Integration</strong> — Hardware assembly, sensor selection, and calibration against reference instruments.</div></li>
+        <li><span class="step-num">2</span><div><strong>System Development</strong> — Software programming, firmware configuration, and web dashboard creation.</div></li>
+        <li><span class="step-num">3</span><div><strong>Pilot Deployment</strong> — Installation in selected indoor environments within PSU campus facilities.</div></li>
+        <li><span class="step-num">4</span><div><strong>Testing and Validation</strong> — Performance benchmarking and data accuracy verification.</div></li>
+        <li><span class="step-num">5</span><div><strong>Data Analysis</strong> — Visualization, interpretation, and documentation of baseline IAQ datasets.</div></li>
+      </ol>
+    </div>
 
-    <h2>5. Expected Outputs</h2>
-    <ul>
-        <li>Operational IoT-based IAQ monitoring prototype</li>
-        <li>Real-time data visualization platform</li>
-        <li>Technical documentation and system design</li>
-        <li>Baseline indoor air quality datasets</li>
-    </ul>
+    <!-- Expected Outputs -->
+    <h3 class="proposal-section-title">5. Expected Outputs</h3>
+    <div class="proposal-card">
+      <div class="chip-grid">
+        <span class="chip green"><i class="bi bi-check-circle"></i> Operational IAQ Monitoring Prototype</span>
+        <span class="chip green"><i class="bi bi-check-circle"></i> Real-Time Data Visualization Platform</span>
+        <span class="chip green"><i class="bi bi-check-circle"></i> Technical Documentation &amp; System Design</span>
+        <span class="chip green"><i class="bi bi-check-circle"></i> Baseline Indoor Air Quality Datasets</span>
+      </div>
+    </div>
 
-    <h2>6. Expected Outcomes and Impact</h2>
-    <ul>
-        <li>Improved awareness of indoor environmental quality</li>
-        <li>Data-driven decision-making in facilities management</li>
-        <li>Enhanced research and instructional capability</li>
-        <li>Foundation for smart campus and smart city initiatives</li>
-    </ul>
+    <!-- Outcomes & Impact -->
+    <h3 class="proposal-section-title">6. Expected Outcomes and Impact</h3>
+    <div class="proposal-card">
+      <ul>
+        <li>Improved awareness of indoor environmental quality among campus stakeholders</li>
+        <li>Data-driven decision-making in facilities and environmental management</li>
+        <li>Enhanced research and instructional capability within the College of Sciences</li>
+        <li>Foundation for smart campus and smart city initiatives in Puerto Princesa City</li>
+      </ul>
+    </div>
 
-    <h2>7. Alignment with CHED Priorities</h2>
-    <p>
-        The Bantay Hangin Project supports key CHED strategic priorities, including:
-    </p>
-    <ul>
+    <!-- CHED Alignment -->
+    <h3 class="proposal-section-title">7. Alignment with CHED Priorities</h3>
+    <div class="callout-card">
+      <ul>
         <li>Advancement of research and innovation in higher education</li>
-        <li>Integration of digital technologies (IoT, data analytics)</li>
+        <li>Integration of digital technologies — IoT and data analytics</li>
         <li>Promotion of sustainable and resilient communities</li>
-        <li>Strengthening of higher education institutions as knowledge hubs</li>
-    </ul>
+        <li>Strengthening HEIs as knowledge and innovation hubs</li>
+      </ul>
+    </div>
 
-    <h2>8. Sustainability and Scalability</h2>
-    <p>
-        The project is designed for scalability across campuses and institutions. Its modular architecture enables expansion into a network of environmental monitoring systems, supporting long-term integration into smart campus infrastructure and regional environmental analytics initiatives.
-    </p>
+    <!-- Sustainability -->
+    <h3 class="proposal-section-title">8. Sustainability and Scalability</h3>
+    <div class="proposal-card">
+      <p>The project is designed for scalability across campuses and institutions. Its modular architecture enables expansion into a network of environmental monitoring systems, supporting long-term integration into smart campus infrastructure and regional environmental analytics initiatives.</p>
+    </div>
 
-    <h2>9. Conclusion</h2>
-    <p>
-        The Bantay Hangin Project represents an innovative and practical approach to addressing indoor air quality challenges through accessible and scalable technology. As a proof-of-concept initiative, it establishes the foundation for broader environmental monitoring systems and contributes to national goals on sustainability, digital transformation, and public health.
-    </p>
+    <!-- Conclusion -->
+    <h3 class="proposal-section-title">9. Conclusion</h3>
+    <div class="proposal-card">
+      <p>The Bantay Hangin Project represents an innovative and practical approach to addressing indoor air quality challenges through accessible and scalable technology. As a proof-of-concept initiative, it establishes the foundation for broader environmental monitoring systems and contributes to national goals on sustainability, digital transformation, and public health.</p>
+    </div>
 
-</div>
 
-<footer>
-    <p>© Palawan State University | College of Sciences | CHED Proposal Format</p>
-</footer>
+
+  </div>
+</div><!-- /row -->
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container">
+      <div class="copyright text-center">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Dr. Ronald Edilberto A. Ona</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
 
 </body>
 </html>

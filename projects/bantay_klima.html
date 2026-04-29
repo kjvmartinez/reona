@@ -1,210 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bantay Klima Proposal</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        margin: 40px;
-        color: #222;
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Bantay Klima | Dr. Ronald Edilberto A. Ona</title>
+  <meta content="Bantay Klima: Establishing a Hybrid Weather Monitoring Network Across External Campuses of Palawan State University." name="description">
+  <meta content="Bantay Klima, weather monitoring, IoT, Palawan State University, climate, smart sensors" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.png" rel="icon">
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* ── Page content area ── */
+    .page-content {
+      padding: 40px 0 60px;
+      max-width: 860px;
+      margin: 0 auto;
     }
-    h1, h2, h3 {
-        color: #0a4d68;
+
+    /* ── Project hero banner ── */
+    .project-hero {
+      background: linear-gradient(135deg, #0a3d2e 0%, #1a9e6e 100%);
+      color: #fff;
+      padding: 60px 40px 50px;
+      border-radius: 12px;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
     }
-    h1 {
-        text-align: center;
-        margin-bottom: 5px;
+    .project-hero::after {
+      content: '\f73d'; /* bi-cloud-lightning */
+      font-family: "bootstrap-icons";
+      position: absolute;
+      right: -20px;
+      bottom: -30px;
+      font-size: 180px;
+      opacity: 0.06;
+      line-height: 1;
     }
-    h2 {
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 5px;
+    .project-hero h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.5px;
     }
-    .section {
-        margin-bottom: 25px;
+    .project-hero .subtitle {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-bottom: 1.5rem;
     }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
+    .project-hero .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
-    table, th, td {
-        border: 1px solid #aaa;
+    .project-hero .meta-badges span {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.85rem;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
     }
-    th, td {
-        padding: 8px;
-        text-align: left;
+
+    /* ── Section headings ── */
+    .proposal-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #149ddd;
+      border-bottom: 2px solid #149ddd22;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.4rem;
+      margin-top: 0;
     }
-</style>
+
+    /* ── Content cards ── */
+    .proposal-card {
+      background: #fff;
+      border: 1px solid #e8f0f7;
+      border-left: 4px solid #149ddd;
+      border-radius: 0 10px 10px 0;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 12px rgba(20, 157, 221, 0.07);
+    }
+    .proposal-card p {
+      font-size: 0.92rem;
+      color: #444;
+      line-height: 1.75;
+      margin-bottom: 0.6rem;
+    }
+    .proposal-card p:last-child { margin-bottom: 0; }
+    .proposal-card ul {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+    .proposal-card ul li {
+      font-size: 0.91rem;
+      color: #444;
+      margin-bottom: 0.4rem;
+      line-height: 1.6;
+    }
+
+    /* ── Sub-component blocks inside cards ── */
+    .component-block {
+      border-top: 1px solid #f0f4f8;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+    .component-block:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .component-block h6 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #173b6c;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.6rem;
+    }
+    .component-block ul {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+    .component-block ul li {
+      font-size: 0.89rem;
+      color: #444;
+      margin-bottom: 0.3rem;
+      line-height: 1.6;
+    }
+
+    /* ── Chip badges ── */
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      background: #e8f5fc;
+      color: #149ddd;
+      border: 1px solid #c2e4f5;
+    }
+    .chip.green  { background: #eaf7ee; color: #28a745; border-color: #b7e4c3; }
+    .chip.navy   { background: #eef1f8; color: #173b6c; border-color: #c5cfdf; }
+    .chip.orange { background: #fff4e5; color: #e07b00; border-color: #ffd9a0; }
+
+    /* ── Callout card (CHED alignment style) ── */
+    .callout-card {
+      background: #f5f9fd;
+      border: 1px solid #d0e6f5;
+      border-top: 4px solid #149ddd;
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .callout-card p, .callout-card li {
+      font-size: 0.91rem;
+      color: #444;
+      line-height: 1.7;
+    }
+    .callout-card ul { padding-left: 1.2rem; margin: 0; }
+    .callout-card li { margin-bottom: 0.4rem; }
+
+    /* ── Methodology steps ── */
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .step-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f4f8;
+      font-size: 0.91rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: #149ddd;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    /* ── Table ── */
+    .proposal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0;
+    }
+    .proposal-table thead tr {
+      background: #149ddd;
+      color: #fff;
+    }
+    .proposal-table thead th {
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .proposal-table tbody tr:nth-child(even) {
+      background: #f5f9fd;
+    }
+    .proposal-table tbody td {
+      padding: 0.65rem 1rem;
+      color: #444;
+      border-bottom: 1px solid #e8f0f7;
+      vertical-align: top;
+    }
+    .proposal-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .project-hero h1 { font-size: 1.5rem; }
+      .project-hero { padding: 40px 24px 36px; }
+    }
+  </style>
 </head>
-<body>
 
-<h1>Bantay Klima</h1>
-<p style="text-align:center;"><strong>Establishing a Hybrid Weather Monitoring Network Across External Campuses of Palawan State University</strong></p>
+<body class="index-page">
 
-<div class="section">
-<h2>I. Implementing HEI</h2>
-<p>Palawan State University (PalawanSU)<br>
-College of Sciences<br>
-Puerto Princesa City, Palawan</p>
-</div>
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════ -->
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
 
-<div class="section">
-<h2>II. Project Proponent</h2>
-<p><strong>Prof. Ronald Edilberto A. Ona, PhD</strong><br>
-Dean, College of Sciences</p>
-</div>
+    <div class="profile-img">
+      <img src="../assets/img/profile_pic.jpg" alt="Dr. Ronald Edilberto A. Ona" class="img-fluid rounded-circle">
+    </div>
 
-<div class="section">
-<h2>III. Project Duration</h2>
-<p>24 Months</p>
-</div>
+    <a href="../index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Ronald Edilberto Ona</h1>
+    </a>
 
-<div class="section">
-<h2>IV. Rationale</h2>
-<p>Palawan is increasingly exposed to climate variability, including typhoons, erratic rainfall, and droughts. Current weather monitoring systems lack localized resolution needed for decision-making, research, and community resilience.</p>
+    <div class="social-links text-center">
+      <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+      <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="mailto:redilberto@psu.palawan.edu.ph" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
 
-<p>Bantay Klima proposes a hybrid monitoring network combining commercial weather stations and DIY IoT-based sensors to generate real-time, localized climate data across Palawan State University’s external campuses.</p>
-</div>
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../index.html#hero"><i class="bi bi-house navicon"></i> Home</a></li>
+        <li><a href="../index.html#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../index.html#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../index.html#research"><i class="bi bi-journal-richtext navicon"></i> Research</a></li>
+        <li class="dropdown"><a href="#" class="active"><i class="bi bi-menu-button navicon"></i> <span>Projects</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="bantay_hangin.html">Bantay Hangin</a></li>
+            <li><a href="bantay_klima.html" class="active">Bantay Klima</a></li>
+          </ul>
+        </li>
+        <li><a href="../index.html#services"><i class="bi bi-hdd-stack navicon"></i> Expertise</a></li>
+        <li><a href="../index.html#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+        <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Courses</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="../environmental_economics.html">Environmental Economics</a></li>
+            <li><a href="#">Ecotourism</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-<div class="section">
-<h2>V. Objectives</h2>
-<ul>
-<li>Deploy commercial weather stations in selected campuses</li>
-<li>Install IoT-based smart weather sensors</li>
-<li>Develop a centralized data platform</li>
-<li>Generate localized climate datasets</li>
-<li>Enhance institutional capacity in IoT and analytics</li>
-<li>Support climate adaptation and disaster preparedness</li>
-</ul>
-</div>
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════ -->
+  <main class="main">
+    <div class="container page-content">
 
-<div class="section">
-<h2>VI. Project Components</h2>
+      <!-- ── Project Hero ── -->
+      <div class="project-hero" data-aos="fade-up">
+        <h1><i class="bi bi-cloud-sun me-2"></i>Bantay Klima</h1>
+        <p class="subtitle">Establishing a Hybrid Weather Monitoring Network Across External Campuses of Palawan State University</p>
+        <div class="meta-badges">
+          <span><i class="bi bi-building me-1"></i>College of Sciences, PSU</span>
+          <span><i class="bi bi-person me-1"></i>Prof. Ronald Edilberto A. Ona, PhD</span>
+          <span><i class="bi bi-clock me-1"></i>24 Months</span>
+          <span><i class="bi bi-thermometer-half me-1"></i>Climate Monitoring</span>
+          <span><i class="bi bi-cpu me-1"></i>IoT / Smart Sensors</span>
+          <span><i class="bi bi-shield-check me-1"></i>Disaster Preparedness</span>
+        </div>
+      </div>
 
-<h3>1. Commercial Weather Stations</h3>
-<ul>
-<li>High-accuracy, calibrated systems</li>
-<li>Measure temperature, humidity, rainfall, wind, solar radiation</li>
-<li>Serve as reference stations</li>
-</ul>
+      <div class="row">
+        <div class="col-12" data-aos="fade-up" data-aos-delay="100">
 
-<h3>2. DIY IoT Smart Sensors</h3>
-<ul>
-<li>ESP32 / Raspberry Pi platforms</li>
-<li>Low-cost sensor integration</li>
-<li>Solar-powered with wireless connectivity</li>
-</ul>
+          <!-- Rationale -->
+          <h3 class="proposal-section-title">I. Rationale</h3>
+          <div class="proposal-card">
+            <p>Palawan is increasingly exposed to climate variability, including typhoons, erratic rainfall, and droughts. Current weather monitoring systems lack the localized resolution needed for effective decision-making, research, and community resilience.</p>
+            <p>Bantay Klima proposes a hybrid monitoring network combining commercial weather stations and DIY IoT-based sensors to generate real-time, localized climate data across Palawan State University's external campuses.</p>
+          </div>
 
-<h3>3. Data Management System</h3>
-<ul>
-<li>Cloud/local server infrastructure</li>
-<li>Real-time dashboard</li>
-<li>Database for historical analysis</li>
-</ul>
+          <!-- Objectives -->
+          <h3 class="proposal-section-title">II. Objectives</h3>
+          <div class="proposal-card">
+            <ul>
+              <li>Deploy commercial weather stations in selected PSU campuses</li>
+              <li>Install IoT-based smart weather sensors across sites</li>
+              <li>Develop a centralized real-time data management platform</li>
+              <li>Generate localized climate datasets for research and policy</li>
+              <li>Enhance institutional capacity in IoT and data analytics</li>
+              <li>Support climate adaptation and disaster preparedness initiatives</li>
+            </ul>
+          </div>
 
-<h3>4. Capacity Building</h3>
-<ul>
-<li>Training for faculty and students</li>
-<li>Integration into academic programs</li>
-</ul>
-</div>
+          <!-- Project Components -->
+          <h3 class="proposal-section-title">III. Project Components</h3>
+          <div class="proposal-card">
 
-<div class="section">
-<h2>VII. Implementation Plan</h2>
-<table>
-<tr>
-<th>Phase</th>
-<th>Activities</th>
-</tr>
-<tr>
-<td>Phase 1</td>
-<td>Planning, site selection, procurement</td>
-</tr>
-<tr>
-<td>Phase 2</td>
-<td>Installation of weather stations and sensors</td>
-</tr>
-<tr>
-<td>Phase 3</td>
-<td>System integration and dashboard development</td>
-</tr>
-<tr>
-<td>Phase 4</td>
-<td>Testing and calibration</td>
-</tr>
-<tr>
-<td>Phase 5</td>
-<td>Training and academic integration</td>
-</tr>
-<tr>
-<td>Phase 6</td>
-<td>Monitoring and evaluation</td>
-</tr>
-</table>
-</div>
+            <div class="component-block">
+              <h6><i class="bi bi-broadcast-pin me-1"></i>1. Commercial Weather Stations</h6>
+              <div class="chip-grid">
+                <span class="chip navy"><i class="bi bi-check2"></i> High-accuracy, calibrated systems</span>
+                <span class="chip navy"><i class="bi bi-check2"></i> Temperature &amp; Humidity</span>
+                <span class="chip navy"><i class="bi bi-check2"></i> Rainfall &amp; Wind</span>
+                <span class="chip navy"><i class="bi bi-check2"></i> Solar Radiation</span>
+                <span class="chip navy"><i class="bi bi-check2"></i> Reference Stations</span>
+              </div>
+            </div>
 
-<div class="section">
-<h2>VIII. Expected Outputs</h2>
-<ul>
-<li>Installed hybrid weather monitoring systems</li>
-<li>Operational real-time data platform</li>
-<li>Localized weather datasets</li>
-<li>Technical documentation</li>
-</ul>
-</div>
+            <div class="component-block">
+              <h6><i class="bi bi-cpu me-1"></i>2. DIY IoT Smart Sensors</h6>
+              <div class="chip-grid">
+                <span class="chip"><i class="bi bi-check2"></i> ESP32 / Raspberry Pi Platforms</span>
+                <span class="chip"><i class="bi bi-check2"></i> Low-Cost Sensor Integration</span>
+                <span class="chip"><i class="bi bi-check2"></i> Solar-Powered Units</span>
+                <span class="chip"><i class="bi bi-check2"></i> Wireless Connectivity</span>
+              </div>
+            </div>
 
-<div class="section">
-<h2>IX. Expected Outcomes</h2>
-<ul>
-<li>Improved climate data availability in Palawan</li>
-<li>Enhanced research and analytics capability</li>
-<li>Strengthened disaster preparedness</li>
-<li>Increased student technical competencies</li>
-</ul>
-</div>
+            <div class="component-block">
+              <h6><i class="bi bi-server me-1"></i>3. Data Management System</h6>
+              <div class="chip-grid">
+                <span class="chip green"><i class="bi bi-check2"></i> Cloud / Local Server Infrastructure</span>
+                <span class="chip green"><i class="bi bi-check2"></i> Real-Time Dashboard</span>
+                <span class="chip green"><i class="bi bi-check2"></i> Historical Analysis Database</span>
+              </div>
+            </div>
 
-<div class="section">
-<h2>X. Sustainability Plan</h2>
-<ul>
-<li>Integration into Environmental Analytics Laboratory</li>
-<li>Partnerships with government and research institutions</li>
-<li>Continuous funding through grants and programs</li>
-</ul>
-</div>
+            <div class="component-block">
+              <h6><i class="bi bi-mortarboard me-1"></i>4. Capacity Building</h6>
+              <div class="chip-grid">
+                <span class="chip orange"><i class="bi bi-check2"></i> Faculty &amp; Student Training</span>
+                <span class="chip orange"><i class="bi bi-check2"></i> Integration into Academic Programs</span>
+              </div>
+            </div>
 
-<div class="section">
-<h2>XI. Risk Management</h2>
-<table>
-<tr>
-<th>Risk</th>
-<th>Mitigation</th>
-</tr>
-<tr>
-<td>Equipment damage</td>
-<td>Protective enclosures and proper siting</td>
-</tr>
-<tr>
-<td>Connectivity issues</td>
-<td>Hybrid communication systems</td>
-</tr>
-<tr>
-<td>Maintenance constraints</td>
-<td>Training local personnel</td>
-</tr>
-<tr>
-<td>Data inconsistency</td>
-<td>Calibration with reference stations</td>
-</tr>
-</table>
-</div>
+          </div>
 
-<div class="section">
-<h2>XII. Conclusion</h2>
-<p>Bantay Klima positions Palawan State University as a leader in environmental monitoring and climate resilience through a scalable, hybrid system integrating commercial and IoT technologies.</p>
-</div>
+          <!-- Implementation Plan -->
+          <h3 class="proposal-section-title">IV. Implementation Plan</h3>
+          <div class="proposal-card">
+            <table class="proposal-table">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Activities</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Phase 1</strong></td>
+                  <td>Planning, site selection, and procurement</td>
+                </tr>
+                <tr>
+                  <td><strong>Phase 2</strong></td>
+                  <td>Installation of weather stations and sensors</td>
+                </tr>
+                <tr>
+                  <td><strong>Phase 3</strong></td>
+                  <td>System integration and dashboard development</td>
+                </tr>
+                <tr>
+                  <td><strong>Phase 4</strong></td>
+                  <td>Testing and calibration</td>
+                </tr>
+                <tr>
+                  <td><strong>Phase 5</strong></td>
+                  <td>Training and academic integration</td>
+                </tr>
+                <tr>
+                  <td><strong>Phase 6</strong></td>
+                  <td>Monitoring and evaluation</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Expected Outputs -->
+          <h3 class="proposal-section-title">V. Expected Outputs</h3>
+          <div class="proposal-card">
+            <div class="chip-grid">
+              <span class="chip green"><i class="bi bi-check-circle"></i> Installed Hybrid Weather Monitoring Systems</span>
+              <span class="chip green"><i class="bi bi-check-circle"></i> Operational Real-Time Data Platform</span>
+              <span class="chip green"><i class="bi bi-check-circle"></i> Localized Weather Datasets</span>
+              <span class="chip green"><i class="bi bi-check-circle"></i> Technical Documentation</span>
+            </div>
+          </div>
+
+          <!-- Expected Outcomes -->
+          <h3 class="proposal-section-title">VI. Expected Outcomes</h3>
+          <div class="proposal-card">
+            <ul>
+              <li>Improved climate data availability and resolution across Palawan</li>
+              <li>Enhanced research and data analytics capability at PSU</li>
+              <li>Strengthened disaster preparedness in campus communities</li>
+              <li>Increased student technical competencies in IoT and environmental monitoring</li>
+            </ul>
+          </div>
+
+          <!-- Sustainability -->
+          <h3 class="proposal-section-title">VII. Sustainability Plan</h3>
+          <div class="callout-card">
+            <ul>
+              <li>Integration into the Environmental Analytics Laboratory at PSU</li>
+              <li>Partnerships with government agencies and research institutions</li>
+              <li>Continuous funding through grants, programs, and institutional support</li>
+            </ul>
+          </div>
+
+          <!-- Risk Management -->
+          <h3 class="proposal-section-title">VIII. Risk Management</h3>
+          <div class="proposal-card">
+            <table class="proposal-table">
+              <thead>
+                <tr>
+                  <th>Risk</th>
+                  <th>Mitigation Strategy</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Equipment damage from weather events</td>
+                  <td>Protective enclosures and proper site selection</td>
+                </tr>
+                <tr>
+                  <td>Connectivity issues in remote campuses</td>
+                  <td>Hybrid communication systems (Wi-Fi + cellular)</td>
+                </tr>
+                <tr>
+                  <td>Maintenance constraints</td>
+                  <td>Training local personnel for routine upkeep</td>
+                </tr>
+                <tr>
+                  <td>Data inconsistency across sensors</td>
+                  <td>Regular calibration against reference stations</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Conclusion -->
+          <h3 class="proposal-section-title">IX. Conclusion</h3>
+          <div class="proposal-card">
+            <p>Bantay Klima positions Palawan State University as a leader in environmental monitoring and climate resilience through a scalable, hybrid system integrating commercial and IoT technologies. The project advances PSU's research agenda while directly contributing to the safety and preparedness of communities across Palawan.</p>
+          </div>
+
+          <!-- Proponent Info Card -->
+          <div class="callout-card">
+            <h6 style="font-weight:700; color:#149ddd; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem;">
+              <i class="bi bi-person-badge me-1"></i> Project Proponent
+            </h6>
+            <p style="margin:0; font-size:0.88rem; color:#444; line-height:1.7;">
+              <strong style="color:#173b6c;">Dr. Ronald Edilberto A. Ona</strong><br>
+              Dean, College of Sciences<br>
+              Palawan State University<br>
+              <a href="mailto:redilberto@psu.palawan.edu.ph" style="color:#149ddd;">redilberto@psu.palawan.edu.ph</a>
+            </p>
+          </div>
+
+        </div>
+      </div><!-- /row -->
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container">
+      <div class="copyright text-center">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Dr. Ronald Edilberto A. Ona</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
 
 </body>
 </html>
