@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>EcoComic Review: Environmental Economics</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none; /* Better for comic click feel, but text can be selected if needed */
+    }
+
+    body {
+      background: linear-gradient(145deg, #2e5d4a 0%, #1d3e2f 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* comic book container */
+    .comic-container {
+      max-width: 1100px;
+      width: 100%;
+      background: #fef7e0;
+      border-radius: 32px;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.4), inset 0 1px 4px rgba(255,255,200,0.8);
+      padding: 20px 20px 30px;
+      border: 1px solid #e9d49c;
+    }
+
+    /* title header with comic burst */
+    .comic-header {
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    .comic-header h1 {
+      font-size: 2.8rem;
+      background: #ffdd77;
+      display: inline-block;
+      padding: 0.2rem 2rem;
+      border-radius: 60px;
+      box-shadow: 8px 8px 0 #b35f1f;
+      transform: rotate(-1deg);
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #2c2b26;
+      margin: 0;
+      font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    }
+    .sub {
+      font-size: 1.1rem;
+      background: #2c5a3e;
+      display: inline-block;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      color: #f9e7b3;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    /* comic grid (panels) */
+    .comic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    /* individual panel */
+    .panel {
+      background: #fffdf5;
+      border-radius: 28px;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+      overflow: hidden;
+      transition: transform 0.1s ease, box-shadow 0.1s;
+      cursor: pointer;
+      border: 2px solid #d4b87a;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel:active {
+      transform: translate(3px, 3px);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+    }
+    /* comic panel art area */
+    .panel-art {
+      background: #e6e2d1;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 3px dashed #c0a86a;
+      padding: 20px 10px;
+    }
+    .emoji-big {
+      font-size: 5rem;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+    }
+    .speech {
+      background: white;
+      border-radius: 40px;
+      padding: 8px 16px;
+      max-width: 85%;
+      font-weight: bold;
+      font-size: 0.9rem;
+      box-shadow: 3px 3px 0 #aaa;
+      position: relative;
+    }
+    .panel-text {
+      padding: 16px 18px 20px;
+      background: #fffcf0;
+    }
+    .term {
+      font-weight: bold;
+      background: #ffecb3;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: #a55117;
+    }
+    .definition {
+      font-size: 0.9rem;
+      margin-top: 12px;
+      line-height: 1.4;
+      color: #2d3e2b;
+    }
+    .panel h3 {
+      margin: 0 0 6px 0;
+      font-size: 1.3rem;
+      color: #3b2a1f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* glossary & interactive zone */
+    .glossary-section {
+      background: #eedd99;
+      border-radius: 48px;
+      padding: 12px 20px;
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      box-shadow: inset 0 0 0 2px #fff3cf, 0 6px 12px rgba(0,0,0,0.1);
+    }
+    .glossary-btn {
+      background: #3d2b1a;
+      border: none;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 60px;
+      color: #ffeaac;
+      cursor: pointer;
+      font-family: inherit;
+      transition: 0.1s linear;
+      box-shadow: 2px 2px 0 #1f1409;
+    }
+    .glossary-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+    .glossary-content {
+      flex: 1;
+      background: #fff6df;
+      border-radius: 32px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #2c4727;
+      border-left: 8px solid #f1b82e;
+    }
+    .feedback-area {
+      margin-top: 20px;
+      background: #cfe6cf;
+      border-radius: 28px;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      text-align: center;
+      font-weight: bold;
+      color: #1e4620;
+      border: 2px dotted #558b2f;
+    }
+    .click-hint {
+      font-size: 0.7rem;
+      text-align: right;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+    footer {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 18px;
+      color: #594e2e;
+    }
+    @media (max-width: 680px) {
+      .comic-grid {
+        grid-template-columns: 1fr;
+      }
+      .comic-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="comic-container">
+  <div class="comic-header">
+    <h1>🌿 ECO•NOMICS COMIC ⚡</h1>
+    <div class="sub">📘 interactive reviewer · tap any panel to reveal more!</div>
+  </div>
+
+  <div class="comic-grid" id="comicGrid">
+    <!-- panel 1: Externalities -->
+    <div class="panel" data-term="externality" data-explanation="💡 Negative externality = cost borne by society (pollution). Positive externality = benefit to others (bees pollinating crops). Economists use taxes or subsidies to fix it!">
+      <div class="panel-art">
+        <div class="emoji-big">🏭🌳</div>
+        <div class="speech">"My smoke harms your health... but I don't pay for it!"</div>
+      </div>
+      <div class="panel-text">
+        <h3>📉 Externalities <span class="term">externality</span></h3>
+        <div class="definition">
+          <strong>Unpriced side effects</strong> — when a factory pollutes a river, that's a <strong>negative externality</strong>. Society bears the cost.
+        </div>
+      </div>
+    </div>
+    <!-- panel 2: Tragedy of the Commons -->
+    <div class="panel" data-term="tragedy of the commons" data-explanation="🌊 Overuse of shared resources: each fisherman thinks 'if I don't catch, others will', leading to depletion. Solutions: quotas, privatization, or community management.">
+      <div class="panel-art">
+        <div class="emoji-big">🐟🐟🚤</div>
+        <div class="speech">"If I don't take more fish, someone else will!"</div>
+      </div>
+      <div class="panel-text">
+        <h3>⚖️ Tragedy of the Commons <span class="term">commons</span></h3>
+        <div class="definition">
+          Shared resources (fisheries, forests) get overexploited because individual gain > shared loss. 💡 <strong>Pigouvian tax / tradeable permits</strong> help.
+        </div>
+      </div>
+    </div>
+    <!-- panel 3: Carbon Pricing / Cap & Trade -->
+    <div class="panel" data-term="carbon pricing" data-explanation="💰 Putting a price on CO₂ emissions. Cap-and-trade: gov sets limit, firms trade permits. Carbon tax: direct fee per ton. Both incentivize green innovation.">
+      <div class="panel-art">
+        <div class="emoji-big">💨💵🌎</div>
+        <div class="speech">"Pollute less or pay the price!"</div>
+      </div>
+      <div class="panel-text">
+        <h3>🏷️ Carbon Pricing <span class="term">cap & trade</span></h3>
+        <div class="definition">
+          Market-based approach to reduce emissions. <strong>Cap & trade</strong> creates scarcity for pollution permits → companies reduce efficiently.
+        </div>
+      </div>
+    </div>
+    <!-- panel 4: Ecosystem Services -->
+    <div class="panel" data-term="ecosystem services" data-explanation="🌼 Nature provides free services: bees pollinate crops ($ billions value), wetlands purify water. Environmental economics values these to prevent loss.">
+      <div class="panel-art">
+        <div class="emoji-big">🐝🌸💧</div>
+        <div class="speech">"We clean water & air — for free!"</div>
+      </div>
+      <div class="panel-text">
+        <h3>🌱 Ecosystem Services <span class="term">natural capital</span></h3>
+        <div class="definition">
+          Benefits from nature: pollination, water filtration, carbon storage. Assigning economic value helps protect them.
+        </div>
+      </div>
+    </div>
+    <!-- panel 5: Discount Rate & Future Generations -->
+    <div class="panel" data-term="discount rate" data-explanation="📉 In cost-benefit analysis, future benefits are 'discounted'. High discount rate → less weight on future climate damages. Low rate → more care for next generations. Ethical debate!">
+      <div class="panel-art">
+        <div class="emoji-big">⏳👵🌲</div>
+        <div class="speech">"Should we care less about future generations?"</div>
+      </div>
+      <div class="panel-text">
+        <h3>⏱️ Discount Rate <span class="term">intergenerational equity</span></h3>
+        <div class="definition">
+          How we value future costs/benefits today. Crucial for climate policy — a low discount rate favors strong action now.
+        </div>
+      </div>
+    </div>
+    <!-- panel 6: Circular Economy -->
+    <div class="panel" data-term="circular economy" data-explanation="♻️ Shift from 'take-make-dispose' to reduce, reuse, recycle. Minimizes waste and resource depletion. Key concept: decoupling growth from resource use.">
+      <div class="panel-art">
+        <div class="emoji-big">🔄🗑️♻️</div>
+        <div class="speech">"Waste = Food! Let's close the loop."</div>
+      </div>
+      <div class="panel-text">
+        <h3>🔄 Circular Economy <span class="term">zero waste</span></h3>
+        <div class="definition">
+          Designing out waste, keeping materials in use. Regenerative system — alternative to linear economy.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- interactive glossary & feedback area -->
+  <div class="glossary-section">
+    <button class="glossary-btn" id="randomTermBtn">🎲 RANDOM KEY TERM</button>
+    <div class="glossary-content" id="glossaryDisplay">
+      💡 Tap a comic panel to reveal deeper economics concept & definition!
+    </div>
+  </div>
+  <div class="feedback-area" id="feedbackArea">
+    📖 Click on any comic panel above to review environmental economics concepts!
+  </div>
+  <div class="click-hint">
+    ✨ interactive reviewer — each panel gives a pop-up style explanation (offline friendly)
+  </div>
+  <footer>
+    🌍 Environmental Economics Comic Review | Tragedy of Commons | Externalities | Carbon Pricing | Ecosystem Services
+  </footer>
+</div>
+
+<script>
+  // ---- DATA FOR EACH PANEL (enhanced definitions) ----
+  const panelData = {
+    externality: {
+      title: "Externalities (Spillover effects)",
+      fullDesc: "🔍 <strong>Negative Externality:</strong> Cost imposed on third parties (e.g., pollution). <strong>Positive Externality:</strong> Benefit to others (e.g., vaccination).<br> 📚 <em>Key solution:</em> Pigouvian tax/subsidy to internalize external costs. Coase theorem: private bargaining can solve if property rights are clear."
+    },
+    "tragedy of the commons": {
+      title: "Tragedy of the Commons",
+      fullDesc: "⚡ Garret Hardin (1968): Common-pool resources (air, water, fisheries) are overused due to self-interest.<br> ✅ <strong>Governance tools:</strong> 1) Privatization 2) Government regulation (quotas) 3) Community-based management (Ostrom's principles)."
+    },
+    "carbon pricing": {
+      title: "Carbon Pricing Mechanisms",
+      fullDesc: "💵 Two main tools: <strong>Carbon tax</strong> – sets a clear price per ton of CO₂. <strong>Cap-and-trade</strong> – sets a pollution cap, firms trade allowances. Both create incentives to cut emissions efficiently.<br> 📈 Examples: EU ETS, carbon border adjustments."
+    },
+    "ecosystem services": {
+      title: "Ecosystem Services & Valuation",
+      fullDesc: "🌿 Four categories: <strong>Provisioning</strong> (food, water), <strong>Regulating</strong> (climate, floods), <strong>Supporting</strong> (nutrient cycling), <strong>Cultural</strong> (recreation).<br> 🧮 Total Economic Value (TEV) = use value + non-use value (existence value)."
+    },
+    "discount rate": {
+      title: "Discounting & Future Generations",
+      fullDesc: "📊 In cost-benefit analysis, future costs/benefits are discounted. <strong>High discount rate</strong> → less present action for climate. <strong>Low / declining rate</strong> → supports sustainability. Stern Review vs. Nordhaus debate highlights ethical dimensions."
+    },
+    "circular economy": {
+      title: "Circular Economy",
+      fullDesc: "🔄 Model that aims to eliminate waste through reuse, remanufacturing, recycling. Contrasts with linear 'take-make-dispose'. <br> 🏭 Ellen MacArthur Foundation: three principles – design out waste, keep materials in use, regenerate natural systems."
+    }
+  };
+
+  // map panel elements to their term ID
+  const panels = document.querySelectorAll('.panel');
+  const glossaryDiv = document.getElementById('glossaryDisplay');
+  const feedbackArea = document.getElementById('feedbackArea');
+
+  // Helper: update glossary & feedback with interactive message
+  function showConcept(termKey, explanationExtra, panelTitle) {
+    const data = panelData[termKey];
+    if (data) {
+      glossaryDiv.innerHTML = `📘 <strong style="font-size:1rem;">${data.title}</strong><br> ${data.fullDesc}`;
+      feedbackArea.innerHTML = `✨ You reviewed: <strong>${data.title}</strong>. ${explanationExtra ? explanationExtra : 'Great for exam prep! Keep tapping.'}`;
+    } else {
+      // fallback using generic from data-term extra
+      glossaryDiv.innerHTML = `💡 <strong>${termKey.replace(/-/g,' ').toUpperCase()}</strong><br> ${explanationExtra || 'Key concept in environmental economics.'}`;
+      feedbackArea.innerHTML = `📚 ${explanationExtra || 'Click another panel to explore!'}`;
+    }
+    // add a little animation flash effect
+    glossaryDiv.style.transition = '0.1s';
+    glossaryDiv.style.backgroundColor = '#fff3cf';
+    setTimeout(() => { glossaryDiv.style.backgroundColor = '#fff6df'; }, 200);
+  }
+
+  // attach click listeners to each panel
+  panels.forEach(panel => {
+    // get term identifier from data-term attribute (set in html)
+    let termId = panel.getAttribute('data-term');
+    // also get the specific extra explanation inline from data-explanation to merge with full definition
+    const inlineExplanation = panel.getAttribute('data-explanation') || '';
+    
+    // extract panel title from h3 for nicer feedback
+    const titleElem = panel.querySelector('h3');
+    let panelTitle = titleElem ? titleElem.innerText : 'Concept';
+    
+    panel.addEventListener('click', (e) => {
+      // prevent event from bubbling weirdly (but fine)
+      e.stopPropagation();
+      // normalize termId mapping
+      let key = '';
+      if (termId === 'externality') key = 'externality';
+      else if (termId === 'tragedy of the commons') key = 'tragedy of the commons';
+      else if (termId === 'carbon pricing') key = 'carbon pricing';
+      else if (termId === 'ecosystem services') key = 'ecosystem services';
+      else if (termId === 'discount rate') key = 'discount rate';
+      else if (termId === 'circular economy') key = 'circular economy';
+      else key = termId;
+      
+      // compose extra message to show in feedback area
+      let extraMsg = '';
+      if (inlineExplanation) {
+        extraMsg = inlineExplanation;
+      } else {
+        extraMsg = `💡 ${panelTitle} — essential environmental economics concept.`;
+      }
+      
+      showConcept(key, extraMsg, panelTitle);
+      
+      // Also add a tiny comic "pop" effect on panel
+      panel.style.transform = 'scale(0.98)';
+      setTimeout(() => { panel.style.transform = ''; }, 120);
+    });
+  });
+
+  // RANDOM TERM BUTTON: displays random term from our dataset
+  const randomBtn = document.getElementById('randomTermBtn');
+  const termKeys = Object.keys(panelData);
+  
+  randomBtn.addEventListener('click', () => {
+    const randomIndex = Math.floor(Math.random() * termKeys.length);
+    const randomTerm = termKeys[randomIndex];
+    const termInfo = panelData[randomTerm];
+    if (termInfo) {
+      glossaryDiv.innerHTML = `🎲 RANDOM REVIEW: <strong style="font-size:1.05rem;">${termInfo.title}</strong><br> ${termInfo.fullDesc}`;
+      feedbackArea.innerHTML = `🔁 Random pick — "${termInfo.title}". Tap any comic panel for more interactive review!`;
+    } else {
+      glossaryDiv.innerHTML = `📖 Click a comic panel to explore environmental economics concepts!`;
+      feedbackArea.innerHTML = `🎯 Try selecting any of the six comic panels for detailed explanations.`;
+    }
+    // add extra pop
+    randomBtn.style.transform = 'scale(0.95)';
+    setTimeout(() => { randomBtn.style.transform = ''; }, 100);
+  });
+  
+  // Optional: initial default hint but also preload one interesting term after load? (not necessary but friendly)
+  window.addEventListener('load', () => {
+    // set a cute welcome comic fact
+    glossaryDiv.innerHTML = `🌎 Welcome, student economist! Tap any panel → discover externalities, cap & trade, circular economy & more.`;
+    feedbackArea.innerHTML = `📘 Offline comic reviewer: Interactive flashcards style. Click to master environmental economics!`;
+    // add subtle floating effect?
+  });
+  
+  // accessibility & offline: everything is static but fully functional without internet
+  // We can also add a little hover instruction for desktop
+  const style = document.createElement('style');
+  style.textContent = `
+    .panel:hover {
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+      transform: translateY(-2px);
+      transition: 0.1s;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // If any student wants to revisit glossary quick, we can double-check that every panel's extra details are coherent.
+  // Additionally, to make the offline comic richer, preload no external assets, all emoji + text.
+  
+  // add a little 'concept reminder' on glossary click? Not necessary but we also support keyboard accessibility?
+  // For fun, create an alternate mode: if someone clicks the glossary area, it shows hint.
+  glossaryDiv.addEventListener('click', () => {
+    glossaryDiv.innerHTML = `💡 <strong>Interactive comic reviewer</strong><br> Click on any illustrated panel to get an in-depth definition + real economics application. Also try the random term button!`;
+    setTimeout(() => {
+      if (!glossaryDiv.innerHTML.includes('Click on any illustrated panel')) return;
+      // but to avoid overwriting recent term display, we check if it's the default or not? keep it subtle: reset after 3 sec? No, better keep info
+    }, 2000);
+  });
+  
+  // embed extra teaching notes within console but not necessary.
+  console.log('🌿 Environmental Economics Comic Reviewer ready — offline interactive study tool');
+</script>
+</body>
+</html>

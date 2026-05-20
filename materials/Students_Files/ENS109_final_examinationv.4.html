@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENS109 - Environmental Economics Final Exam</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f5f7fa;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+        #start-screen, #exam-container, #result-screen {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        #start-screen h1, #result-screen h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .exam-meta {
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .timer-box {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.8em;
+            font-weight: bold;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .timer-box.warning {
+            background: #c0392b;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; }
+        }
+        .question-block {
+            background: #f9f9fb;
+            border-left: 5px solid #3498db;
+            padding: 15px 20px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+        }
+        .question-block p {
+            font-weight: 600;
+            margin: 0 0 10px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            font-size: 1.2em;
+            padding: 14px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        #result-screen {
+            display: none;
+        }
+        .receipt-section {
+            border: 2px dashed #2c3e50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            background: #fdfefe;
+        }
+        .receipt-section p {
+            font-size: 1.2em;
+            margin: 8px 0;
+        }
+        .score-highlight {
+            font-size: 2em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        #attemptsList {
+            list-style: none;
+            padding: 0;
+        }
+        #attemptsList li {
+            background: #ecf0f1;
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 20px;
+        }
+        .clear-btn {
+            background: #e74c3c;
+            font-size: 0.9em;
+            padding: 8px 18px;
+        }
+        .prepared-by {
+            margin-top: 25px;
+            font-style: italic;
+            font-size: 1em;
+            color: #34495e;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+            text-align: center;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #result-screen, #result-screen * {
+                visibility: visible;
+            }
+            #result-screen {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                box-shadow: none;
+                padding: 10px;
+            }
+            #printBtn, #clearScoresBtn, .clear-btn {
+                display: none;
+            }
+            .timer-box, #exam-container, #start-screen {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="start-screen">
+        <h1>ENS109: Environmental Economics Final Exam</h1>
+        <p><strong>100 multiple-choice questions</strong> · Timed: 1 hour · Random answer order · Evenly distributed correct answers</p>
+        <div class="exam-meta">
+            <p>Examination prepared by <strong>Ronald Edilberto A. Ona, PhD</strong></p>
+        </div>
+        <div style="margin: 30px 0;">
+            <input type="text" id="studentName" placeholder="Enter your full name" style="padding: 12px 20px; width: 70%; font-size: 1.1em; border: 2px solid #bdc3c7; border-radius: 30px; margin-bottom: 15px;"><br>
+            <input type="text" id="studentNumber" placeholder="Enter your student number" style="padding: 12px 20px; width: 70%; font-size: 1.1em; border: 2px solid #bdc3c7; border-radius: 30px;">
+        </div>
+        <button class="btn" id="startBtn">Start Exam</button>
+        <p style="color: #7f8c8d; margin-top: 25px;">Once you start, the timer begins. The exam will auto‑submit after 60 minutes.</p>
+    </div>
+
+    <div id="exam-container" style="display: none;">
+        <div style="text-align: center; margin-bottom: 10px; color: #2c3e50;">
+            <strong>ENS109 – Environmental Economics</strong><br>
+            <span style="font-size: 0.9em;">Prepared by Ronald Edilberto A. Ona, PhD</span>
+        </div>
+        <div class="timer-box" id="timerDisplay">60:00</div>
+        <div id="questionsContainer"></div>
+        <button class="btn" id="submitBtn">Submit Answers</button>
+    </div>
+
+    <div id="result-screen">
+        <h2>📋 Exam Receipt – ENS109</h2>
+        <div class="receipt-section">
+            <p><strong>Student Name:</strong> <span id="receiptName"></span></p>
+            <p><strong>Student Number:</strong> <span id="receiptNumber"></span></p>
+            <p><strong>Score:</strong> <span class="score-highlight" id="receiptScore"></span> / 100</p>
+            <p><strong>Date & Time of submission:</strong> <span id="receiptDateTime"></span></p>
+            <p><strong>Time taken:</strong> <span id="receiptTimeTaken"></span></p>
+            <p class="prepared-by">Examination prepared by Ronald Edilberto A. Ona, PhD</p>
+        </div>
+        <button class="btn" id="printBtn" onclick="window.print();">🖨️ Print Receipt</button>
+        <h3 style="margin-top: 35px;">📊 Previous Attempts (saved locally)</h3>
+        <ul id="attemptsList"></ul>
+        <button class="btn clear-btn" id="clearScoresBtn">🗑️ Clear Saved Scores</button>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 100 ENVIRONMENTAL ECONOMICS QUESTIONS ----------
+            const questionBank = [
+                {
+                    question: "Which of the following best defines a negative externality?",
+                    options: ["A cost that is borne by a third party not involved in the transaction.", "A benefit that accrues to the market participants.", "A government-imposed tax on polluters.", "A subsidy given to renewable energy."],
+                    correct: "A cost that is borne by a third party not involved in the transaction."
+                }, {
+                    question: "According to the Coase theorem, private bargaining can lead to an efficient outcome if:",
+                    options: ["Transaction costs are high and property rights are well-defined.", "Transaction costs are zero and property rights are well-defined.", "The government sets an emissions standard.", "There are many affected parties with no legal standing."],
+                    correct: "Transaction costs are zero and property rights are well-defined."
+                }, {
+                    question: "A Pigouvian tax on a polluting firm should be set equal to:",
+                    options: ["The private marginal cost of production.", "The marginal external cost at the socially optimal level of output.", "The average total cost of abatement.", "The market price of the polluting good."],
+                    correct: "The marginal external cost at the socially optimal level of output."
+                }, {
+                    question: "Which valuation method relies on observed travel expenditures to estimate recreational site benefits?",
+                    options: ["Contingent valuation method", "Hedonic pricing method", "Travel cost method", "Production function approach"],
+                    correct: "Travel cost method"
+                }, {
+                    question: "The \"tragedy of the commons\" results from:",
+                    options: ["Private ownership of resources.", "Non-excludability and rivalry in consumption of a common resource.", "Government subsidies for public goods.", "High transaction costs in markets."],
+                    correct: "Non-excludability and rivalry in consumption of a common resource."
+                }, {
+                    question: "In cost-benefit analysis, the social discount rate is used to:",
+                    options: ["Adjust market prices for inflation.", "Convert future costs and benefits to present values.", "Calculate the internal rate of return for private firms.", "Determine the optimal tax rate."],
+                    correct: "Convert future costs and benefits to present values."
+                }, {
+                    question: "Which of the following is an example of a market-based instrument for pollution control?",
+                    options: ["Uniform emission standards", "Technology mandates", "Tradable discharge permits", "Mandatory abatement technology"],
+                    correct: "Tradable discharge permits"
+                }, {
+                    question: "The Hotelling rule for a non-renewable resource states that in an efficient market, the net price (royalty) should:",
+                    options: ["Decline at the rate of interest.", "Rise at the rate of interest.", "Remain constant over time.", "Rise at the rate of inflation."],
+                    correct: "Rise at the rate of interest."
+                }, {
+                    question: "The concept of \"weak sustainability\" requires that:",
+                    options: ["Natural capital stocks are maintained at current levels.", "The total capital stock (natural + human-made) is non-declining.", "All natural resources are preserved intact.", "Renewable resources are harvested at maximum sustainable yield."],
+                    correct: "The total capital stock (natural + human-made) is non-declining."
+                }, {
+                    question: "What does the environmental Kuznets curve hypothesis suggest?",
+                    options: ["Pollution increases monotonically with income.", "Pollution decreases monotonically with income.", "Pollution first increases then decreases with rising per capita income.", "There is no relationship between income and pollution."],
+                    correct: "Pollution first increases then decreases with rising per capita income."
+                }, {
+                    question: "Hedonic pricing method is most commonly used to estimate the value of:",
+                    options: ["Biodiversity in remote forests.", "Air quality improvements through changes in property values.", "Existence value of endangered species.", "The option value of future drug discoveries."],
+                    correct: "Air quality improvements through changes in property values."
+                }, {
+                    question: "A fishery governed by open access tends to result in:",
+                    options: ["Maximum sustainable yield.", "Economic rent maximization.", "Stock depletion below the maximum sustainable yield level, with dissipation of rents.", "Efficient harvest levels set by social planner."],
+                    correct: "Stock depletion below the maximum sustainable yield level, with dissipation of rents."
+                }, {
+                    question: "The \"double dividend\" hypothesis in environmental taxation suggests that shifting taxes from labor to pollution can:",
+                    options: ["Both improve environmental quality and reduce the distortionary costs of existing taxes.", "Increase government revenue and cause higher inflation.", "Reduce pollution but increase unemployment.", "Double the output of polluting industries."],
+                    correct: "Both improve environmental quality and reduce the distortionary costs of existing taxes."
+                }, {
+                    question: "Contingent valuation method directly elicits values by:",
+                    options: ["Observing market transactions of related goods.", "Using survey questions about willingness to pay for an environmental change.", "Calculating replacement costs.", "Measuring hedonic prices."],
+                    correct: "Using survey questions about willingness to pay for an environmental change."
+                }, {
+                    question: "The social cost of carbon is:",
+                    options: ["The cost of reducing carbon emissions by one ton.", "The present value of economic damages caused by an additional ton of CO₂ emissions.", "The tax rate applied to gasoline.", "The price of a carbon permit in the EU ETS."],
+                    correct: "The present value of economic damages caused by an additional ton of CO₂ emissions."
+                }, {
+                    question: "Which of the following is a characteristic of a pure public good?",
+                    options: ["Rivalry and excludability.", "Non-rivalry and non-excludability.", "Rivalry but non-excludability.", "Excludability but non-rivalry."],
+                    correct: "Non-rivalry and non-excludability."
+                }, {
+                    question: "The Hartwick rule for sustainability states that resource-rich economies should:",
+                    options: ["Invest all resource rents in foreign assets.", "Consume all resource rents to boost welfare.", "Reinvest resource rents into reproducible capital to maintain constant consumption over time.", "Keep resource extraction constant."],
+                    correct: "Reinvest resource rents into reproducible capital to maintain constant consumption over time."
+                }, {
+                    question: "A major criticism of the Stern Review on climate change is its:",
+                    options: ["Use of a high discount rate.", "Use of a very low discount rate, giving high present value to future damages.", "Neglect of adaptation options.", "Overestimation of mitigation costs."],
+                    correct: "Use of a very low discount rate, giving high present value to future damages."
+                }, {
+                    question: "Marketable permits for pollution (cap-and-trade) achieve cost-effectiveness because:",
+                    options: ["All firms reduce emissions by the same percentage.", "Firms with lower abatement costs sell permits to firms with higher abatement costs.", "The government sets the permit price.", "Total emissions are fixed independent of abatement cost."],
+                    correct: "Firms with lower abatement costs sell permits to firms with higher abatement costs."
+                }, {
+                    question: "The option value in environmental economics refers to:",
+                    options: ["The value from knowing a resource exists.", "The value of preserving the option to use a resource in the future.", "The current market price of a resource.", "The value of leaving a resource to future generations."],
+                    correct: "The value of preserving the option to use a resource in the future."
+                }, {
+                    question: "Which statement about the Coase theorem is true?",
+                    options: ["It applies only when many parties are involved.", "It requires government to assign property rights initially, but bargaining leads to efficient outcome regardless of who holds rights, if transaction costs are zero.", "It advocates for government regulation of all externalities.", "It shows that taxes are always more efficient than bargaining."],
+                    correct: "It requires government to assign property rights initially, but bargaining leads to efficient outcome regardless of who holds rights, if transaction costs are zero."
+                }, {
+                    question: "The maximum sustainable yield (MSY) of a fishery is the harvest level that:",
+                    options: ["Maximizes economic profits.", "Maximizes the sustainable catch equal to the biological growth of the stock.", "Achieves zero stock level.", "Minimizes fishing effort."],
+                    correct: "Maximizes the sustainable catch equal to the biological growth of the stock."
+                }, {
+                    question: "Which of the following is an example of a non-use value?",
+                    options: ["Benefit from swimming in a clean lake.", "Timber harvested from a forest.", "Existence value of a whale species.", "Crop pollination services."],
+                    correct: "Existence value of a whale species."
+                }, {
+                    question: "If the marginal damage cost of pollution rises with emissions, the efficient level of pollution is where:",
+                    options: ["Total damage equals total abatement cost.", "Marginal damage equals marginal abatement cost.", "Marginal damage is zero.", "Total abatement cost is minimized."],
+                    correct: "Marginal damage equals marginal abatement cost."
+                }, {
+                    question: "The Porter hypothesis argues that:",
+                    options: ["Environmental regulations always reduce competitiveness.", "Well-designed environmental regulations can spur innovation and improve competitiveness.", "Pollution havens always attract dirty industries.", "Market instruments are inferior to command-and-control."],
+                    correct: "Well-designed environmental regulations can spur innovation and improve competitiveness."
+                }, {
+                    question: "Discounting future benefits and costs matters most for environmental projects because:",
+                    options: ["The benefits are immediate.", "Environmental projects often have costs now and benefits far into the future.", "Inflation is high.", "Interest rates are zero."],
+                    correct: "Environmental projects often have costs now and benefits far into the future."
+                }, {
+                    question: "The concept of \"genuine savings\" (adjusted net savings) corrects national savings by accounting for:",
+                    options: ["Consumer spending on durables.", "Depletion of natural resources and environmental damage.", "Government transfer payments.", "Inflationary adjustments."],
+                    correct: "Depletion of natural resources and environmental damage."
+                }, {
+                    question: "A backstop technology in resource economics is:",
+                    options: ["A resource-extraction method that prevents depletion.", "An alternative technology that can replace a non-renewable resource at a given cost.", "A policy to ban resource use.", "A method to increase natural regeneration."],
+                    correct: "An alternative technology that can replace a non-renewable resource at a given cost."
+                }, {
+                    question: "The travel cost method is best suited for valuing:",
+                    options: ["Existence value of rainforests.", "Recreational benefits of a specific site like a national park.", "Improved air quality in an urban area.", "Reduced mortality risks."],
+                    correct: "Recreational benefits of a specific site like a national park."
+                }, {
+                    question: "In a cap-and-trade system, the initial allocation of permits (grandfathering vs. auctioning) affects:",
+                    options: ["The final distribution of emissions across firms.", "The overall efficiency of the system, if permits are tradable.", "The distribution of wealth among firms, but not the cost-effectiveness of the final outcome.", "The equilibrium permit price."],
+                    correct: "The distribution of wealth among firms, but not the cost-effectiveness of the final outcome."
+                }, {
+                    question: "A negative externality leads to market failure because the market quantity is:",
+                    options: ["Lower than the socially efficient quantity.", "Higher than the socially efficient quantity.", "Equal to the efficient quantity but at a wrong price.", "Zero."],
+                    correct: "Higher than the socially efficient quantity."
+                }, {
+                    question: "Which of the following is a command-and-control regulation?",
+                    options: ["Emissions tax", "Tradable permits", "A requirement for all power plants to install scrubbers.", "A deposit-refund system."],
+                    correct: "A requirement for all power plants to install scrubbers."
+                }, {
+                    question: "The travel cost recreation demand model uses trip frequency to infer:",
+                    options: ["The existence value of a resource.", "The consumer surplus per visit from the site.", "The cost of building a new park.", "The hedonic price of houses."],
+                    correct: "The consumer surplus per visit from the site."
+                }, {
+                    question: "A major limitation of contingent valuation is:",
+                    options: ["It can only measure use values.", "Hypothetical bias, where stated willingness to pay may not reflect real payments.", "It uses market data exclusively.", "It is not applicable to public goods."],
+                    correct: "Hypothetical bias, where stated willingness to pay may not reflect real payments."
+                }, {
+                    question: "The efficient extraction path of a non-renewable resource under competitive conditions typically shows:",
+                    options: ["Extraction rising indefinitely.", "Quantity extracted declining over time while net price rises.", "Constant extraction until exhaustion.", "Extraction only after backstop appears."],
+                    correct: "Quantity extracted declining over time while net price rises."
+                }, {
+                    question: "What does the term \"carbon leakage\" refer to?",
+                    options: ["Carbon stored in forests.", "The increase in emissions in countries without carbon regulations as a result of emission reductions in regulated countries.", "Leaking carbon dioxide from storage sites.", "The rebound effect of energy efficiency."],
+                    correct: "The increase in emissions in countries without carbon regulations as a result of emission reductions in regulated countries."
+                }, {
+                    question: "The discount rate used in climate change analysis is controversial because:",
+                    options: ["It has no effect on the result.", "A high discount rate gives very low weight to future climate damages, while a low rate favors immediate strong mitigation.", "It only matters for non-market impacts.", "It raises the cost of solar panels."],
+                    correct: "A high discount rate gives very low weight to future climate damages, while a low rate favors immediate strong mitigation."
+                }, {
+                    question: "Bequest value is the value people place on:",
+                    options: ["Their own future use of an environmental asset.", "Being able to leave an environmental asset to future generations.", "Knowing that an asset exists.", "The option to use an asset later."],
+                    correct: "Being able to leave an environmental asset to future generations."
+                }, {
+                    question: "Which of the following is true about the open-access equilibrium in a fishery?",
+                    options: ["Total revenue equals total cost, leading to zero economic rent.", "Marginal revenue equals marginal cost.", "Harvest is set at maximum economic yield.", "Stock is at the carrying capacity."],
+                    correct: "Total revenue equals total cost, leading to zero economic rent."
+                }, {
+                    question: "A lump-sum payment to polluters to reduce emissions (subsidy for abatement) can achieve the same efficient outcome as a tax if:",
+                    options: ["The subsidy is given to all polluters equally.", "The subsidy rate equals the marginal external cost at the efficient level, and long-run entry/exit is restricted.", "Firms are forced to pay the subsidy back.", "This is impossible; subsidies are always inefficient."],
+                    correct: "The subsidy rate equals the marginal external cost at the efficient level, and long-run entry/exit is restricted."
+                }, {
+                    question: "Global environmental problems like ozone depletion are difficult to solve because of:",
+                    options: ["High transaction costs and free-riding incentives among nations.", "Too many available solutions.", "Complete lack of property rights regimes.", "Overwhelming public support for pollution."],
+                    correct: "High transaction costs and free-riding incentives among nations."
+                }, {
+                    question: "The \"marginal abatement cost\" (MAC) curve shows:",
+                    options: ["The total cost of eliminating all pollution.", "The additional cost of reducing pollution by one more unit.", "The damages from an additional unit of pollution.", "The optimal pollution level."],
+                    correct: "The additional cost of reducing pollution by one more unit."
+                }, {
+                    question: "In the hedonic wage model, differences in wages across jobs are used to infer the value of:",
+                    options: ["Worker productivity.", "Job-related risks, such as fatality risk (value of a statistical life).", "Education premiums.", "Unionization benefits."],
+                    correct: "Job-related risks, such as fatality risk (value of a statistical life)."
+                }, {
+                    question: "Which of the following is an example of a pure public good with global dimensions?",
+                    options: ["A local park.", "Climate stability.", "A fishery.", "A toll road."],
+                    correct: "Climate stability."
+                }, {
+                    question: "The \"polluter pays\" principle means that:",
+                    options: ["Governments should pay for pollution cleanup.", "Polluters should bear the costs of pollution control and damages.", "Taxpayers subsidize polluters.", "Victims should pay polluters to reduce emissions."],
+                    correct: "Polluters should bear the costs of pollution control and damages."
+                }, {
+                    question: "If a forest's optimal harvest age is determined by the Faustmann formula, the landowner considers:",
+                    options: ["Only the value of timber at a single rotation.", "The opportunity cost of land and the present value of an infinite series of rotations.", "Interest rate is irrelevant.", "Only non-market benefits of standing forest."],
+                    correct: "The opportunity cost of land and the present value of an infinite series of rotations."
+                }, {
+                    question: "The social discount rate for public projects may be lower than the market interest rate to reflect:",
+                    options: ["Higher risk of public projects.", "Patience of consumers.", "Ethical considerations about intergenerational equity.", "Inflation expectations."],
+                    correct: "Ethical considerations about intergenerational equity."
+                }, {
+                    question: "A deposit-refund system for beverage containers is designed to:",
+                    options: ["Tax the production of beverages.", "Internalize the disposal externalities and encourage recycling.", "Subsidize landfills.", "Increase sales."],
+                    correct: "Internalize the disposal externalities and encourage recycling."
+                }, {
+                    question: "Existence value of the Amazon rainforest means:",
+                    options: ["Benefit from tourism.", "Benefit from timber.", "Value from knowing that the forest exists and is preserved for its own sake.", "Future pharmaceutical discoveries."],
+                    correct: "Value from knowing that the forest exists and is preserved for its own sake."
+                }, {
+                    question: "According to the Hotelling rule, an unexpected discovery of a large new oil reserve would likely:",
+                    options: ["Increase the current net price.", "Lower the current net price and alter the extraction path.", "Leave the price unchanged due to cartel action.", "Make extraction unprofitable."],
+                    correct: "Lower the current net price and alter the extraction path."
+                }, {
+                    question: "The Kyoto Protocol included which market-based mechanisms?",
+                    options: ["International emissions trading, Clean Development Mechanism, Joint Implementation.", "Uniform global carbon tax.", "Technology standards for all nations.", "Ban on fossil fuels."],
+                    correct: "International emissions trading, Clean Development Mechanism, Joint Implementation."
+                }, {
+                    question: "Which of the following is a correct statement about discounting in cost-benefit analysis?",
+                    options: ["Higher discount rates favor projects with long-term benefits.", "The net present value (NPV) rule: accept projects with NPV > 0.", "Discounting is only applied to costs, not benefits.", "The internal rate of return must be less than the discount rate to accept."],
+                    correct: "The net present value (NPV) rule: accept projects with NPV > 0."
+                }, {
+                    question: "The hedonic property value method assumes that:",
+                    options: ["People do not care about environmental quality.", "Differences in property prices can be attributed to differences in environmental amenities, holding other characteristics constant.", "Environmental quality is the only factor affecting house prices.", "It cannot control for structural characteristics."],
+                    correct: "Differences in property prices can be attributed to differences in environmental amenities, holding other characteristics constant."
+                }, {
+                    question: "In the context of renewable resources, \"carrying capacity\" refers to:",
+                    options: ["The maximum harvest possible.", "The maximum population size that an ecosystem can support without degradation.", "The fishing effort level.", "The discount rate."],
+                    correct: "The maximum population size that an ecosystem can support without degradation."
+                }, {
+                    question: "The \"double dividend\" from an environmental tax reform arises when revenues are used to:",
+                    options: ["Increase government spending.", "Reduce distortionary taxes on labor or capital.", "Pay subsidies to polluters.", "Fund military expenditures."],
+                    correct: "Reduce distortionary taxes on labor or capital."
+                }, {
+                    question: "The concept of \"critical natural capital\" is associated with:",
+                    options: ["Weak sustainability.", "Strong sustainability, where certain natural assets are non-substitutable and must be preserved.", "The Hotelling rule.", "Optimal pollution."],
+                    correct: "Strong sustainability, where certain natural assets are non-substitutable and must be preserved."
+                }, {
+                    question: "A tax on emissions equal to marginal damage at the efficient level will:",
+                    options: ["Reduce emissions to zero.", "Lead firms to abate until their marginal abatement cost equals the tax rate, achieving the efficient emission level.", "Increase emissions because firms pass on the tax.", "Have no effect on emissions."],
+                    correct: "Lead firms to abate until their marginal abatement cost equals the tax rate, achieving the efficient emission level."
+                }, {
+                    question: "The \"willingness to accept\" (WTA) compensation for environmental loss is usually:",
+                    options: ["Lower than willingness to pay (WTP) due to income effects.", "Higher than WTP due to loss aversion and lack of substitutes.", "Exactly equal to WTP by definition.", "Not relevant in valuation."],
+                    correct: "Higher than WTP due to loss aversion and lack of substitutes."
+                }, {
+                    question: "\"Non-point source\" pollution refers to:",
+                    options: ["Pollution from a single factory smokestack.", "Diffuse pollution from many sources, such as agricultural runoff.", "Pollution that is easy to monitor.", "Pollution from a point like a pipe."],
+                    correct: "Diffuse pollution from many sources, such as agricultural runoff."
+                }, {
+                    question: "The rebound effect (Jevons paradox) in energy efficiency means that:",
+                    options: ["Energy efficiency always reduces energy consumption proportionally.", "Improvements in energy efficiency can lead to increased consumption, partially offsetting the energy savings.", "Energy efficiency reduces GDP.", "Efficiency gains are fully saved."],
+                    correct: "Improvements in energy efficiency can lead to increased consumption, partially offsetting the energy savings."
+                }, {
+                    question: "In the context of cost-benefit analysis, \"Kaldor-Hicks compensation criterion\" holds if:",
+                    options: ["Everyone is made better off.", "The winners could in principle compensate the losers and still be better off.", "The losers actually receive compensation.", "No one loses."],
+                    correct: "The winners could in principle compensate the losers and still be better off."
+                }, {
+                    question: "The \"value of a statistical life\" (VSL) is typically estimated using:",
+                    options: ["Contingent valuation surveys on life.", "Wage-risk tradeoffs in labor markets (hedonic wage).", "Cost of medical care.", "The present value of future earnings alone."],
+                    correct: "Wage-risk tradeoffs in labor markets (hedonic wage)."
+                }, {
+                    question: "A renewable resource is one that:",
+                    options: ["Has a fixed stock that does not regenerate.", "Can regenerate over time through biological processes if harvest doesn't exceed growth.", "Cannot be exhausted.", "Is always abundant."],
+                    correct: "Can regenerate over time through biological processes if harvest doesn't exceed growth."
+                }, {
+                    question: "Under pure rate-of-time-preference, a positive discount rate reflects:",
+                    options: ["The productivity of capital.", "The expectation of future economic growth.", "Impatience, that people prefer consumption today over tomorrow.", "Inflation."],
+                    correct: "Impatience, that people prefer consumption today over tomorrow."
+                }, {
+                    question: "Which of the following is not a non-market valuation method?",
+                    options: ["Travel cost method", "Market price method for timber", "Contingent valuation", "Hedonic pricing"],
+                    correct: "Market price method for timber"
+                }, {
+                    question: "The \"safe minimum standard\" approach to biodiversity conservation advocates:",
+                    options: ["Conserving all species regardless of cost.", "Protecting a species unless the costs of doing so are \"unacceptably\" high, given uncertainty.", "Applying standard cost-benefit analysis.", "Extinction is acceptable."],
+                    correct: "Protecting a species unless the costs of doing so are \"unacceptably\" high, given uncertainty."
+                }, {
+                    question: "In a cap-and-trade system, if the regulator sets the cap too high (lenient), the permit price will be:",
+                    options: ["Very high.", "Very low, leading to little abatement incentive.", "The same as if it were tight.", "Determined by taxes."],
+                    correct: "Very low, leading to little abatement incentive."
+                }, {
+                    question: "The concept of \"total economic value\" (TEV) of an environmental asset comprises:",
+                    options: ["Only use values.", "Use value plus non-use values (existence, bequest, option).", "Market price only.", "Replacement cost."],
+                    correct: "Use value plus non-use values (existence, bequest, option)."
+                }, {
+                    question: "The \"equimarginal principle\" in pollution control states that cost-effectiveness requires:",
+                    options: ["All firms reduce emissions by the same amount.", "The marginal abatement costs across all polluters are equalized.", "The total abatement cost is minimized ignoring distribution.", "The marginal damage equals zero."],
+                    correct: "The marginal abatement costs across all polluters are equalized."
+                }, {
+                    question: "Which discount rate concept uses the Ramsey formula?",
+                    options: ["Social discount rate derived from pure rate of time preference plus elasticity of marginal utility times growth rate of consumption.", "Market interest rate.", "Project-specific risk-adjusted rate.", "Internal rate of return."],
+                    correct: "Social discount rate derived from pure rate of time preference plus elasticity of marginal utility times growth rate of consumption."
+                }, {
+                    question: "The concept of \"natural resource curse\" suggests that:",
+                    options: ["Resource-rich countries have faster economic growth.", "Resource abundance can lead to poor economic performance, corruption, and conflict.", "Natural resources are always a blessing.", "Resource depletion is never a problem."],
+                    correct: "Resource abundance can lead to poor economic performance, corruption, and conflict."
+                }, {
+                    question: "The \"precautionary principle\" in environmental policy implies:",
+                    options: ["No action until scientific certainty of harm is established.", "Precautionary measures should be taken even if some cause-effect relationships are not fully established scientifically, especially when potential damage is severe.", "Cost-benefit analysis must be always used.", "Only economic efficiency matters."],
+                    correct: "Precautionary measures should be taken even if some cause-effect relationships are not fully established scientifically, especially when potential damage is severe."
+                }, {
+                    question: "In benefit transfer, values from a study site are applied to a policy site. This method is:",
+                    options: ["Highly accurate without adjustments.", "A cost-effective but potentially less reliable alternative to primary valuation.", "Only usable for travel cost studies.", "Always yields overestimates."],
+                    correct: "A cost-effective but potentially less reliable alternative to primary valuation."
+                }, {
+                    question: "The main reason for the failure of the Coase theorem in many environmental problems is:",
+                    options: ["Absence of property rights.", "High transaction costs and large numbers of affected parties.", "Zero interest rates.", "Perfect information."],
+                    correct: "High transaction costs and large numbers of affected parties."
+                }, {
+                    question: "A Pigouvian subsidy should be paid to:",
+                    options: ["Polluters for each unit of emission.", "Producers of goods that generate positive externalities, equal to marginal external benefit at efficient output.", "Consumers of fossil fuels.", "Government agencies."],
+                    correct: "Producers of goods that generate positive externalities, equal to marginal external benefit at efficient output."
+                }, {
+                    question: "Which international agreement set binding emission reduction targets for developed countries for 2008-2012?",
+                    options: ["Montreal Protocol", "UNFCCC", "Kyoto Protocol", "Paris Agreement"],
+                    correct: "Kyoto Protocol"
+                }, {
+                    question: "The \"social cost of carbon\" is used in regulatory impact analysis to:",
+                    options: ["Determine the optimal amount of carbon tax.", "Monetize the marginal damage of CO₂ emissions, to include in benefit-cost analysis of regulations.", "Set the price of offsets.", "Calculate the compliance cost."],
+                    correct: "Monetize the marginal damage of CO₂ emissions, to include in benefit-cost analysis of regulations."
+                }, {
+                    question: "In a fishery governed by individual transferable quotas (ITQs), the outcome tends to:",
+                    options: ["Overcapitalization and race to fish.", "Efficient harvest and elimination of the race to fish, maximizing economic rent.", "Open-access depletion.", "Complete ban on fishing."],
+                    correct: "Efficient harvest and elimination of the race to fish, maximizing economic rent."
+                }, {
+                    question: "Which of the following is not a characteristic of a public bad (e.g., air pollution)?",
+                    options: ["Non-rivalry in damages.", "Non-excludability of damages.", "Excludability through market prices.", "Often requires collective action."],
+                    correct: "Excludability through market prices."
+                }, {
+                    question: "The \"green paradox\" suggests that a future climate policy that becomes increasingly stringent over time may:",
+                    options: ["Reduce current emissions gradually.", "Accelerate current extraction of fossil fuels as owners anticipate lower future returns, increasing near-term emissions.", "Have no effect on extraction timing.", "Immediately stop all extraction."],
+                    correct: "Accelerate current extraction of fossil fuels as owners anticipate lower future returns, increasing near-term emissions."
+                }, {
+                    question: "To correct a positive externality (e.g., beekeeping benefiting orchards), the economically efficient policy is:",
+                    options: ["Tax the beekeeper.", "Provide a subsidy to the beekeeper equal to the marginal external benefit.", "Impose a quota on honey.", "Ban the activity."],
+                    correct: "Provide a subsidy to the beekeeper equal to the marginal external benefit."
+                }, {
+                    question: "The \"benefit-cost ratio\" is:",
+                    options: ["The difference between present value of benefits and costs.", "The ratio of present value of benefits to present value of costs; a ratio > 1 suggests a project is worthwhile.", "The internal rate of return.", "The payback period."],
+                    correct: "The ratio of present value of benefits to present value of costs; a ratio > 1 suggests a project is worthwhile."
+                }, {
+                    question: "Which of the following is an example of a common property resource?",
+                    options: ["A private vineyard.", "A public library.", "An ocean fishery with limited management.", "A patented medicine."],
+                    correct: "An ocean fishery with limited management."
+                }, {
+                    question: "The \"contingent ranking\" method is a variant of stated preference where respondents:",
+                    options: ["Rank alternative scenarios rather than state monetary values directly.", "Are asked for their maximum willingness to pay.", "Report their travel costs.", "Vote in a referendum."],
+                    correct: "Rank alternative scenarios rather than state monetary values directly."
+                }, {
+                    question: "The \"equity-weighted\" social discount rate approach adjusts for:",
+                    options: ["Differences in marginal utility of income between rich and poor regions.", "Risk premiums.", "Inflation.", "Market interest rates."],
+                    correct: "Differences in marginal utility of income between rich and poor regions."
+                }, {
+                    question: "A key difference between an emissions tax and a cap-and-trade system is:",
+                    options: ["Tax fixes price and leaves quantity uncertain; cap fixes quantity and leaves price uncertain, given cost uncertainty.", "Cap-and-trade provides no incentive to reduce emissions.", "Tax is a command-and-control instrument.", "They are identical in all aspects."],
+                    correct: "Tax fixes price and leaves quantity uncertain; cap fixes quantity and leaves price uncertain, given cost uncertainty."
+                }, {
+                    question: "In the field of environmental economics, \"defensive expenditures\" (averting behavior) are used to:",
+                    options: ["Measure the cost of illness.", "Estimate a lower bound for willingness to pay to avoid environmental damages.", "Directly compute non-use values.", "Set emission standards."],
+                    correct: "Estimate a lower bound for willingness to pay to avoid environmental damages."
+                }, {
+                    question: "A lake that suffers from cultural eutrophication due to phosphorus runoff is an example of:",
+                    options: ["Point source pollution.", "Non-point source pollution.", "A positive externality.", "Pure public good."],
+                    correct: "Non-point source pollution."
+                }, {
+                    question: "The \"arbitrage\" in tradable permit markets ensures that:",
+                    options: ["Permit prices diverge across firms.", "Permit prices converge to a single equilibrium price that equals marginal abatement costs.", "Firms hoard permits indefinitely.", "No trading occurs."],
+                    correct: "Permit prices converge to a single equilibrium price that equals marginal abatement costs."
+                }, {
+                    question: "The \"energy efficiency gap\" refers to the observation that:",
+                    options: ["Consumers invest in all cost-effective energy efficiency measures.", "Many cost-effective energy efficiency improvements are not adopted, implying market barriers.", "Energy intensity always falls with GDP.", "There are no barriers to energy efficiency."],
+                    correct: "Many cost-effective energy efficiency improvements are not adopted, implying market barriers."
+                }, {
+                    question: "The \"substitution problem\" in environmental valuation refers to:",
+                    options: ["The difficulty in replacing survey respondents.", "The limited availability of substitutes for environmental goods affecting willingness to pay, especially in contingent valuation.", "The replacement of market goods.", "The use of substitute prices in cost-benefit analysis."],
+                    correct: "The limited availability of substitutes for environmental goods affecting willingness to pay, especially in contingent valuation."
+                }, {
+                    question: "Under the US Clean Air Act, the market for sulfur dioxide (SO₂) allowances is an example of:",
+                    options: ["Emissions tax.", "A cap-and-trade system.", "Technology standard.", "Deposit-refund."],
+                    correct: "A cap-and-trade system."
+                }, {
+                    question: "The term \"discount rate\" in cost-benefit analysis can be interpreted as:",
+                    options: ["The rate of return on private investment.", "The social opportunity cost of capital or the rate at which society trades present for future consumption.", "The inflation rate only.", "The prime lending rate."],
+                    correct: "The social opportunity cost of capital or the rate at which society trades present for future consumption."
+                }, {
+                    question: "The value of an ecosystem service such as pollination can be estimated using the:",
+                    options: ["Production function approach, linking pollination to crop output value.", "Contingent valuation only.", "Travel cost method.", "Hedonic wage method."],
+                    correct: "Production function approach, linking pollination to crop output value."
+                }, {
+                    question: "According to the \"pollution haven hypothesis\":",
+                    options: ["Pollution-intensive industries relocate to countries with weaker environmental regulations.", "Trade liberalization always reduces pollution.", "Multinational firms use the cleanest technology everywhere.", "Developing countries have no comparative advantage in dirty industries."],
+                    correct: "Pollution-intensive industries relocate to countries with weaker environmental regulations."
+                }, {
+                    question: "The \"income elasticity of willingness to pay\" for environmental quality usually suggests that environmental quality is a:",
+                    options: ["Inferior good.", "Normal good and possibly a luxury good.", "Giffen good.", "Substitute."],
+                    correct: "Normal good and possibly a luxury good."
+                }, {
+                    question: "The \"cost of illness\" method is used to value:",
+                    options: ["Lost work days and medical costs from pollution-related diseases, providing a lower-bound estimate of damages.", "The pain and suffering from illness.", "Existence value.", "Recreational benefits."],
+                    correct: "Lost work days and medical costs from pollution-related diseases, providing a lower-bound estimate of damages."
+                }, {
+                    question: "\"Dynamic efficiency\" in resource extraction requires maximizing the present value of net benefits, which implies that:",
+                    options: ["The marginal net benefit (rent) grows at the discount rate over time (Hotelling rule for non-renewables).", "Extraction is constant.", "Price always falls.", "Resource stock is immediately exhausted."],
+                    correct: "The marginal net benefit (rent) grows at the discount rate over time (Hotelling rule for non-renewables)."
+                }, {
+                    question: "The Paris Agreement's primary goal is to:",
+                    options: ["Impose globally uniform carbon tax.", "Limit global temperature increase to well below 2°C above pre-industrial levels through nationally determined contributions.", "Ban fossil fuels by 2025.", "Create a world government."],
+                    correct: "Limit global temperature increase to well below 2°C above pre-industrial levels through nationally determined contributions."
+                }, {
+                    question: "In welfare economics, the net social benefit of an environmental project is measured as:",
+                    options: ["The change in consumer surplus plus change in producer surplus, minus costs.", "The increase in tax revenue.", "The total expenditure on the project.", "The number of jobs created."],
+                    correct: "The change in consumer surplus plus change in producer surplus, minus costs."
+                }
+            ];
+
+            // ---------- APP STATE ----------
+            let examQuestions = [];
+            let studentName = "";
+            let studentNumber = "";
+            let startTime, endTime;
+            let timerInterval;
+            let submitted = false;
+
+            // DOM elements
+            const startScreen = document.getElementById('start-screen');
+            const examContainer = document.getElementById('exam-container');
+            const resultScreen = document.getElementById('result-screen');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const questionsContainer = document.getElementById('questionsContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const startBtn = document.getElementById('startBtn');
+            const studentNameInput = document.getElementById('studentName');
+            const studentNumberInput = document.getElementById('studentNumber');
+            const receiptName = document.getElementById('receiptName');
+            const receiptNumber = document.getElementById('receiptNumber');
+            const receiptScore = document.getElementById('receiptScore');
+            const receiptDateTime = document.getElementById('receiptDateTime');
+            const receiptTimeTaken = document.getElementById('receiptTimeTaken');
+            const attemptsList = document.getElementById('attemptsList');
+            const clearScoresBtn = document.getElementById('clearScoresBtn');
+
+            // ---------- UTILS ----------
+            function shuffleArray(arr) {
+                const a = [...arr];
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function formatTime(ms) {
+                if (ms <= 0) return "00:00";
+                const totalSec = Math.floor(ms / 1000);
+                const min = Math.floor(totalSec / 60);
+                const sec = totalSec % 60;
+                return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }
+
+            function loadAttempts() {
+                const stored = localStorage.getItem('envEconExamResults');
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            function saveAttempt(attempt) {
+                const attempts = loadAttempts();
+                attempts.push(attempt);
+                localStorage.setItem('envEconExamResults', JSON.stringify(attempts));
+            }
+
+            function renderAttempts() {
+                const attempts = loadAttempts();
+                attemptsList.innerHTML = '';
+                if (attempts.length === 0) {
+                    attemptsList.innerHTML = '<li>No previous attempts saved.</li>';
+                    return;
+                }
+                attempts.reverse().forEach(a => {
+                    const li = document.createElement('li');
+                    li.textContent = `${a.name} (${a.studentNumber}) — ${a.score}/100 on ${a.dateTime} (took ${a.timeTaken})`;
+                    attemptsList.appendChild(li);
+                });
+            }
+
+            function buildExam() {
+                const shuffledQuestions = shuffleArray(questionBank);
+                const totalQuestions = 100;
+                const targetPositions = [];
+                for (let i = 0; i < totalQuestions; i++) {
+                    targetPositions.push(i % 4);
+                }
+                const shuffledTargets = shuffleArray(targetPositions);
+
+                examQuestions = [];
+                for (let i = 0; i < shuffledQuestions.length; i++) {
+                    const q = shuffledQuestions[i];
+                    const targetIdx = shuffledTargets[i];
+                    let options = shuffleArray(q.options);
+                    let currentCorrectIdx = options.indexOf(q.correct);
+                    if (currentCorrectIdx !== targetIdx) {
+                        [options[currentCorrectIdx], options[targetIdx]] = [options[targetIdx], options[currentCorrectIdx]];
+                        currentCorrectIdx = targetIdx;
+                    }
+                    examQuestions.push({
+                        questionText: q.question,
+                        options: options,
+                        correctIndex: currentCorrectIdx
+                    });
+                }
+
+                let html = '';
+                examQuestions.forEach((q, idx) => {
+                    html += `<div class="question-block">
+                        <p><strong>${idx + 1}.</strong> ${q.questionText}</p>`;
+                    q.options.forEach((opt, optIdx) => {
+                        const letter = String.fromCharCode(65 + optIdx);
+                        html += `<label>
+                            <input type="radio" name="q${idx}" value="${optIdx}"> ${letter}. ${opt}
+                        </label>`;
+                    });
+                    html += `</div>`;
+                });
+                questionsContainer.innerHTML = html;
+            }
+
+            function submitExam(auto = false) {
+                if (submitted) return;
+                submitted = true;
+                clearInterval(timerInterval);
+
+                const submissionTime = new Date();
+                const timeTakenMs = submissionTime - startTime;
+                const timeTakenStr = formatTime(timeTakenMs);
+
+                let score = 0;
+                for (let i = 0; i < examQuestions.length; i++) {
+                    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (selected && parseInt(selected.value, 10) === examQuestions[i].correctIndex) {
+                        score++;
+                    }
+                }
+
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+                submitBtn.disabled = true;
+
+                examContainer.style.display = 'none';
+                resultScreen.style.display = 'block';
+                receiptName.textContent = studentName;
+                receiptNumber.textContent = studentNumber;
+                receiptScore.textContent = score;
+                receiptDateTime.textContent = submissionTime.toLocaleString();
+                receiptTimeTaken.textContent = timeTakenStr;
+
+                saveAttempt({
+                    name: studentName,
+                    studentNumber: studentNumber,
+                    score: score,
+                    total: 100,
+                    dateTime: submissionTime.toLocaleString(),
+                    timeTaken: timeTakenStr
+                });
+                renderAttempts();
+
+                if (auto) {
+                    alert('Time is up! Your exam has been submitted automatically.');
+                }
+            }
+
+            function updateTimer() {
+                const remaining = endTime - Date.now();
+                if (remaining <= 0) {
+                    timerDisplay.textContent = "00:00";
+                    timerDisplay.classList.add('warning');
+                    submitExam(true);
+                    return;
+                }
+                timerDisplay.textContent = formatTime(remaining);
+                if (remaining < 300000) {
+                    timerDisplay.classList.add('warning');
+                } else {
+                    timerDisplay.classList.remove('warning');
+                }
+            }
+
+            function startExam() {
+                studentName = studentNameInput.value.trim();
+                studentNumber = studentNumberInput.value.trim();
+                if (!studentName || !studentNumber) {
+                    alert('Please enter both your full name and student number to start the exam.');
+                    return;
+                }
+
+                startScreen.style.display = 'none';
+                examContainer.style.display = 'block';
+                startTime = new Date();
+                endTime = startTime.getTime() + 60 * 60 * 1000;
+                updateTimer();
+                timerInterval = setInterval(updateTimer, 200);
+
+                buildExam();
+                submitted = false;
+                submitBtn.disabled = false;
+            }
+
+            // ---------- EVENT LISTENERS ----------
+            startBtn.addEventListener('click', startExam);
+            submitBtn.addEventListener('click', () => submitExam(false));
+
+            clearScoresBtn.addEventListener('click', () => {
+                if (confirm('Delete all saved scores?')) {
+                    localStorage.removeItem('envEconExamResults');
+                    renderAttempts();
+                }
+            });
+
+            window.addEventListener('DOMContentLoaded', () => {
+                renderAttempts();
+            });
+
+            window.addEventListener('beforeunload', (e) => {
+                if (!submitted && examContainer.style.display === 'block') {
+                    e.preventDefault();
+                    e.returnValue = 'You have an ongoing exam. Are you sure you want to leave?';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

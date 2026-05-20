@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Interactive Learning: VUCA · 4IR · 5IR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0f5 0%, #d9e2ec 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1a2c3e;
+        }
+
+        /* main container */
+        .module-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* header */
+        .hero {
+            background: #0f2c3d;
+            padding: 2rem 2rem 1.8rem;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #FFFFFF, #b9e2ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* tabs navigation */
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            background: #ffffffdd;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #cbdbe2;
+            padding: 0 1rem;
+            gap: 0.25rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 1rem 1.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #2c4b66;
+            border-radius: 2rem 2rem 0 0;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            background: #eef2f7;
+            color: #0f2c3d;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #0c6b7e;
+            border-bottom: 3px solid #1f8cad;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
+        }
+
+        /* panels */
+        .tab-panel {
+            display: none;
+            padding: 2rem 2rem 2.2rem;
+            background: white;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* cards and grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .concept-card {
+            background: #f8fafc;
+            border-radius: 1.8rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2edf2;
+            transition: transform 0.2s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            background: #ffffff;
+            border-color: #bfd9e5;
+        }
+
+        .card-icon {
+            font-size: 2.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .concept-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1f5e72;
+        }
+
+        .badge {
+            background: #d4eaf1;
+            color: #0a4c5e;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        /* interactive quiz section */
+        .quiz-area {
+            background: #eef3fa;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-left: 8px solid #2b95b3;
+        }
+
+        .quiz-question {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-opt {
+            background: white;
+            border: 1px solid #cbdde6;
+            border-radius: 60px;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .quiz-opt:hover {
+            background: #cbe5ef;
+            transform: scale(0.98);
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            background: #fff7e5;
+            border-left: 5px solid #ffb347;
+        }
+
+        .btn-reset-quiz {
+            background: #2c5f7a;
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            margin-top: 0.8rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* comparison table */
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fefefe;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin: 1.5rem 0;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 1rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0ecf2;
+        }
+
+        .comp-table th {
+            background: #e2f0f5;
+            color: #155f74;
+            font-weight: 700;
+        }
+
+        /* list style */
+        .styled-list {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        hr {
+            margin: 1.2rem 0;
+            border: 0;
+            height: 2px;
+            background: linear-gradient(to right, #cbe0ea, transparent);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 680px) {
+            body { padding: 1rem; }
+            .tab-btn { padding: 0.7rem 1rem; font-size: 1rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .tab-panel { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="module-container">
+    <div class="hero">
+        <h1>🌍 Navigating Tomorrow</h1>
+        <p>VUCA world · Fourth Industrial Revolution (4IR) · Fifth Industrial Revolution (5IR)</p>
+        <p style="font-size:0.85rem; margin-top:0.5rem;">📘 Offline interactive module — explore, learn, test yourself</p>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="vuca">⚡ VUCA World</button>
+        <button class="tab-btn" data-tab="ir4">🤖 4IR — Industry 4.0</button>
+        <button class="tab-btn" data-tab="ir5">🌿 5IR — Industry 5.0</button>
+        <button class="tab-btn" data-tab="compare">🔄 Compare & Future</button>
+    </div>
+
+    <!-- Panel 1: VUCA -->
+    <div id="vuca" class="tab-panel active-panel">
+        <h2>📌 What is VUCA?</h2>
+        <p>VUCA is an acronym originating from military strategy, now used to describe the turbulent, unpredictable nature of the modern world. Leaders and learners need adaptive thinking.</p>
+        <div class="grid-2">
+            <div class="concept-card"><div class="card-icon">🌪️</div><div class="badge">Volatility</div><h3>Volatility</h3><p>Rapid, unexpected change. Markets, trends, and technologies shift fast. Example: crypto fluctuations or sudden supply chain shocks.</p></div>
+            <div class="concept-card"><div class="card-icon">❓</div><div class="badge">Uncertainty</div><h3>Uncertainty</h3><p>Lack of predictability, even with data. The future feels ambiguous. Example: post-pandemic work models.</p></div>
+            <div class="concept-card"><div class="card-icon">🧩</div><div class="badge">Complexity</div><h3>Complexity</h3><p>Multiple interconnected factors. Cause & effect are not linear. Example: global trade networks & climate policies.</p></div>
+            <div class="concept-card"><div class="card-icon">🎭</div><div class="badge">Ambiguity</div><h3>Ambiguity</h3><p>Unclear realities, mixed meanings. Information is contradictory. Example: AI ethics & regulations.</p></div>
+        </div>
+        <h3>💡 Why VUCA matters for learning & work</h3>
+        <p>In a VUCA environment, traditional problem-solving fails. Agility, resilience, and continuous learning become essential. Organizations adopt "VUCA Prime" — Vision, Understanding, Clarity, Agility — to counteract.</p>
+        <div class="quiz-area" id="quizVUCA">
+            <div class="quiz-question">📝 Quick Check: Which VUCA element describes "unexpected price swings due to geopolitical events"?</div>
+            <div class="quiz-options" data-quiz="vuca">
+                <div class="quiz-opt" data-value="volatility">A) Volatility</div>
+                <div class="quiz-opt" data-value="uncertainty">B) Uncertainty</div>
+                <div class="quiz-opt" data-value="complexity">C) Complexity</div>
+                <div class="quiz-opt" data-value="ambiguity">D) Ambiguity</div>
+            </div>
+            <div class="quiz-feedback" id="vucaFeedback">✨ Click an option to test your understanding.</div>
+            <button class="btn-reset-quiz" data-reset="vuca">⟳ Reset</button>
+        </div>
+    </div>
+
+    <!-- Panel 2: 4IR -->
+    <div id="ir4" class="tab-panel">
+        <h2>🤖 Fourth Industrial Revolution (4IR)</h2>
+        <p>Coined by Klaus Schwab, 4IR builds on digital revolution (3IR) with fusion of technologies blurring physical, digital, and biological spheres. It is <strong>cyber-physical systems, AI, IoT, Big Data, and automation</strong>.</p>
+        <div class="grid-2">
+            <div class="concept-card"><div class="card-icon">🧠</div><h3>AI & Machine Learning</h3><p>Algorithms that learn from data, enabling predictive maintenance, autonomous vehicles, and intelligent assistants.</p></div>
+            <div class="concept-card"><div class="card-icon">📡</div><h3>IoT (Internet of Things)</h3><p>Billions of connected devices, smart homes, industrial sensors — real-time data ecosystems.</p></div>
+            <div class="concept-card"><div class="card-icon">🔗</div><h3>Blockchain & DLT</h3><p>Decentralized trust, secure transactions, supply chain transparency.</p></div>
+            <div class="concept-card"><div class="card-icon">🖨️</div><h3>3D Printing & Robotics</h3><p>Additive manufacturing, collaborative robots (cobots) transforming production.</p></div>
+        </div>
+        <h3>⚙️ Impact of 4IR</h3>
+        <ul class="styled-list">
+            <li>✅ Hyper-efficiency and mass customization</li>
+            <li>⚠️ Job displacement & skills gap — need for reskilling</li>
+            <li>🌐 Digital transformation of every industry (health, finance, agriculture)</li>
+            <li>🔐 New ethical challenges: privacy, algorithmic bias, surveillance</li>
+        </ul>
+        <div class="quiz-area" id="quiz4IR">
+            <div class="quiz-question">🧪 Which technology is a CORE hallmark of the Fourth Industrial Revolution?</div>
+            <div class="quiz-options" data-quiz="ir4">
+                <div class="quiz-opt" data-value="steam">A) Steam engine</div>
+                <div class="quiz-opt" data-value="cyberphysical">B) Cyber-physical systems & AI</div>
+                <div class="quiz-opt" data-value="internet">C) World Wide Web</div>
+                <div class="quiz-opt" data-value="nano">D) Nanotechnology only</div>
+            </div>
+            <div class="quiz-feedback" id="ir4Feedback">💡 Select the best answer.</div>
+            <button class="btn-reset-quiz" data-reset="ir4">⟳ Reset</button>
+        </div>
+    </div>
+
+    <!-- Panel 3: 5IR -->
+    <div id="ir5" class="tab-panel">
+        <h2>🌱 Fifth Industrial Revolution (5IR) — Industry 5.0</h2>
+        <p>While 4IR focuses on technology-driven efficiency, <strong>5IR emphasizes human-centricity, sustainability, and resilience</strong>. It complements AI with human creativity, ethical principles, and ecological harmony.</p>
+        <div class="grid-2">
+            <div class="concept-card"><div class="card-icon">🤝</div><h3>Human-Machine Collaboration</h3><p>Cobots working alongside humans, enhancing skills rather than replacing. AI assists, not dominates.</p></div>
+            <div class="concept-card"><div class="card-icon">🌍</div><h3>Circular & Green Economy</h3><p>Zero waste, regenerative design, carbon-neutral production.</p></div>
+            <div class="concept-card"><div class="card-icon">🧑⚖️</div><h3>Inclusive & Ethical AI</h3><p>Fair algorithms, data dignity, and human oversight.</p></div>
+            <div class="concept-card"><div class="card-icon">💡</div><h3>Resilience & Personalization</h3><p>Mass personalization with care for societal well-being and local adaptation.</p></div>
+        </div>
+        <h3>🌟 5IR vs 4IR: The shift</h3>
+        <p>5IR does not discard 4IR, but reorients technology toward human flourishing. Where 4IR asks "can we?", 5IR asks "should we, and for whom?" It prioritizes workforce well-being and environmental regeneration.</p>
+        <div class="quiz-area" id="quiz5IR">
+            <div class="quiz-question">🌿 What is the primary focus of the Fifth Industrial Revolution (5IR)?</div>
+            <div class="quiz-options" data-quiz="ir5">
+                <div class="quiz-opt" data-value="automation">A) Full automation without humans</div>
+                <div class="quiz-opt" data-value="humancentric">B) Human-centric, sustainable & resilient systems</div>
+                <div class="quiz-opt" data-value="speed">C) Maximizing processing speed only</div>
+                <div class="quiz-opt" data-value="cloud">D) Exclusive cloud computing dominance</div>
+            </div>
+            <div class="quiz-feedback" id="ir5Feedback">✨ Choose the best description.</div>
+            <button class="btn-reset-quiz" data-reset="ir5">⟳ Reset</button>
+        </div>
+    </div>
+
+    <!-- Panel 4: Compare & Future -->
+    <div id="compare" class="tab-panel">
+        <h2>🔄 VUCA · 4IR · 5IR — Connections & Synthesis</h2>
+        <p>Understanding the interplay: 4IR technologies accelerate VUCA conditions, while 5IR offers strategies to navigate VUCA with human resilience and sustainability.</p>
+        <table class="comp-table">
+            <thead>
+                <tr><th>Aspect</th><th>VUCA lens</th><th>4IR Response</th><th>5IR Evolution</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Change & Speed</td><td>Volatility</td><td>Real-time data, predictive AI</td><td>Agile but human-guided adaptation</td></tr>
+                <tr><td>Uncertainty</td><td>Uncertainty</td><td>Big Data analytics</td><td>Collaborative foresight + ethics</td></tr>
+                <tr><td>Complex systems</td><td>Complexity</td><td>Digital twins, IoT networks</td><td>Resilience by design, circular models</td></tr>
+                <tr><td>Ambiguity</td><td>Ambiguity</td><td>Algorithmic decisions</td><td>Transparent, explainable AI (XAI)</td></tr>
+            </tbody>
+        </table>
+        <h3>🧭 The future roadmap: from 4IR to 5IR</h3>
+        <p>Forward-thinking organizations combine 4IR technologies with 5IR principles: <strong>human in the loop, ecological limits, equitable access</strong>. In a VUCA world, the most adaptive entities blend tech prowess with deep empathy.</p>
+        <div style="background:#eef1f5; border-radius:1.5rem; padding:1.2rem; margin: 1.2rem 0;">
+            <p style="font-style:italic;">"The Fifth Industrial Revolution is about creating a symbiotic relationship between humans and machines, ensuring that technological progress serves society and planet." — European Commission, Industry 5.0 definition</p>
+        </div>
+        <div class="quiz-area">
+            <div class="quiz-question">🤔 Which statement best captures the synergy between 5IR and VUCA?</div>
+            <div class="quiz-options" data-quiz="synergy">
+                <div class="quiz-opt" data-value="ignore">A) Ignore volatility, focus only on automation</div>
+                <div class="quiz-opt" data-value="humancentric">B) Human-centric resilience and sustainability help navigate VUCA challenges</div>
+                <div class="quiz-opt" data-value="rigid">C) Use rigid plans and disregard complexity</div>
+                <div class="quiz-opt" data-value="replace">D) Replace all human decision-making</div>
+            </div>
+            <div class="quiz-feedback" id="synergyFeedback">🤝 Select an answer to reflect on the relationship.</div>
+            <button class="btn-reset-quiz" data-reset="synergy">⟳ Reset</button>
+        </div>
+        <div class="footer-note">✨ Offline interactive — all content self-contained. Keep exploring!</div>
+    </div>
+</div>
+
+<script>
+    // ---------- TAB SWITCHING ----------
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    function switchTab(tabId) {
+        panels.forEach(panel => {
+            panel.classList.remove('active-panel');
+            if(panel.id === tabId) {
+                panel.classList.add('active-panel');
+            }
+        });
+        tabBtns.forEach(btn => {
+            const btnTab = btn.getAttribute('data-tab');
+            if(btnTab === tabId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const tabId = btn.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+
+    // ---------- QUIZ LOGIC (generic, works for all embedded quizzes) ----------
+    // each quiz container has .quiz-options with data-quiz and .quiz-feedback div id accordingly.
+    // we store correct answers mapping.
+    const answerKey = {
+        vuca: 'volatility',          // volatility
+        ir4: 'cyberphysical',       // cyber-physical systems
+        ir5: 'humancentric',        // human-centric
+        synergy: 'humancentric'     // human-centric resilience (the second option)
+    };
+
+    // feedback messages
+    const feedbackMessages = {
+        vuca: {
+            correct: "✅ Perfect! Volatility describes rapid, unpredictable change — exactly like price swings from geopolitical events.",
+            wrong: "❌ Not quite. The correct answer is Volatility. Sudden, sharp changes in market conditions are classic volatility."
+        },
+        ir4: {
+            correct: "🎯 Correct! Cyber-physical systems, AI, and IoT define 4IR. While the internet (3IR) enabled it, 4IR fuses physical and digital.",
+            wrong: "⚠️ That's not the hallmark. The Fourth Industrial Revolution is characterized by cyber-physical systems, AI, and Big Data integration."
+        },
+        ir5: {
+            correct: "🌿 Yes! 5IR places humans, sustainability, and resilience at the core, moving beyond pure automation.",
+            wrong: "🌱 Not this time. Industry 5.0 emphasizes human-centric collaboration, circular economy, and ethical tech."
+        },
+        synergy: {
+            correct: "🌟 Exactly! 5IR's focus on human-centric resilience, sustainability, and collaboration directly helps navigate VUCA's volatility and complexity.",
+            wrong: "🤔 Reconsider. The best synergy is that human-centric resilience (5IR) helps manage VUCA conditions, rather than ignoring them."
+        }
+    };
+
+    // function to apply quiz logic to a specific quiz container
+    function setupQuiz(quizContainer, quizId, feedbackId, resetBtnId) {
+        const optionsDiv = quizContainer.querySelector('.quiz-options');
+        const feedbackDiv = document.getElementById(feedbackId);
+        if(!optionsDiv || !feedbackDiv) return;
+
+        const options = optionsDiv.querySelectorAll('.quiz-opt');
+        const resetBtn = quizContainer.querySelector('.btn-reset-quiz');
+        
+        // check answer function
+        function checkAnswer(selectedValue) {
+            const correctVal = answerKey[quizId];
+            const isCorrect = (selectedValue === correctVal);
+            if(isCorrect) {
+                feedbackDiv.innerHTML = feedbackMessages[quizId]?.correct || "✅ Correct! Great understanding.";
+                feedbackDiv.style.background = "#e0f7e8";
+                feedbackDiv.style.borderLeftColor = "#2c9c5c";
+            } else {
+                feedbackDiv.innerHTML = feedbackMessages[quizId]?.wrong || "❌ Incorrect. Review the content and try again!";
+                feedbackDiv.style.background = "#ffe6e5";
+                feedbackDiv.style.borderLeftColor = "#d9534f";
+            }
+            // disable further clicks? but allow reset to re-enable. For UX: after answer, we can still re-answer but reset can clear.
+            // For better experience: disable options? not necessary; user can change mind; but we re-apply on any new click.
+        }
+
+        // attach event to each option
+        options.forEach(opt => {
+            opt.removeEventListener('click', opt._listener);
+            const handler = (e) => {
+                e.stopPropagation();
+                const value = opt.getAttribute('data-value');
+                if(value) checkAnswer(value);
+            };
+            opt.addEventListener('click', handler);
+            opt._listener = handler;
+        });
+
+        // reset logic: clear feedback and reset background style
+        if(resetBtn) {
+            resetBtn.removeEventListener('click', resetBtn._resetHandler);
+            const resetHandler = () => {
+                feedbackDiv.innerHTML = "✨ Click an option to test your understanding.";
+                feedbackDiv.style.background = "#fff7e5";
+                feedbackDiv.style.borderLeftColor = "#ffb347";
+                // also reset any styling
+            };
+            resetBtn.addEventListener('click', resetHandler);
+            resetBtn._resetHandler = resetHandler;
+        }
+    }
+
+    // initialize all quizzes
+    const vucaPanel = document.getElementById('vuca');
+    const ir4Panel = document.getElementById('ir4');
+    const ir5Panel = document.getElementById('ir5');
+    const comparePanel = document.getElementById('compare');
+    
+    if(vucaPanel) {
+        const quizDivV = vucaPanel.querySelector('#quizVUCA');
+        if(quizDivV) setupQuiz(quizDivV, 'vuca', 'vucaFeedback', null);
+    }
+    if(ir4Panel) {
+        const quizDiv4 = ir4Panel.querySelector('#quiz4IR');
+        if(quizDiv4) setupQuiz(quizDiv4, 'ir4', 'ir4Feedback', null);
+    }
+    if(ir5Panel) {
+        const quizDiv5 = ir5Panel.querySelector('#quiz5IR');
+        if(quizDiv5) setupQuiz(quizDiv5, 'ir5', 'ir5Feedback', null);
+    }
+    if(comparePanel) {
+        const synergyQuiz = comparePanel.querySelector('.quiz-area');
+        if(synergyQuiz) setupQuiz(synergyQuiz, 'synergy', 'synergyFeedback', null);
+    }
+
+    // additional: fix any reset buttons that we missed (they are already covered by setupQuiz's reset handler)
+    // but to ensure all reset buttons work with correct quiz context we manually attach if needed.
+    // also we need to attach resets manually for existing because we passed null originally, but we included reset logic inside setupQuiz
+    // Actually setupQuiz uses resetBtn from quizContainer.querySelector('.btn-reset-quiz') and attaches event, all good.
+    // However for synergy quiz inside compare, we already targeted that div. Works.
+    
+    // Extra: ensure that if there are multiple reset buttons, each resets its own feedback.
+    document.querySelectorAll('.btn-reset-quiz').forEach(btn => {
+        // if for some reason event not attached (double safe)
+        if(!btn.hasAttribute('data-listener-attached')) {
+            const parentQuiz = btn.closest('.quiz-area');
+            if(parentQuiz) {
+                const feedbackDiv = parentQuiz.querySelector('.quiz-feedback');
+                if(feedbackDiv) {
+                    const newHandler = () => {
+                        feedbackDiv.innerHTML = "✨ Click an option to test your understanding.";
+                        feedbackDiv.style.background = "#fff7e5";
+                        feedbackDiv.style.borderLeftColor = "#ffb347";
+                    };
+                    btn.removeEventListener('click', btn._genericReset);
+                    btn.addEventListener('click', newHandler);
+                    btn._genericReset = newHandler;
+                    btn.setAttribute('data-listener-attached', 'true');
+                }
+            }
+        }
+    });
+
+    // Minor: preload correct styling for all interactive parts
+    console.log("Interactive VUCA/4IR/5IR module ready — offline capable");
+</script>
+</body>
+</html>

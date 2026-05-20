@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>ENS109 Midterm Exam • Interactive Practice</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #eef2f7;
+      font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+      padding: 20px 16px 50px;
+      color: #1e2a3e;
+    }
+
+    /* main card container */
+    .exam-container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* header section */
+    .exam-header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      border-radius: 32px;
+      padding: 24px 20px;
+      margin-bottom: 24px;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .exam-header h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .exam-header .sub {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* progress card */
+    .progress-panel {
+      background: white;
+      border-radius: 28px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .score-box {
+      background: #f0f4fa;
+      padding: 8px 18px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    .score-box span {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e3c72;
+    }
+    .reset-btn {
+      background: none;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2c3e66;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .reset-btn:active {
+      background: #eef2ff;
+      transform: scale(0.97);
+    }
+
+    /* questions list */
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* individual question card */
+    .question-card {
+      background: white;
+      border-radius: 32px;
+      padding: 20px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+      transition: all 0.15s;
+      border: 1px solid #e9edf2;
+    }
+    .q-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eef2f8;
+    }
+    .q-num {
+      background: #eef2ff;
+      color: #1e3c72;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
+    .q-text {
+      font-weight: 650;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .options {
+      margin: 16px 0 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #f9fafc;
+      padding: 12px 16px;
+      border-radius: 60px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.1s;
+      cursor: pointer;
+    }
+    .option.selected {
+      background: #eef4ff;
+      border-color: #2a5298;
+      box-shadow: 0 2px 6px rgba(42,82,152,0.1);
+    }
+    .option input {
+      width: 22px;
+      height: 22px;
+      accent-color: #2a5298;
+      cursor: pointer;
+      margin: 0;
+    }
+    .option label {
+      flex: 1;
+      font-size: 0.98rem;
+      line-height: 1.35;
+      font-weight: 450;
+      color: #1f2a44;
+      cursor: pointer;
+    }
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 24px;
+      font-size: 0.9rem;
+      background: #f8fafc;
+      border-left: 5px solid;
+      transition: 0.1s;
+    }
+    .feedback.correct {
+      background: #e6f7ec;
+      border-left-color: #2b9348;
+      color: #1e6f3f;
+    }
+    .feedback.incorrect {
+      background: #ffeae9;
+      border-left-color: #d64045;
+      color: #a23d32;
+    }
+    .feedback.neutral {
+      background: #f1f5f9;
+      border-left-color: #94a3b8;
+      color: #334155;
+    }
+    .explanation {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .small-note {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-top: 6px;
+    }
+
+    /* submit footer */
+    .submit-area {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+    }
+    .submit-final {
+      background: #2a5298;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      width: 100%;
+      max-width: 280px;
+      box-shadow: 0 8px 18px rgba(42,82,152,0.3);
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .submit-final:active {
+      transform: scale(0.97);
+      background: #1e3c72;
+    }
+
+    /* result modal style (light) */
+    .result-toast {
+      background: white;
+      border-radius: 36px;
+      padding: 20px 24px;
+      margin-top: 28px;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      border: 1px solid #eef2ff;
+    }
+    .result-toast h3 {
+      font-size: 1.6rem;
+      color: #1e3c72;
+    }
+    .result-score {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 8px 0;
+    }
+    hr {
+      margin: 16px 0;
+      border: none;
+      height: 1px;
+      background: #e2edf7;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.7rem;
+      color: #5e6f8d;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px 12px 40px;
+      }
+      .question-card {
+        padding: 16px;
+      }
+      .option {
+        padding: 10px 14px;
+      }
+      .q-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="exam-container">
+  <div class="exam-header">
+    <h1>📘 ENS109 Midterm Exam</h1>
+    <div class="sub">
+      <span>🌱 Environmental Science · Core Concepts</span>
+      <span class="badge">📱 offline interactive</span>
+    </div>
+    <div style="margin-top: 12px; font-size:0.85rem;">10 questions · Choose best answer · Auto-check per question</div>
+  </div>
+
+  <div class="progress-panel">
+    <div class="score-box">🎯 Score: <span id="liveScore">0</span> / <span id="totalQuestions">10</span></div>
+    <button class="reset-btn" id="resetAllBtn">⟳ Reset all answers</button>
+  </div>
+
+  <div id="questionsContainer" class="questions-list"></div>
+
+  <div class="submit-area">
+    <button class="submit-final" id="summaryBtn">📋 Show final summary</button>
+  </div>
+  <div id="summaryMessage"></div>
+  <footer>ENS109 practice exam — each selection updates your score instantly. Review explanations.</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // ENS109 MIDTERM EXAM BANK (realistic environmental science)
+  // each object: id, text, options array, correct (0-indexed), explanation
+  // --------------------------------------------------------------
+  const examData = [
+    {
+      id: 1,
+      text: "Which of the following best defines an ecological footprint?",
+      options: [
+        "The total carbon emissions of a single country",
+        "The amount of biologically productive land and water needed to support a population",
+        "The measurement of air pollutants in urban areas",
+        "The total number of species in an ecosystem"
+      ],
+      correct: 1,
+      explanation: "Ecological footprint measures human demand on nature, representing the area required to produce resources and absorb waste."
+    },
+    {
+      id: 2,
+      text: "What is the primary greenhouse gas emitted by human activities that drives climate change?",
+      options: [
+        "Methane (CH₄)",
+        "Nitrous oxide (N₂O)",
+        "Carbon dioxide (CO₂)",
+        "Chlorofluorocarbons (CFCs)"
+      ],
+      correct: 2,
+      explanation: "Carbon dioxide from fossil fuel combustion and deforestation is the most abundant long-lived greenhouse gas from human activities."
+    },
+    {
+      id: 3,
+      text: "Which biome is characterized by permafrost, very low temperatures, and minimal vegetation?",
+      options: [
+        "Taiga",
+        "Tundra",
+        "Temperate deciduous forest",
+        "Savanna"
+      ],
+      correct: 1,
+      explanation: "Tundra has permanently frozen subsoil (permafrost), harsh cold, and supports mosses, lichens, and dwarf shrubs."
+    },
+    {
+      id: 4,
+      text: "What is the process by which nitrogen gas from the atmosphere is converted into ammonia in soil?",
+      options: [
+        "Denitrification",
+        "Nitrification",
+        "Nitrogen fixation",
+        "Ammonification"
+      ],
+      correct: 2,
+      explanation: "Nitrogen fixation (by bacteria or lightning) converts inert N₂ into NH₃, making it available to plants."
+    },
+    {
+      id: 5,
+      text: "Which of the following is an example of a negative feedback loop in Earth's climate system?",
+      options: [
+        "Ice-albedo feedback (melting ice reduces reflectivity)",
+        "Increased CO₂ leads to more plant growth, which absorbs CO₂",
+        "Permafrost thaw releases methane, accelerating warming",
+        "Warmer oceans release dissolved CO₂"
+      ],
+      correct: 1,
+      explanation: "Increased CO₂ enhances plant growth (CO₂ fertilization) which can absorb more carbon, dampening warming — a negative feedback."
+    },
+    {
+      id: 6,
+      text: "What is the primary source of energy that drives the hydrologic (water) cycle?",
+      options: [
+        "Geothermal heat",
+        "Tidal forces",
+        "Solar radiation",
+        "Gravitational pull of the moon"
+      ],
+      correct: 2,
+      explanation: "Solar energy evaporates water from oceans and land, driving circulation and precipitation."
+    },
+    {
+      id: 7,
+      text: "Which layer of the atmosphere contains the ozone layer that absorbs most UV radiation?",
+      options: [
+        "Troposphere",
+        "Mesosphere",
+        "Thermosphere",
+        "Stratosphere"
+      ],
+      correct: 3,
+      explanation: "The stratosphere houses the ozone layer (15–35 km altitude) which protects life from harmful UV-B."
+    },
+    {
+      id: 8,
+      text: "In an ecosystem, organisms that break down dead organic matter and recycle nutrients are called:",
+      options: [
+        "Producers",
+        "Consumers",
+        "Decomposers",
+        "Detritivores (both detritivores and decomposers)"
+      ],
+      correct: 2,
+      explanation: "Decomposers like bacteria and fungi break down dead material, releasing inorganic nutrients back into the ecosystem."
+    },
+    {
+      id: 9,
+      text: "Which of the following is a non-renewable resource?",
+      options: [
+        "Solar energy",
+        "Timber from sustainably managed forests",
+        "Coal",
+        "Wind power"
+      ],
+      correct: 2,
+      explanation: "Coal forms over millions of years and cannot be replenished on human timescales → non-renewable."
+    },
+    {
+      id: 10,
+      text: "What is the main cause of biodiversity loss worldwide?",
+      options: [
+        "Invasive species",
+        "Pollution",
+        "Climate change",
+        "Habitat destruction and fragmentation"
+      ],
+      correct: 3,
+      explanation: "Habitat loss due to agriculture, urbanization, and deforestation is the leading driver of species extinction."
+    }
+  ];
+
+  const TOTAL_QS = examData.length;
+  document.getElementById("totalQuestions").innerText = TOTAL_QS;
+
+  // ----- state management: store selected answers (index of option, -1 = no answer) -----
+  let userSelections = new Array(TOTAL_QS).fill(-1);
+  // each answer correctness: true/false (reactive)
+  let answerStatus = new Array(TOTAL_QS).fill(false);
+
+  // helper: recalc score and update display
+  function updateScoreAndUI() {
+    let correctCount = 0;
+    for (let i = 0; i < TOTAL_QS; i++) {
+      if (userSelections[i] !== -1 && userSelections[i] === examData[i].correct) {
+        answerStatus[i] = true;
+        correctCount++;
+      } else {
+        answerStatus[i] = false;
+      }
+    }
+    document.getElementById("liveScore").innerText = correctCount;
+    // also refresh each card's feedback display and selected styling without full re-render (efficient)
+    for (let i = 0; i < TOTAL_QS; i++) {
+      updateSingleCardUI(i);
+    }
+    return correctCount;
+  }
+
+  // update UI for a specific question card (options highlight + feedback)
+  function updateSingleCardUI(qIdx) {
+    const card = document.getElementById(`card-${qIdx}`);
+    if (!card) return;
+    const selectedVal = userSelections[qIdx];
+    const question = examData[qIdx];
+    const correctIdx = question.correct;
+
+    // update option radio checked state & parent highlight
+    for (let optIdx = 0; optIdx < question.options.length; optIdx++) {
+      const radio = document.getElementById(`q${qIdx}_opt${optIdx}`);
+      if (radio) {
+        radio.checked = (selectedVal === optIdx);
+      }
+      const optionDiv = document.getElementById(`optDiv-${qIdx}-${optIdx}`);
+      if (optionDiv) {
+        if (selectedVal === optIdx) {
+          optionDiv.classList.add("selected");
+        } else {
+          optionDiv.classList.remove("selected");
+        }
+      }
+    }
+
+    // update feedback message
+    const feedbackDiv = document.getElementById(`feedback-${qIdx}`);
+    if (feedbackDiv) {
+      if (selectedVal === -1) {
+        feedbackDiv.innerHTML = `<div class="explanation">📌 No answer selected yet</div><div class="small-note">Choose an option to check your knowledge.</div>`;
+        feedbackDiv.className = "feedback neutral";
+      } else {
+        const isCorrect = (selectedVal === correctIdx);
+        const correctLetter = String.fromCharCode(65 + correctIdx); // A, B, C, D
+        const correctAnswerText = question.options[correctIdx];
+        if (isCorrect) {
+          feedbackDiv.innerHTML = `<div class="explanation">✅ Correct!</div><div>${question.explanation}</div>`;
+          feedbackDiv.className = "feedback correct";
+        } else {
+          feedbackDiv.innerHTML = `<div class="explanation">❌ Incorrect</div><div>${question.explanation}<br><span style="font-weight:500;">✔ Correct answer: ${correctLetter}. ${correctAnswerText}</span></div>`;
+          feedbackDiv.className = "feedback incorrect";
+        }
+      }
+    }
+  }
+
+  // event handler when a radio is clicked
+  function onOptionSelect(qIdx, optIdx) {
+    // update selection state
+    userSelections[qIdx] = optIdx;
+    // recalc overall score & refresh UI
+    updateScoreAndUI();
+    // optional: store to localStorage for persistence (not required but nice)
+    saveToLocalStorage();
+  }
+
+  // reset everything
+  function resetAllAnswers() {
+    userSelections = new Array(TOTAL_QS).fill(-1);
+    answerStatus = new Array(TOTAL_QS).fill(false);
+    // re-render all cards fully or just update UI per card
+    for (let i = 0; i < TOTAL_QS; i++) {
+      updateSingleCardUI(i);
+    }
+    updateScoreAndUI(); // recalc score (zero)
+    const summaryDiv = document.getElementById("summaryMessage");
+    if (summaryDiv) summaryDiv.innerHTML = "";
+    saveToLocalStorage();
+  }
+
+  // persistent storage: save selections to localStorage (optional but improves offline experience)
+  function saveToLocalStorage() {
+    try {
+      localStorage.setItem("ens109_selections", JSON.stringify(userSelections));
+    } catch(e) {}
+  }
+
+  function loadFromLocalStorage() {
+    try {
+      const saved = localStorage.getItem("ens109_selections");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === TOTAL_QS) {
+          userSelections = parsed;
+          for (let i = 0; i < TOTAL_QS; i++) {
+            if (userSelections[i] !== undefined && (userSelections[i] < -1 || userSelections[i] >= examData[i].options.length)) {
+              userSelections[i] = -1;
+            }
+          }
+          updateScoreAndUI();
+        }
+      }
+    } catch(e) {}
+  }
+
+  // generate full exam HTML dynamically
+  function buildExamHTML() {
+    const container = document.getElementById("questionsContainer");
+    let html = "";
+    for (let i = 0; i < examData.length; i++) {
+      const q = examData[i];
+      const qNumber = i+1;
+      const optionsHtml = q.options.map((opt, optIdx) => {
+        const optLetter = String.fromCharCode(65 + optIdx); // A, B, C, D
+        return `
+          <div class="option" id="optDiv-${i}-${optIdx}" data-qidx="${i}" data-optidx="${optIdx}">
+            <input type="radio" name="q${i}" id="q${i}_opt${optIdx}" value="${optIdx}">
+            <label for="q${i}_opt${optIdx}"><strong>${optLetter}.</strong> ${escapeHtml(opt)}</label>
+          </div>
+        `;
+      }).join('');
+
+      html += `
+        <div class="question-card" id="card-${i}">
+          <div class="q-title">
+            <div class="q-num">Question ${qNumber}</div>
+            <div class="q-text">${escapeHtml(q.text)}</div>
+          </div>
+          <div class="options" id="options-${i}">
+            ${optionsHtml}
+          </div>
+          <div class="feedback neutral" id="feedback-${i}">
+            <div class="explanation">📌 No answer selected yet</div>
+            <div class="small-note">Choose an option to check your knowledge.</div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+
+    // attach event listeners dynamically after DOM insertion
+    for (let i = 0; i < examData.length; i++) {
+      for (let optIdx = 0; optIdx < examData[i].options.length; optIdx++) {
+        const radio = document.getElementById(`q${i}_opt${optIdx}`);
+        if (radio) {
+          radio.addEventListener('change', (function(qIdx, oIdx) {
+            return function(e) {
+              if (e.target.checked) {
+                onOptionSelect(qIdx, oIdx);
+              }
+            };
+          })(i, optIdx));
+        }
+        // also make entire div clickable for better touch
+        const optionDiv = document.getElementById(`optDiv-${i}-${optIdx}`);
+        if (optionDiv) {
+          optionDiv.addEventListener('click', (function(qIdx, oIdx) {
+            return function(ev) {
+              // avoid double trigger if label/radio inside
+              const radioEl = document.getElementById(`q${qIdx}_opt${oIdx}`);
+              if (radioEl && !radioEl.checked) {
+                radioEl.checked = true;
+                // trigger change event manually
+                const changeEvent = new Event('change', { bubbles: true });
+                radioEl.dispatchEvent(changeEvent);
+              }
+            };
+          })(i, optIdx));
+        }
+      }
+    }
+
+    // after building, load previous selections from localStorage and apply
+    if (userSelections.some(v => v !== -1)) {
+      for (let i = 0; i < TOTAL_QS; i++) {
+        if (userSelections[i] !== -1) {
+          const radioToCheck = document.getElementById(`q${i}_opt${userSelections[i]}`);
+          if (radioToCheck) radioToCheck.checked = true;
+        }
+        updateSingleCardUI(i);
+      }
+      updateScoreAndUI();
+    } else {
+      // ensure fresh neutral state
+      for (let i = 0; i < TOTAL_QS; i++) updateSingleCardUI(i);
+      updateScoreAndUI();
+    }
+  }
+
+  // simple XSS escape
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // final summary modal / inline report
+  function showFinalSummary() {
+    let answeredCount = 0;
+    let correctCount = 0;
+    const details = [];
+    for (let i = 0; i < TOTAL_QS; i++) {
+      const selected = userSelections[i];
+      const isCorrect = (selected !== -1 && selected === examData[i].correct);
+      if (selected !== -1) answeredCount++;
+      if (isCorrect) correctCount++;
+      const statusIcon = selected === -1 ? "⭕ Unanswered" : (isCorrect ? "✅ Correct" : "❌ Wrong");
+      const userAnswerLetter = selected !== -1 ? String.fromCharCode(65 + selected) : "—";
+      const correctLetter = String.fromCharCode(65 + examData[i].correct);
+      details.push(`
+        <div style="margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #eef2f8;">
+          <strong>Q${i+1}:</strong> ${examData[i].text.substring(0, 80)}${examData[i].text.length>80?'…':''}<br>
+          <span style="font-size:0.85rem;">Your choice: ${userAnswerLetter} · ${statusIcon}  (Correct: ${correctLetter})</span>
+          <div style="font-size:0.75rem; color:#4a5b7a;">💡 ${examData[i].explanation.substring(0, 100)}</div>
+        </div>
+      `);
+    }
+    const percentage = Math.round((correctCount / TOTAL_QS) * 100);
+    const summaryHtml = `
+      <div class="result-toast">
+        <h3>📊 Midterm Summary</h3>
+        <div class="result-score">${correctCount} / ${TOTAL_QS} &nbsp; (${percentage}%)</div>
+        <p>✅ Answered: ${answeredCount} of ${TOTAL_QS} questions</p>
+        <p style="font-weight:500;">Review your performance below:</p>
+        <hr>
+        <div style="max-height: 340px; overflow-y: auto; text-align: left; margin-top: 8px;">
+          ${details.join('')}
+        </div>
+        <button id="closeSummaryLocal" style="margin-top: 16px; background:#eef2ff; border:none; padding:8px 20px; border-radius:60px; font-weight:500;">Close</button>
+      </div>
+    `;
+    const summaryDiv = document.getElementById("summaryMessage");
+    summaryDiv.innerHTML = summaryHtml;
+    const closeBtn = document.getElementById("closeSummaryLocal");
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        summaryDiv.innerHTML = "";
+      });
+    }
+    // auto scroll to summary
+    summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // initial render and event bind for reset + summary
+  window.addEventListener('DOMContentLoaded', () => {
+    loadFromLocalStorage();   // loads userSelections if any
+    buildExamHTML();          // renders with current userSelections state
+    const resetBtn = document.getElementById("resetAllBtn");
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resetAllAnswers();
+        const summaryDiv = document.getElementById("summaryMessage");
+        if (summaryDiv) summaryDiv.innerHTML = "";
+      });
+    }
+    const summaryButton = document.getElementById("summaryBtn");
+    if (summaryButton) {
+      summaryButton.addEventListener('click', showFinalSummary);
+    }
+  });
+</script>
+</body>
+</html>

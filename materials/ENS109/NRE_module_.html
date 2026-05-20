@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Interactive Module: Natural Resource Economics | Environmental Economics</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #eef4ed;
+            margin: 0;
+            padding: 20px;
+            color: #1a2e1f;
+        }
+
+        .module-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* header */
+        .module-header {
+            background: linear-gradient(135deg, #1b4d1f, #2c6e2f);
+            color: white;
+            padding: 1.8rem 2rem;
+        }
+
+        .module-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.9rem;
+            letter-spacing: -0.3px;
+        }
+
+        .module-header p {
+            margin: 0;
+            opacity: 0.85;
+            font-size: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ffcd3c;
+            color: #1e3a1e;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 0.8rem;
+        }
+
+        /* two column layout */
+        .content-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .theory-panel {
+            flex: 1.2;
+            background: #fefef7;
+            padding: 1.8rem 2rem;
+            border-right: 1px solid #dde6d5;
+        }
+
+        .interactive-panel {
+            flex: 1;
+            background: #ffffff;
+            padding: 1.8rem 2rem;
+        }
+
+        /* typography */
+        h2 {
+            font-size: 1.5rem;
+            border-left: 6px solid #2c6e2f;
+            padding-left: 1rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #1c481f;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.6rem 0;
+            color: #2a5e2a;
+        }
+
+        .concept-box {
+            background: #f0f7ea;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            margin: 1.2rem 0;
+            border-left: 4px solid #3b8c3b;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #e9ece5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* interactive card */
+        .sim-card {
+            background: #fafbf8;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #dde6d5;
+        }
+
+        .slider-group {
+            margin: 1rem 0;
+        }
+
+        .slider-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 0.5rem 0;
+            accent-color: #2e7d32;
+        }
+
+        .value-display {
+            font-family: monospace;
+            background: #eef2e9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background: #2c6e2f;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #1d5620;
+            transform: scale(0.97);
+        }
+
+        .result-box {
+            background: #e9f0e3;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .hotelling-chart {
+            background: #fef9e6;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        canvas {
+            max-width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            margin-top: 0.5rem;
+        }
+
+        .footnote {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #5c6e53;
+            border-top: 1px solid #dde6d5;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 800px) {
+            .content-grid {
+                flex-direction: column;
+            }
+            .theory-panel {
+                border-right: none;
+                border-bottom: 1px solid #dde6d5;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="module-container">
+    <div class="module-header">
+        <h1>🌿 Natural Resource Economics</h1>
+        <p>Optimal extraction | Hotelling's rule | Renewable vs Non‑renewable | Discounting future</p>
+        <div class="badge">📘 Offline Interactive Module — Environmental Economics</div>
+    </div>
+
+    <div class="content-grid">
+        <!-- LEFT PANEL: Theory & Concepts -->
+        <div class="theory-panel">
+            <h2>📖 Core concepts</h2>
+            <p><strong>Natural resource economics</strong> studies how scarce environmental resources are allocated over time. Key trade-off: <strong>extract today vs. preserve for future</strong>.</p>
+
+            <div class="concept-box">
+                <strong>🏭 Hotelling’s Rule (1931)</strong><br>
+                For a non‑renewable resource, the price (or net price) must rise at the rate of interest (discount rate) to ensure efficient intertemporal allocation.<br>
+                <span class="formula">Pₜ = P₀ · e^(r·t)</span> &nbsp; or &nbsp; <span class="formula">(Pₜ₊₁ - Pₜ)/Pₜ = r</span><br>
+                Higher discount rate → faster extraction today.
+            </div>
+
+            <div class="concept-box">
+                <strong>🌲 Renewable vs Non‑renewable</strong><br>
+                • <strong>Renewable:</strong> Fish, forests — can regenerate if harvest ≤ growth rate (Maximum Sustainable Yield).<br>
+                • <strong>Non‑renewable:</strong> Oil, minerals — fixed stock; depletion implies scarcity rent.
+            </div>
+
+            <div class="concept-box">
+                <strong>💰 Discounting & Future Value</strong><br>
+                Future benefits are discounted: <span class="formula">PV = FutureValue / (1+r)^t</span>.<br>
+                High discount rates favor immediate extraction, low rates favor conservation.
+            </div>
+
+            <h3>📊 Module interactives</h3>
+            <ul style="line-height: 1.5;">
+                <li><strong>Hotelling simulator:</strong> Adjust discount rate & initial price — see price path and scarcity rent.</li>
+                <li><strong>Fishery harvest model:</strong> Choose harvest rate and observe stock dynamics & sustainable yield.</li>
+                <li><strong>Resource depletion clock:</strong> Track years until exhaustion under current extraction.</li>
+            </ul>
+            <p style="font-size: 0.85rem; margin-top: 0.8rem;">⚡ All simulations update live — no internet needed. Explore trade-offs!</p>
+        </div>
+
+        <!-- RIGHT PANEL: INTERACTIVE TOOLS -->
+        <div class="interactive-panel">
+            <!-- Sim 1: Hotelling Price Path -->
+            <div class="sim-card">
+                <h3>📈 Hotelling Rule Simulator (Non‑renewable)</h3>
+                <div class="slider-group">
+                    <label>📉 Discount rate (r): <span id="discountRateVal" class="value-display">5.0%</span></label>
+                    <input type="range" id="discountSlider" min="0" max="15" step="0.5" value="5">
+                </div>
+                <div class="slider-group">
+                    <label>💰 Initial net price (P₀): $<span id="initPriceVal" class="value-display">50.0</span></label>
+                    <input type="range" id="priceSlider" min="10" max="150" step="2" value="50">
+                </div>
+                <div class="hotelling-chart">
+                    <canvas id="hotellingCanvas" width="400" height="180" style="width:100%; height:auto; max-width:400px; background:#fff"></canvas>
+                    <div class="result-box" id="hotellingInsight">
+                        <strong>📌 Interpretation:</strong> At r = 5.0%, price after 10 years = $82.4 → 65% increase.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sim 2: Renewable resource (Fishery / Forest) -->
+            <div class="sim-card">
+                <h3>🐟 Renewable Resource: Fishery Model</h3>
+                <p><small>Logistic growth: <strong>dS/dt = rS (1 - S/K) - H</strong>. Maximum Sustainable Yield (MSY) at K/2.</small></p>
+                <div class="slider-group">
+                    <label>🌱 Intrinsic growth rate (r): <span id="growthRateVal" class="value-display">0.30</span></label>
+                    <input type="range" id="growthRateSlider" min="0.1" max="0.8" step="0.02" value="0.3">
+                </div>
+                <div class="slider-group">
+                    <label>📏 Carrying capacity (K): <span id="carryCapVal" class="value-display">1000</span></label>
+                    <input type="range" id="carrySlider" min="400" max="2000" step="20" value="1000">
+                </div>
+                <div class="slider-group">
+                    <label>🎣 Harvest rate (H) [fish/year]: <span id="harvestVal" class="value-display">120</span></label>
+                    <input type="range" id="harvestSlider" min="0" max="400" step="5" value="120">
+                </div>
+                <div class="slider-group">
+                    <label>🏞️ Current stock (S₀): <span id="stockVal" class="value-display">600</span></label>
+                    <input type="range" id="stockSlider" min="50" max="1900" step="10" value="600">
+                </div>
+                <div id="fisheryResult" class="result-box">
+                    <strong>📊 Stock dynamics:</strong> Sustainable? Net growth = <span id="netGrowth">0</span> fish/year. 
+                    <span id="sustainableMsg">⚠️ Overfishing: stock declining</span>
+                </div>
+                <canvas id="fisheryCanvas" width="400" height="170" style="width:100%; height:auto; max-width:400px; background:#fff"></canvas>
+                <div style="font-size: 0.75rem; margin-top: 6px;">*Green dot: current stock vs growth curve. MSY at K/2 = <span id="msyPoint">500</span></div>
+            </div>
+
+            <!-- Sim 3: Depletion clock & extraction scenario -->
+            <div class="sim-card">
+                <h3>⏳ Resource Depletion Clock (Non‑renewable)</h3>
+                <div class="slider-group">
+                    <label>📦 Initial reserve (units): <span id="reserveVal" class="value-display">5000</span></label>
+                    <input type="range" id="reserveSlider" min="500" max="20000" step="100" value="5000">
+                </div>
+                <div class="slider-group">
+                    <label>⛏️ Annual extraction rate: <span id="extractVal" class="value-display">400</span> units/year</label>
+                    <input type="range" id="extractSlider" min="50" max="1500" step="10" value="400">
+                </div>
+                <div class="result-box" id="depletionMsg">
+                    🔋 <strong>Years until exhaustion:</strong> 12.5 years (constant extraction). 
+                    <span id="depletionWarning"></span>
+                </div>
+                <button id="resetDepletionBtn">⟳ Reset to baseline (5000/400)</button>
+                <p style="margin-top: 0.5rem;"><small>💡 If extraction > regeneration (not applicable here), resource is finite. Scarcity rent rises.</small></p>
+            </div>
+            <div class="footnote">
+                🧠 Interactive learning: adjust parameters and observe economic & ecological trade-offs. Based on canonical resource economics models.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- DOM elements ----------
+        // Hotelling
+        const discountSlider = document.getElementById('discountSlider');
+        const discountRateVal = document.getElementById('discountRateVal');
+        const priceSlider = document.getElementById('priceSlider');
+        const initPriceVal = document.getElementById('initPriceVal');
+        const hotellingCanvas = document.getElementById('hotellingCanvas');
+        const hotellingInsight = document.getElementById('hotellingInsight');
+        
+        // Fishery
+        const growthRateSlider = document.getElementById('growthRateSlider');
+        const growthRateVal = document.getElementById('growthRateVal');
+        const carrySlider = document.getElementById('carrySlider');
+        const carryCapVal = document.getElementById('carryCapVal');
+        const harvestSlider = document.getElementById('harvestSlider');
+        const harvestVal = document.getElementById('harvestVal');
+        const stockSlider = document.getElementById('stockSlider');
+        const stockVal = document.getElementById('stockVal');
+        const netGrowthSpan = document.getElementById('netGrowth');
+        const sustainableMsgSpan = document.getElementById('sustainableMsg');
+        const msyPointSpan = document.getElementById('msyPoint');
+        const fisheryCanvas = document.getElementById('fisheryCanvas');
+        
+        // Depletion
+        const reserveSlider = document.getElementById('reserveSlider');
+        const reserveVal = document.getElementById('reserveVal');
+        const extractSlider = document.getElementById('extractSlider');
+        const extractVal = document.getElementById('extractVal');
+        const depletionMsgDiv = document.getElementById('depletionMsg');
+        const depletionWarningSpan = document.getElementById('depletionWarning');
+        const resetDepletionBtn = document.getElementById('resetDepletionBtn');
+        
+        // Chart contexts
+        let hotellingCtx = hotellingCanvas.getContext('2d');
+        let fisheryCtx = fisheryCanvas.getContext('2d');
+        
+        // dimensions
+        function setCanvasDimensions(canvas, width, height) {
+            canvas.width = width;
+            canvas.height = height;
+        }
+        setCanvasDimensions(hotellingCanvas, 500, 220);
+        setCanvasDimensions(fisheryCanvas, 500, 200);
+        
+        // ------------------- 1. Hotelling update ------------------
+        function updateHotelling() {
+            let r = parseFloat(discountSlider.value) / 100;   // e.g., 5% => 0.05
+            let P0 = parseFloat(priceSlider.value);
+            discountRateVal.innerText = (r*100).toFixed(1) + '%';
+            initPriceVal.innerText = P0.toFixed(1);
+            
+            // generate price path for t = 0 to 30 years (discrete)
+            let years = [];
+            let prices = [];
+            for (let t = 0; t <= 30; t++) {
+                let Pt = P0 * Math.exp(r * t);
+                years.push(t);
+                prices.push(Pt);
+            }
+            // draw line chart
+            drawHotellingChart(years, prices, r, P0);
+            
+            // insight text: price after 10 and 20 years
+            let P10 = P0 * Math.exp(r * 10);
+            let P20 = P0 * Math.exp(r * 20);
+            hotellingInsight.innerHTML = `<strong>📌 Interpretation:</strong> At r = ${(r*100).toFixed(1)}%, price after 10 yrs = $${P10.toFixed(1)} (${((P10/P0-1)*100).toFixed(0)}% increase). After 20 yrs = $${P20.toFixed(1)}. Higher r → faster extraction today.`;
+        }
+        
+        function drawHotellingChart(years, prices, r, P0) {
+            const ctx = hotellingCtx;
+            const w = hotellingCanvas.width, h = hotellingCanvas.height;
+            ctx.clearRect(0, 0, w, h);
+            if (prices.length === 0) return;
+            const maxPrice = Math.max(...prices, P0 * 1.2);
+            const minPrice = P0 * 0.9;
+            
+            // axes
+            ctx.beginPath();
+            ctx.strokeStyle = "#aaa";
+            ctx.lineWidth = 1;
+            ctx.moveTo(40, 10);
+            ctx.lineTo(40, h-30);
+            ctx.lineTo(w-15, h-30);
+            ctx.stroke();
+            ctx.fillStyle = "#2c3e2b";
+            ctx.font = "10px 'Segoe UI'";
+            ctx.fillText("Time (years)", w-70, h-12);
+            ctx.save();
+            ctx.translate(20, h/2);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText("Price ($)", -10, 5);
+            ctx.restore();
+            
+            // scale
+            const xScale = (w - 60) / (years[years.length-1] - years[0]);
+            const yScale = (h - 50) / (maxPrice - minPrice);
+            function mapX(t) { return 40 + t * xScale; }
+            function mapY(p) { return (h-30) - (p - minPrice) * yScale; }
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "#1f6d2b";
+            ctx.lineWidth = 2.5;
+            let first = true;
+            for (let i=0; i<years.length; i++) {
+                let x = mapX(years[i]);
+                let y = mapY(prices[i]);
+                if (first) { ctx.moveTo(x, y); first=false; }
+                else { ctx.lineTo(x, y); }
+            }
+            ctx.stroke();
+            
+            // highlight start point
+            ctx.fillStyle = "#d98c2b";
+            ctx.beginPath();
+            ctx.arc(mapX(0), mapY(P0), 4, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#2e6b2f";
+            ctx.font = "bold 10px sans-serif";
+            ctx.fillText(`P₀=$${P0}`, mapX(0)+5, mapY(P0)-4);
+        }
+        
+        // ------------------- 2. Fishery model (renewable) ------------------
+        function logisticGrowth(S, r, K) {
+            return r * S * (1 - S / K);
+        }
+        
+        function updateFishery() {
+            let r = parseFloat(growthRateSlider.value);
+            let K = parseFloat(carrySlider.value);
+            let H = parseFloat(harvestSlider.value);
+            let S = parseFloat(stockSlider.value);
+            
+            growthRateVal.innerText = r.toFixed(2);
+            carryCapVal.innerText = Math.round(K);
+            harvestVal.innerText = H;
+            stockVal.innerText = Math.round(S);
+            
+            let net = logisticGrowth(S, r, K) - H;
+            netGrowthSpan.innerText = net.toFixed(1);
+            let msy = r * K / 4;
+            msyPointSpan.innerText = (K/2).toFixed(0);
+            
+            let isSustainable = (net >= 0 && S > 0);
+            if (isSustainable) {
+                sustainableMsgSpan.innerHTML = "✅ Sustainable: stock stable or increasing (net growth ≥ 0)";
+                sustainableMsgSpan.style.color = "#1f6d2b";
+            } else {
+                sustainableMsgSpan.innerHTML = "⚠️ Overharvesting: stock declining! Reduce harvest or increase stock.";
+                sustainableMsgSpan.style.color = "#b85c1a";
+            }
+            if (S <= 0) sustainableMsgSpan.innerHTML = "💀 Stock collapsed! Reduce harvest drastically.";
+            
+            // Draw growth curve and current point
+            drawFisheryChart(r, K, S, H);
+        }
+        
+        function drawFisheryChart(r, K, S, H) {
+            const ctx = fisheryCtx;
+            const w = fisheryCanvas.width, h = fisheryCanvas.height;
+            ctx.clearRect(0, 0, w, h);
+            // axes
+            ctx.beginPath();
+            ctx.strokeStyle = "#888";
+            ctx.lineWidth = 1;
+            ctx.moveTo(40, 10);
+            ctx.lineTo(40, h-30);
+            ctx.lineTo(w-15, h-30);
+            ctx.stroke();
+            ctx.fillStyle = "#2e3b2c";
+            ctx.fillText("Stock (S)", w-65, h-12);
+            ctx.save();
+            ctx.translate(20, h/2);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText("Growth G(S)", -10, 5);
+            ctx.restore();
+            
+            // logistic growth curve
+            let points = [];
+            for (let s = 0; s <= K+50; s+= K/50) {
+                let growth = (s <= 0) ? 0 : r * s * (1 - s / K);
+                points.push({s, growth});
+            }
+            const maxGrowth = Math.max(...points.map(p=>p.growth), 0.1);
+            const maxS = K * 1.1;
+            const xScale = (w - 70) / maxS;
+            const yScale = (h - 50) / (maxGrowth * 1.05);
+            function mapX(s) { return 40 + s * xScale; }
+            function mapY(g) { return (h-30) - g * yScale; }
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "#2a6b2f";
+            ctx.lineWidth = 2.2;
+            let first = true;
+            for (let p of points) {
+                if (p.s < 0) continue;
+                let x = mapX(p.s);
+                let y = mapY(p.growth);
+                if (first) { ctx.moveTo(x, y); first=false; }
+                else { ctx.lineTo(x, y); }
+            }
+            ctx.stroke();
+            
+            // current stock & net growth point (actual net = growth - H)
+            let currentGrowth = r * S * (1 - S / K);
+            let netGrowthCurr = currentGrowth - H;
+            let netY = netGrowthCurr >= 0 ? netGrowthCurr : 0;
+            let xCurr = mapX(S);
+            let yCurrGrowth = mapY(currentGrowth);
+            let yNet = mapY(netGrowthCurr);
+            
+            ctx.fillStyle = "#308a3a";
+            ctx.beginPath();
+            ctx.arc(xCurr, yCurrGrowth, 5, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "black";
+            ctx.font = "9px sans-serif";
+            ctx.fillText(`G(S)=${currentGrowth.toFixed(1)}`, xCurr+5, yCurrGrowth-4);
+            if (netGrowthCurr >= 0) {
+                ctx.fillStyle = "#1c6ea4";
+                ctx.beginPath();
+                ctx.arc(xCurr, yNet, 4, 0, 2*Math.PI);
+                ctx.fill();
+                ctx.fillStyle = "#0e4b6e";
+                ctx.fillText(`Net: ${netGrowthCurr.toFixed(1)}`, xCurr+5, yNet-4);
+            } else {
+                ctx.fillStyle = "#c93a2b";
+                ctx.beginPath();
+                ctx.arc(xCurr, yNet, 4, 0, 2*Math.PI);
+                ctx.fill();
+                ctx.fillStyle = "#a53f2b";
+                ctx.fillText(`Decline: ${netGrowthCurr.toFixed(1)}`, xCurr+5, yNet-4);
+            }
+            
+            // reference line harvest H (horizontal)
+            ctx.beginPath();
+            ctx.setLineDash([5,5]);
+            ctx.strokeStyle = "#bb7744";
+            ctx.lineWidth = 1.5;
+            let yHarvest = mapY(H);
+            ctx.moveTo(40, yHarvest);
+            ctx.lineTo(w-20, yHarvest);
+            ctx.stroke();
+            ctx.fillStyle = "#b45f2b";
+            ctx.fillText(`Harvest H = ${H}`, w-90, yHarvest-3);
+            ctx.setLineDash([]);
+            
+            // msy marker
+            let msyStock = K/2;
+            let msyGrowth = r * msyStock * (1 - msyStock/K);
+            let xMsy = mapX(msyStock);
+            let yMsy = mapY(msyGrowth);
+            ctx.fillStyle = "#d4a017";
+            ctx.beginPath();
+            ctx.arc(xMsy, yMsy, 3, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#826413";
+            ctx.fillText("MSY", xMsy+3, yMsy-3);
+        }
+        
+        // ---------- 3. Depletion clock ----------
+        function updateDepletion() {
+            let reserves = parseFloat(reserveSlider.value);
+            let extraction = parseFloat(extractSlider.value);
+            reserveVal.innerText = Math.round(reserves);
+            extractVal.innerText = Math.round(extraction);
+            
+            let yearsLeft = extraction > 0 ? (reserves / extraction) : Infinity;
+            let msg = "";
+            let warn = "";
+            if (extraction <= 0) {
+                msg = "∞ years (extraction rate zero)";
+                warn = "No extraction activity.";
+            } else if (yearsLeft < 1) {
+                msg = `Less than 1 year (${yearsLeft.toFixed(2)} years) — rapid depletion!`;
+                warn = "⚠️ Critical: resource will be exhausted within months!";
+            } else if (yearsLeft < 10) {
+                msg = `${yearsLeft.toFixed(1)} years until exhaustion.`;
+                warn = "⚠️ Short time horizon: consider reducing extraction or investing in alternatives.";
+            } else {
+                msg = `${yearsLeft.toFixed(1)} years until exhaustion.`;
+                warn = "✅ Moderate horizon. Adjust discount rate for optimal extraction.";
+            }
+            depletionMsgDiv.innerHTML = `🔋 <strong>Years until exhaustion:</strong> ${msg} <span id="depletionWarning">${warn}</span>`;
+        }
+        
+        function resetDepletion() {
+            reserveSlider.value = "5000";
+            extractSlider.value = "400";
+            updateDepletion();
+            // also reflect values on display
+            reserveVal.innerText = "5000";
+            extractVal.innerText = "400";
+        }
+        
+        // ---------- event listeners ----------
+        discountSlider.addEventListener('input', () => { updateHotelling(); });
+        priceSlider.addEventListener('input', () => { updateHotelling(); });
+        
+        growthRateSlider.addEventListener('input', () => { updateFishery(); });
+        carrySlider.addEventListener('input', () => { updateFishery(); });
+        harvestSlider.addEventListener('input', () => { updateFishery(); });
+        stockSlider.addEventListener('input', () => { updateFishery(); });
+        
+        reserveSlider.addEventListener('input', () => { updateDepletion(); });
+        extractSlider.addEventListener('input', () => { updateDepletion(); });
+        resetDepletionBtn.addEventListener('click', resetDepletion);
+        
+        // initial update all
+        updateHotelling();
+        updateFishery();
+        updateDepletion();
+        
+        // resize handling optional: re-draw on window resize (preserve)
+        window.addEventListener('resize', () => {
+            updateHotelling();
+            updateFishery();
+        });
+    })();
+</script>
+</body>
+</html>

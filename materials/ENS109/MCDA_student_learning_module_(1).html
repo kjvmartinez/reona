@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MCDA Learning Module: Multiple Criteria Decision Analysis</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f7ff;
+            margin: 0;
+            padding: 20px;
+            color: #1a2c3e;
+        }
+        .module-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            padding: 1.5rem 2rem 2rem;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, #1e4b6e, #2b7a62);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .subhead {
+            color: #2c6979;
+            border-left: 4px solid #2b7a62;
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #e2edf2;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 40px 40px 0 0;
+            transition: all 0.2s;
+            color: #4a627a;
+        }
+        .tab-btn.active {
+            background: #eef6fc;
+            color: #1f6e5c;
+            border-bottom: 3px solid #2b7a62;
+        }
+        .tab-pane {
+            display: none;
+            animation: fade 0.25s ease;
+        }
+        .tab-pane.active-pane {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0edf2;
+        }
+        .example-box, .exercise-box {
+            background: #f9fefb;
+            border-left: 6px solid #2b7a62;
+            padding: 1rem 1.5rem;
+            margin: 1.2rem 0;
+            border-radius: 20px;
+        }
+        .exercise-box {
+            border-left-color: #f4b942;
+            background: #fffbf0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            border: 1px solid #cbdde5;
+            padding: 10px 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background: #e6f3f0;
+            font-weight: 600;
+        }
+        .matrix-input {
+            background: #fefdf7;
+        }
+        input {
+            width: 70px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #bdd3df;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        button {
+            background: #2b7a62;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 10px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        button.secondary {
+            background: #5f9ea0;
+        }
+        button:hover {
+            background: #1e5e4c;
+            transform: scale(0.97);
+        }
+        .result-area {
+            background: #eef3f2;
+            padding: 1rem;
+            border-radius: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+        .score-highlight {
+            font-weight: bold;
+            background: #d9f0e6;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .flex-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        hr {
+            margin: 1.5rem 0;
+            border-color: #d4e4ea;
+        }
+        @media (max-width: 700px) {
+            .module-container {
+                padding: 1rem;
+            }
+            input {
+                width: 55px;
+            }
+            th, td {
+                padding: 6px;
+            }
+        }
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c8d9c;
+            margin-top: 2rem;
+            border-top: 1px solid #d4e2e8;
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="module-container">
+    <h1>📊 Multiple Criteria Decision Analysis (MCDA)</h1>
+    <div class="subhead">✧ Learn to evaluate complex choices using weighted scoring & AHP-like intuition ✧</div>
+
+    <!-- TABS -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="theory">📘 Theory & Concepts</button>
+        <button class="tab-btn" data-tab="example">🏠 Example: Buying a Laptop</button>
+        <button class="tab-btn" data-tab="exercise1">✍️ Exercise 1: Car Selection</button>
+        <button class="tab-btn" data-tab="exercise2">🧠 Exercise 2: Personal Project</button>
+        <button class="tab-btn" data-tab="interactive">⚙️ Interactive MCDA Tool</button>
+    </div>
+
+    <!-- PANE 1: THEORY -->
+    <div id="theory" class="tab-pane active-pane">
+        <div class="card">
+            <h2>📚 What is MCDA?</h2>
+            <p>Multiple Criteria Decision Analysis (MCDA) is a structured approach used to evaluate and rank options when decisions involve multiple, often conflicting, criteria. It helps decision-makers quantify preferences and trade-offs.</p>
+            <h3>🔑 Core Steps:</h3>
+            <ol>
+                <li><strong>Define alternatives</strong> – the choices you are comparing.</li>
+                <li><strong>Identify criteria</strong> – attributes that matter (cost, quality, sustainability, etc.).</li>
+                <li><strong>Assign weights</strong> – indicate relative importance (sum to 100% or 1).</li>
+                <li><strong>Score alternatives</strong> – rate how each alternative performs on each criterion (e.g., 1-10).</li>
+                <li><strong>Calculate weighted scores</strong> – sum(criterion_score × weight).</li>
+                <li><strong>Rank & decide</strong> – highest total score is the preferred option.</li>
+            </ol>
+            <div class="example-box">
+                <strong>📐 Weighted Sum Model (WSM) formula:</strong><br>
+                \( S_i = \sum_{j=1}^{n} w_j \times x_{ij} \)<br>
+                Where \(w_j\) = weight of criterion j, \(x_{ij}\) = score of alternative i on criterion j.
+            </div>
+            <p>💡 <strong>Tip:</strong> Normalization is sometimes used when criteria have different units. In this module we use direct rating (1–10) for simplicity, but you can adapt.</p>
+        </div>
+    </div>
+
+    <!-- PANE 2: LAPTOP EXAMPLE (prefilled) -->
+    <div id="example" class="tab-pane">
+        <div class="card">
+            <h2>💻 Example: Choosing a Laptop</h2>
+            <p>You need a new laptop for work & study. Criteria: <strong>Price (lower better, but scored inversely)</strong>, <strong>Performance</strong>, <strong>Battery Life</strong>, <strong>Portability</strong>. We'll use 1–10 scores (10 = best).</p>
+            <div id="exampleTableContainer">
+                <!-- dynamic table with data -->
+            </div>
+            <div class="flex-btns">
+                <button id="computeExampleBtn">▶ Compute Weighted Scores</button>
+                <button id="resetExampleBtn" class="secondary">↺ Reset Example</button>
+            </div>
+            <div id="exampleResult" class="result-area">⚡ Click "Compute Weighted Scores" to see the best laptop option.</div>
+        </div>
+    </div>
+
+    <!-- PANE 3: EXERCISE 1 - Car Selection (student fills weights/scores) -->
+    <div id="exercise1" class="tab-pane">
+        <div class="card">
+            <h2>🚗 Exercise 1: Family Car Selection</h2>
+            <p>You are helping a family choose between three cars: <strong>Sedan, SUV, Electric Hatchback</strong>. Criteria: <strong>Safety (weight 35%)</strong>, <strong>Fuel Economy (25%)</strong>, <strong>Comfort (20%)</strong>, <strong>Price (20%)</strong>.<br> 
+            Enter scores (1–10, where 10 = best) for each car. Then click "Evaluate" and interpret the winner.</p>
+            <div id="carMatrix"></div>
+            <button id="solveCarBtn">🔍 Evaluate Car Choice</button>
+            <button id="resetCarBtn" class="secondary">⟳ Reset Defaults</button>
+            <div id="carResult" class="result-area">📊 Your result will appear here.</div>
+            <div class="exercise-box">
+                💡 <strong>Class discussion:</strong> Does the highest score always reflect the best real-world choice? Discuss trade-offs and sensitivity to weights.
+            </div>
+        </div>
+    </div>
+
+    <!-- PANE 4: EXERCISE 2 - Personal Project (flexible alternatives) -->
+    <div id="exercise2" class="tab-pane">
+        <div class="card">
+            <h2>🎓 Exercise 2: Design Your Own MCDA</h2>
+            <p>Define your own decision problem: e.g., choosing a university, smartphone, vacation destination. Fill in the table below (max 4 alternatives, up to 4 criteria). Modify weights and scores to practice.</p>
+            <div id="customTool">
+                <div class="flex-btns" style="margin-bottom: 12px;">
+                    <button id="addAltBtn">➕ Add alternative</button>
+                    <button id="removeAltBtn">➖ Remove last alternative</button>
+                    <button id="addCritBtn">📌 Add criterion</button>
+                    <button id="removeCritBtn">❌ Remove last criterion</button>
+                </div>
+                <div id="customMatrixContainer"></div>
+                <button id="computeCustomBtn">⚖️ Compute Weighted Scores</button>
+                <div id="customResult" class="result-area">💡 Create your decision matrix and click compute.</div>
+                <p class="subhead" style="margin-top: 1rem;">✏️ Tip: weights sum must be 100% (automatically normalized if needed). Edit scores (1–10) and weights.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANE 5: INTERACTIVE TOOL (generic robust) -->
+    <div id="interactive" class="tab-pane">
+        <div class="card">
+            <h2>⚙️ Interactive MCDA Sandbox</h2>
+            <p>Create any problem from scratch: define alternatives, criteria, weights, and scores. Perfect for group exercises.</p>
+            <div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px;">
+                    <input type="text" id="altInput" placeholder="Alternative name (e.g., Option A)" style="width: auto; flex:1; min-width: 130px;">
+                    <button id="interactiveAddAlt">➕ Add alternative</button>
+                    <input type="text" id="critInput" placeholder="Criterion name (e.g., Quality)" style="width: auto; flex:1; min-width: 130px;">
+                    <button id="interactiveAddCrit">📊 Add criterion</button>
+                </div>
+                <div id="interactiveMatrixArea" style="overflow-x: auto;"></div>
+                <div class="flex-btns">
+                    <button id="interactiveCompute">🧮 Compute final scores</button>
+                    <button id="interactiveResetDefault">🔄 Load demo (3 alternatives, 3 criteria)</button>
+                </div>
+                <div id="interactiveResult" class="result-area">✅ Set up your decision matrix and press compute.</div>
+            </div>
+        </div>
+    </div>
+    <footer>📐 MCDA learning module — Weighted Sum Model | Works offline • Real-time decision practice</footer>
+</div>
+
+<script>
+    // Helper: render any matrix with scores & weights, returns array of rows/cols metadata
+    function buildMatrixStructure(alternatives, criteria, scores, weights) {
+        // scores: 2D array [alt][crit], weights: array length = criteria.length
+        let html = '<table><thead><tr><th>Alternatives \\ Criteria</th>';
+        for(let j=0; j<criNames.length; j++) {
+            html += `<th>${escapeHtml(criNames[j])} <br> <span style="font-size:0.75rem;">Weight: <input type="number" step="1" class="weight-input" data-critidx="${j}" value="${weights[j]}" style="width:55px;"> %</span></th>`;
+        }
+        html += '<th>Total Score</th></tr></thead><tbody>';
+        for(let i=0; i<altNames.length; i++) {
+            html += `<tr><td style="font-weight:600;">${escapeHtml(altNames[i])}</td>`;
+            for(let j=0; j<criNames.length; j++) {
+                let val = (scores[i] && scores[i][j] !== undefined) ? scores[i][j] : 5;
+                html += `<td><input type="number" class="score-input" data-alt="${i}" data-crit="${j}" value="${val}" min="0" max="10" step="0.5" style="width:60px;"></td>`;
+            }
+            html += `<td class="total-cell-${i}" style="background:#f0f4f0; font-weight:bold;">—</td>`;
+            html += `</tr>`;
+        }
+        html += '</tbody></table><p class="subhead" style="font-size:0.8rem;">✔️ Weights sum to 100% ideally; tool auto-normalizes.</p>';
+        return html;
+    }
+
+    // Generic compute function for a given container context
+    function computeScores(altNames, criNames, getWeightFn, getScoreFn, resultContainerId, totalClassPrefix = "total-cell-") {
+        let weights = criNames.map((_, idx) => {
+            let w = getWeightFn(idx);
+            return isNaN(w) ? 0 : Number(w);
+        });
+        // normalize weights to sum 100%
+        let totalWeight = weights.reduce((a,b)=>a+b,0);
+        if(totalWeight === 0) totalWeight = 1;
+        let normWeights = weights.map(w => w / totalWeight);
+        
+        let altTotals = [];
+        let rowsHtml = [];
+        for(let i=0; i<altNames.length; i++) {
+            let total = 0;
+            for(let j=0; j<criNames.length; j++) {
+                let score = getScoreFn(i,j);
+                let s = isNaN(score) ? 0 : Number(score);
+                total += s * normWeights[j];
+            }
+            altTotals.push(total.toFixed(2));
+            rowsHtml.push(`<span class="score-highlight">${escapeHtml(altNames[i])}: ${total.toFixed(2)}</span>`);
+        }
+        // update each total cell in DOM if present
+        for(let i=0; i<altNames.length; i++) {
+            let cell = document.querySelector(`.${totalClassPrefix}${i}`);
+            if(cell) cell.innerText = altTotals[i];
+        }
+        let ranking = [...altTotals.map((val, idx) => ({name: altNames[idx], score: parseFloat(val)}))].sort((a,b)=>b.score - a.score);
+        let rankMsg = ranking.map((r,idx) => `${idx+1}. ${r.name} (${r.score.toFixed(2)})`).join('  |  ');
+        document.getElementById(resultContainerId).innerHTML = `✅ <strong>Weighted Scores:</strong><br>${rowsHtml.join(' &nbsp; | &nbsp; ')}<br><strong>🏆 Ranking:</strong> ${rankMsg}`;
+    }
+
+    // Helper: escapeHtml
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // ---------- LAPTOP EXAMPLE ----------
+    let laptopAlts = ["ZenBook", "MacBook Air", "Gaming Laptop"];
+    let laptopCrit = ["Price (1-10, 10=cheap)", "Performance", "Battery Life", "Portability"];
+    let laptopScores = [[7,8,9,8],[6,9,10,9],[5,10,5,4]];
+    let laptopWeights = [25, 35, 25, 15]; 
+    function renderExample() {
+        let html = '<table><thead><tr><th>Laptops \\ Criteria</th>';
+        for(let j=0;j<laptopCrit.length;j++) {
+            html += `<th>${escapeHtml(laptopCrit[j])} <br> <span style="font-size:0.75rem;">Weight: <input type="number" step="1" class="example-weight" data-critidx="${j}" value="${laptopWeights[j]}" style="width:55px;"> %</span></th>`;
+        }
+        html += '<th>Total Score</th></tr></thead><tbody>';
+        for(let i=0;i<laptopAlts.length;i++) {
+            html += `<tr><td style="font-weight:600;">${escapeHtml(laptopAlts[i])}</td>`;
+            for(let j=0;j<laptopCrit.length;j++) {
+                html += `<td><input type="number" class="example-score" data-alt="${i}" data-crit="${j}" value="${laptopScores[i][j]}" min="0" max="10" step="0.5" style="width:60px;"></td>`;
+            }
+            html += `<td class="example-total-cell-${i}" style="background:#eef2ea; font-weight:bold;">—</td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById("exampleTableContainer").innerHTML = html;
+        attachExampleEvents();
+    }
+    function attachExampleEvents() {
+        // update scores/weights from inputs
+        document.querySelectorAll('.example-score').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let alt = parseInt(this.dataset.alt);
+                let crit = parseInt(this.dataset.crit);
+                laptopScores[alt][crit] = parseFloat(this.value);
+            });
+        });
+        document.querySelectorAll('.example-weight').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let idx = parseInt(this.dataset.critidx);
+                laptopWeights[idx] = parseFloat(this.value);
+            });
+        });
+    }
+    function computeExample() {
+        let getWeight = (j) => laptopWeights[j];
+        let getScore = (i,j) => laptopScores[i][j];
+        computeScores(laptopAlts, laptopCrit, getWeight, getScore, "exampleResult", "example-total-cell-");
+    }
+    function resetExample() {
+        laptopScores = [[7,8,9,8],[6,9,10,9],[5,10,5,4]];
+        laptopWeights = [25,35,25,15];
+        renderExample();
+        document.getElementById("exampleResult").innerHTML = "🔄 Reset. Click 'Compute Weighted Scores' to see results.";
+    }
+    
+    // ---------- EXERCISE 1: Car Selection ----------
+    let carAlts = ["Sedan", "SUV", "Electric Hatchback"];
+    let carCrit = ["Safety (35%)", "Fuel Economy (25%)", "Comfort (20%)", "Price (20%)"];
+    let carScores = [[8,7,6,7],[9,4,8,5],[7,9,7,6]];
+    let carWeights = [35,25,20,20];
+    function renderCarMatrix() {
+        let html = '<table><thead><tr><th>Cars \\ Criteria</th>';
+        for(let j=0;j<carCrit.length;j++) {
+            html += `<th>${escapeHtml(carCrit[j])}<br><span style="font-size:0.7rem;">Weight: <input type="number" class="car-weight" data-critidx="${j}" value="${carWeights[j]}" style="width:55px;"> %</span></th>`;
+        }
+        html += '<th>Total Score</th></tr></thead><tbody>';
+        for(let i=0;i<carAlts.length;i++) {
+            html += `<tr><td style="font-weight:600;">${escapeHtml(carAlts[i])}</td>`;
+            for(let j=0;j<carCrit.length;j++) {
+                html += `<td><input type="number" class="car-score" data-alt="${i}" data-crit="${j}" value="${carScores[i][j]}" min="0" max="10" step="0.5" style="width:60px;"></td>`;
+            }
+            html += `<td class="car-total-cell-${i}" style="background:#fdf8e7;">—</td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById("carMatrix").innerHTML = html;
+        attachCarEvents();
+    }
+    function attachCarEvents() {
+        document.querySelectorAll('.car-score').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let a=parseInt(this.dataset.alt), c=parseInt(this.dataset.crit);
+                carScores[a][c]=parseFloat(this.value);
+            });
+        });
+        document.querySelectorAll('.car-weight').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let idx=parseInt(this.dataset.critidx);
+                carWeights[idx]=parseFloat(this.value);
+            });
+        });
+    }
+    function computeCar() {
+        let getW = (j)=>carWeights[j];
+        let getS = (i,j)=>carScores[i][j];
+        computeScores(carAlts, carCrit, getW, getS, "carResult", "car-total-cell-");
+    }
+    function resetCar() {
+        carScores = [[8,7,6,7],[9,4,8,5],[7,9,7,6]];
+        carWeights = [35,25,20,20];
+        renderCarMatrix();
+        document.getElementById("carResult").innerHTML = "🚗 Reset complete. Adjust scores/weights and evaluate.";
+    }
+
+    // ---------- CUSTOM EXERCISE 2: variable size matrix ----------
+    let customAlts = ["University A", "University B", "University C"];
+    let customCrit = ["Tuition Cost", "Reputation", "Location", "Social Life"];
+    let customScores = [[7,8,6,9],[6,9,8,7],[9,6,7,8]];
+    let customWeights = [30,30,20,20];
+    function renderCustomMatrix() {
+        let html = '<table style="min-width:400px;"><thead><tr><th>Alternatives</th>';
+        for(let j=0; j<customCrit.length; j++) {
+            html += `<th>${escapeHtml(customCrit[j])}<br><span style="font-size:0.7rem;">W: <input type="number" step="1" class="custom-weight" data-cidx="${j}" value="${customWeights[j]}" style="width:55px;">%</span></th>`;
+        }
+        html += '<th>Score</th></tr></thead><tbody>';
+        for(let i=0; i<customAlts.length; i++) {
+            html += `<tr><td style="font-weight:600;">${escapeHtml(customAlts[i])}</td>`;
+            for(let j=0; j<customCrit.length; j++) {
+                let val = (customScores[i] && customScores[i][j]!==undefined) ? customScores[i][j] : 5;
+                html += `<td><input type="number" class="custom-score" data-altidx="${i}" data-cidx="${j}" value="${val}" min="0" max="10" step="0.5" style="width:60px;"></td>`;
+            }
+            html += `<td class="custom-total-cell-${i}" style="background:#f3f9f0;">—</td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById("customMatrixContainer").innerHTML = html;
+        attachCustomEvents();
+    }
+    function attachCustomEvents() {
+        document.querySelectorAll('.custom-score').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let a=parseInt(this.dataset.altidx), c=parseInt(this.dataset.cidx);
+                if(!customScores[a]) customScores[a]=[];
+                customScores[a][c]=parseFloat(this.value);
+            });
+        });
+        document.querySelectorAll('.custom-weight').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let idx=parseInt(this.dataset.cidx);
+                customWeights[idx]=parseFloat(this.value);
+            });
+        });
+    }
+    function computeCustom() {
+        let getW = (j)=> customWeights[j] || 0;
+        let getS = (i,j)=> (customScores[i] && customScores[i][j]!==undefined) ? customScores[i][j] : 0;
+        computeScores(customAlts, customCrit, getW, getS, "customResult", "custom-total-cell-");
+    }
+    function addCustomAlternative() {
+        let newName = `Option ${customAlts.length+1}`;
+        customAlts.push(newName);
+        let newRow = new Array(customCrit.length).fill(5);
+        customScores.push(newRow);
+        renderCustomMatrix();
+    }
+    function removeCustomAlternative() { if(customAlts.length>1) { customAlts.pop(); customScores.pop(); renderCustomMatrix(); } }
+    function addCustomCriterion() { let newCrit = `Criterion ${customCrit.length+1}`; customCrit.push(newCrit); customWeights.push(10); for(let i=0;i<customScores.length;i++) customScores[i].push(5); renderCustomMatrix(); }
+    function removeCustomCriterion() { if(customCrit.length>1) { let idx=customCrit.length-1; customCrit.pop(); customWeights.pop(); for(let i=0;i<customScores.length;i++) customScores[i].pop(); renderCustomMatrix(); } }
+
+    // ---------- INTERACTIVE SANDBOX (full dynamic) ----------
+    let interactiveAlts = ["Laptop", "Tablet", "Desktop"];
+    let interactiveCrit = ["Price", "Performance", "Portability"];
+    let interactiveScores = [[7,8,6],[6,9,9],[5,10,4]];
+    let interactiveWeights = [40,40,20];
+    function renderInteractive() {
+        let html = '<table><thead><tr><th>Alternatives \\ Criteria</th>';
+        for(let j=0;j<interactiveCrit.length;j++) {
+            html += `<th>${escapeHtml(interactiveCrit[j])} <br> <span style="font-size:0.7rem;">Weight: <input type="number" step="1" class="inter-weight" data-icrit="${j}" value="${interactiveWeights[j]}" style="width:55px;">%</span></th>`;
+        }
+        html += '<th>Total</th></tr></thead><tbody>';
+        for(let i=0;i<interactiveAlts.length;i++) {
+            html += `<tr><td style="font-weight:600;"><input type="text" class="inter-alt-name" data-ialt="${i}" value="${escapeHtml(interactiveAlts[i])}" style="width:100px;"></td>`;
+            for(let j=0;j<interactiveCrit.length;j++) {
+                let val = (interactiveScores[i] && interactiveScores[i][j]!==undefined) ? interactiveScores[i][j] : 5;
+                html += `<td><input type="number" class="inter-score" data-ialt="${i}" data-icrit="${j}" value="${val}" min="0" max="10" step="0.5" style="width:60px;"></td>`;
+            }
+            html += `<td class="inter-total-cell-${i}">—</td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById("interactiveMatrixArea").innerHTML = html;
+        attachInteractiveEvents();
+    }
+    function attachInteractiveEvents() {
+        document.querySelectorAll('.inter-score').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let a=parseInt(this.dataset.ialt), c=parseInt(this.dataset.icrit);
+                if(!interactiveScores[a]) interactiveScores[a]=[];
+                interactiveScores[a][c]=parseFloat(this.value);
+            });
+        });
+        document.querySelectorAll('.inter-weight').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let c=parseInt(this.dataset.icrit);
+                interactiveWeights[c]=parseFloat(this.value);
+            });
+        });
+        document.querySelectorAll('.inter-alt-name').forEach(inp => {
+            inp.addEventListener('change', function() {
+                let idx=parseInt(this.dataset.ialt);
+                interactiveAlts[idx]=inp.value;
+            });
+        });
+    }
+    function computeInteractive() {
+        let getW = (j)=>interactiveWeights[j];
+        let getS = (i,j)=> (interactiveScores[i] && interactiveScores[i][j]!==undefined) ? interactiveScores[i][j] : 0;
+        computeScores(interactiveAlts, interactiveCrit, getW, getS, "interactiveResult", "inter-total-cell-");
+    }
+    function addInteractiveAlt() {
+        let nameInput = document.getElementById("altInput");
+        let newName = nameInput.value.trim() || `New Alt ${interactiveAlts.length+1}`;
+        interactiveAlts.push(newName);
+        interactiveScores.push(new Array(interactiveCrit.length).fill(5));
+        nameInput.value = '';
+        renderInteractive();
+    }
+    function addInteractiveCrit() {
+        let critInput = document.getElementById("critInput");
+        let newCrit = critInput.value.trim() || `New Crit ${interactiveCrit.length+1}`;
+        interactiveCrit.push(newCrit);
+        interactiveWeights.push(10);
+        for(let i=0;i<interactiveScores.length;i++) interactiveScores[i].push(5);
+        critInput.value = '';
+        renderInteractive();
+    }
+    function resetInteractiveDemo() {
+        interactiveAlts = ["Laptop", "Tablet", "Desktop"];
+        interactiveCrit = ["Price", "Performance", "Portability"];
+        interactiveScores = [[7,8,6],[6,9,9],[5,10,4]];
+        interactiveWeights = [40,40,20];
+        renderInteractive();
+        document.getElementById("interactiveResult").innerHTML = "✅ Demo loaded: compare Laptop, Tablet, Desktop.";
+    }
+
+    // Tab switching
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+        document.getElementById(tabId).classList.add('active-pane');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+    }
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+    
+    // Initial rendering
+    renderExample();
+    renderCarMatrix();
+    renderCustomMatrix();
+    renderInteractive();
+    document.getElementById("computeExampleBtn").addEventListener("click", computeExample);
+    document.getElementById("resetExampleBtn").addEventListener("click", resetExample);
+    document.getElementById("solveCarBtn").addEventListener("click", computeCar);
+    document.getElementById("resetCarBtn").addEventListener("click", resetCar);
+    document.getElementById("addAltBtn").addEventListener("click", addCustomAlternative);
+    document.getElementById("removeAltBtn").addEventListener("click", removeCustomAlternative);
+    document.getElementById("addCritBtn").addEventListener("click", addCustomCriterion);
+    document.getElementById("removeCritBtn").addEventListener("click", removeCustomCriterion);
+    document.getElementById("computeCustomBtn").addEventListener("click", computeCustom);
+    document.getElementById("interactiveAddAlt").addEventListener("click", addInteractiveAlt);
+    document.getElementById("interactiveAddCrit").addEventListener("click", addInteractiveCrit);
+    document.getElementById("interactiveCompute").addEventListener("click", computeInteractive);
+    document.getElementById("interactiveResetDefault").addEventListener("click", resetInteractiveDemo);
+</script>
+</body>
+</html>

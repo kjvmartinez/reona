@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Final Exam: Environmental Economics | 100 Points</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Georgia', 'Times New Roman', serif;
+        }
+        body {
+            background: #eef2f0;
+            margin: 0;
+            padding: 24px 16px;
+            color: #1a3b2e;
+        }
+        .exam-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2rem;
+        }
+        h1 {
+            font-size: 1.9rem;
+            margin: 0 0 0.2rem 0;
+            border-left: 6px solid #2b6e47;
+            padding-left: 20px;
+        }
+        .sub {
+            color: #2c5e44;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+            padding-left: 26px;
+        }
+        .student-section {
+            background: #f4faf2;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.5rem;
+            margin: 1.2rem 0 1.8rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+            justify-content: space-between;
+            border: 1px solid #cde2d4;
+        }
+        .name-field {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .name-field label {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        #studentName {
+            padding: 10px 16px;
+            font-size: 1rem;
+            border-radius: 60px;
+            border: 1px solid #bdd5bf;
+            width: 280px;
+            outline: none;
+            transition: 0.1s;
+        }
+        #studentName:focus {
+            border-color: #2b6e47;
+            box-shadow: 0 0 0 2px #a3d0af;
+        }
+        .stats-panel {
+            display: flex;
+            gap: 20px;
+            background: #ffffffd9;
+            padding: 6px 18px;
+            border-radius: 48px;
+            font-weight: 600;
+        }
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #e9f0e6;
+            padding: 0.7rem 1.4rem;
+            border-radius: 50px;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .badge-count {
+            background: #2b6e47;
+            color: white;
+            border-radius: 30px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.85rem;
+        }
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem 0;
+            background: #e2ecd9;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+        }
+        .question-card {
+            background: #fefef9;
+            border-left: 6px solid #3b825b;
+            margin-bottom: 1.2rem;
+            padding: 1rem 1.3rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: 0.05s linear;
+        }
+        .q-text {
+            font-weight: 700;
+            font-size: 0.98rem;
+            margin-bottom: 0.7rem;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+        .q-num {
+            background: #e0eedb;
+            padding: 0px 10px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            row-gap: 0.6rem;
+            margin-top: 6px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f9fdf7;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            border: 1px solid #d5e5cf;
+            cursor: pointer;
+        }
+        .option:hover {
+            background: #e2f0dd;
+        }
+        input[type="radio"] {
+            accent-color: #2b6e47;
+            width: 1.1rem;
+            height: 1.1rem;
+            margin: 0;
+            cursor: pointer;
+        }
+        label {
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin: 2rem 0 1.2rem;
+        }
+        button {
+            background: #236b45;
+            border: none;
+            padding: 0.7rem 1.6rem;
+            font-weight: 600;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.1s;
+        }
+        button:hover {
+            background: #0f4a2f;
+            transform: scale(0.97);
+        }
+        .reset-btn {
+            background: #6b6f6b;
+        }
+        .clear-btn {
+            background: #b1623b;
+        }
+        .receipt-area {
+            background: #fef7e0;
+            border-top: 3px double #a7c5a3;
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 1.2rem;
+            font-family: 'Courier New', monospace;
+        }
+        .receipt-header {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+        .receipt-content {
+            background: #fffcf0;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            max-height: 280px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #4b6b58;
+            border-top: 1px solid #cee0c7;
+            padding-top: 1.2rem;
+        }
+        @media (max-width: 700px) {
+            .exam-container {
+                padding: 1rem;
+            }
+            .option {
+                padding: 0.2rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="exam-container" id="examRoot">
+    <h1>🌿 Final Examination<br>Environmental Economics</h1>
+    <div class="sub">📌 100 points total: 50 multiple-type (2 pts each) + 50 True/False (1 pt each)</div>
+
+    <!-- Student Name Section -->
+    <div class="student-section">
+        <div class="name-field">
+            <label>🧑‍🎓 Student Name:</label>
+            <input type="text" id="studentName" placeholder="Enter full name (for receipt)" autocomplete="off">
+        </div>
+        <div class="stats-panel">
+            <span>🏆 Best Saved: <span id="bestScoreSpan">—</span></span>
+        </div>
+    </div>
+
+    <div class="info-bar">
+        <span>📋 Answer all questions. Multiple-choice = 2 pts each | True/False = 1 pt each</span>
+        <span class="badge-count" id="currentScoreBadge">Current: 0 / 100</span>
+    </div>
+
+    <!-- Questions will be injected here (50 multiple-type + 50 True/False) -->
+    <div id="questionsContainer"></div>
+
+    <div class="action-bar">
+        <button id="submitExamBtn">✅ Submit Exam & Score</button>
+        <button id="resetAnswersBtn" class="reset-btn">🔄 Reset All Answers</button>
+        <button id="clearBestBtn" class="clear-btn">🗑 Clear Saved Best Score</button>
+    </div>
+
+    <div id="receiptPanel" class="receipt-area" style="display: none;">
+        <div class="receipt-header">
+            🧾 OFFICIAL EXAM RECEIPT
+            <button id="printReceiptBtn" style="background:#4a6a3b; padding: 0.3rem 1rem;">🖨️ Print / PDF</button>
+        </div>
+        <div id="receiptText" class="receipt-content"></div>
+    </div>
+    <footer>⚡ Fully offline interactive exam • Environmental Economics • Auto scoring • Saves highest score per student (name + score) • Printable receipt</footer>
+</div>
+
+<script>
+    // ======================= 50 MULTIPLE-TYPE QUESTIONS (2 points each) - ENVIRONMENTAL ECONOMICS =======================
+    const MULTI_QUESTIONS = [
+        { text: "What is the central concept of the 'Coase Theorem'?", options: ["If property rights are well-defined and transaction costs low, private bargaining can solve externalities", "Governments must always intervene to correct pollution", "Externalities cannot be resolved without taxes", "Markets always fail for environmental goods"], correct: 0, points: 2 },
+        { text: "Which of the following is an example of a negative production externality?", options: ["A factory emitting smoke affecting nearby residents", "A beekeeper benefiting neighboring orchards", "Education increasing social welfare", "Vaccination reducing disease spread"], correct: 0, points: 2 },
+        { text: "The 'Pigouvian tax' is designed to:", options: ["Make polluters internalize the external cost", "Subsidize green technology", "Reduce income inequality", "Encourage resource extraction"], correct: 0, points: 2 },
+        { text: "What does the 'Social Cost of Carbon' (SCC) represent?", options: ["Monetary estimate of damages from each additional ton of CO₂", "Price of carbon offsets", "Cost of renewable energy", "Tax rate on gasoline"], correct: 0, points: 2 },
+        { text: "Which market-based instrument creates a cap on total emissions and allows trading of permits?", options: ["Cap-and-trade", "Command-and-control regulation", "Technology standard", "Subsidy for abatement"], correct: 0, points: 2 },
+        { text: "The 'Tragedy of the Commons' is most directly associated with:", options: ["Overuse of rivalrous but non-excludable resources", "Privately owned forests", "Public goods like national defense", "Club goods"], correct: 0, points: 2 },
+        { text: "Which valuation method asks individuals their willingness to pay for environmental quality through hypothetical scenarios?", options: ["Contingent valuation", "Hedonic pricing", "Travel cost method", "Averting expenditure"], correct: 0, points: 2 },
+        { text: "What is 'environmental Kuznets curve' (EKC) hypothesis?", options: ["Environmental degradation first rises then falls with income per capita", "Pollution increases linearly with GDP", "Economic growth always harms environment", "Inequality worsens environmental quality forever"], correct: 0, points: 2 },
+        { text: "Which of the following is a public good characteristic?", options: ["Non-excludability and non-rivalry", "Rivalry and excludability", "Rivalry and non-excludability", "Excludability and non-rivalry"], correct: 0, points: 2 },
+        { text: "The 'discount rate' in environmental economics affects:", options: ["How future environmental benefits are valued relative to present", "The rate of population growth", "Pollution tax levels", "Subsidy rates for renewables"], correct: 0, points: 2 },
+        { text: "What does 'willingness to accept' (WTA) measure?", options: ["Compensation required to tolerate a loss or forego a benefit", "Maximum amount someone will pay for a good", "Market equilibrium price", "Marginal abatement cost"], correct: 0, points: 2 },
+        { text: "Which policy instrument is an example of 'command and control'?", options: ["Emission standards requiring specific technology", "Emissions trading", "Environmental tax", "Subsidy for electric vehicles"], correct: 0, points: 2 },
+        { text: "The concept of 'intergenerational equity' emphasizes:", options: ["Fairness between present and future generations", "Maximizing current consumption", "Privatizing all environmental resources", "Ignoring long-term impacts"], correct: 0, points: 2 },
+        { text: "Which of the following best describes 'ecosystem services'?", options: ["Benefits people obtain from nature (e.g., pollination, water purification)", "Market value of timber", "Cost of pollution control", "GDP from natural resources"], correct: 0, points: 2 },
+        { text: "The 'precautionary principle' suggests:", options: ["Lack of full scientific certainty should not delay cost-effective measures to prevent environmental harm", "Only act when risks are proven beyond doubt", "Risk-taking is always justified", "Cost-benefit analysis must be ignored"], correct: 0, points: 2 },
+        { text: "Hedonic pricing method values environmental quality by:", options: ["Observing how property prices vary with environmental attributes", "Surveying people's hypothetical payments", "Calculating travel expenses to recreational sites", "Estimating health costs avoided"], correct: 0, points: 2 },
+        { text: "What is 'additionality' in carbon offset markets?", options: ["Ensuring emission reductions would not have occurred without the offset project", "Adding extra pollution allowances", "Increasing baseline emissions", "Double counting reductions"], correct: 0, points: 2 },
+        { text: "The 'Green Paradox' refers to:", options: ["Climate policies may accelerate fossil fuel extraction in the near term", "Renewable energy always reduces emissions", "Energy efficiency leads to more energy use", "Carbon taxes are ineffective"], correct: 0, points: 2 },
+        { text: "Which of the following is a stock pollutant?", options: ["Carbon dioxide accumulating in atmosphere", "Biodegradable sewage", "Noise pollution", "Fertilizer runoff that decays quickly"], correct: 0, points: 2 },
+        { text: "What is 'weak sustainability' criterion?", options: ["Total capital (manufactured + natural) must be non-declining", "Natural capital must be preserved intact", "Only manufactured capital matters", "Zero resource extraction required"], correct: 0, points: 2 },
+        { text: "The 'travel cost method' estimates recreational value based on:", options: ["Expenditures and time people spend to visit a site", "Property value differences", "Contingent survey responses", "Market prices of related goods"], correct: 0, points: 2 },
+        { text: "Which agreement is the primary international framework for climate change mitigation?", options: ["Paris Agreement", "Montreal Protocol", "Basel Convention", "Convention on Biological Diversity"], correct: 0, points: 2 },
+        { text: "What is 'moral hazard' in environmental insurance contexts?", options: ["Reduced incentive to prevent harm when insured", "Overconsumption of public goods", "Excessive regulation", "Polluter pays principle"], correct: 0, points: 2 },
+        { text: "Which term refers to the value of environmental goods not captured in markets?", options: ["Non-market valuation", "Market failure", "Shadow price", "Opportunity cost"], correct: 0, points: 2 },
+        { text: "The 'polluter pays principle' states:", options: ["Those who cause pollution should bear the costs of remediation", "Taxpayers should fund cleanup", "Pollution permits should be free", "Polluters should be subsidized"], correct: 0, points: 2 },
+        { text: "Which of the following is an example of a positive consumption externality?", options: ["Vaccination reducing disease transmission", "Cigarette smoke affecting others", "Factory pollution", "Noise from a nightclub"], correct: 0, points: 2 },
+        { text: "What does 'marginal abatement cost' represent?", options: ["Cost of reducing one additional unit of pollution", "Total cost of all pollution control", "Benefit of reducing pollution", "Tax on emissions"], correct: 0, points: 2 },
+        { text: "The concept of 'natural capital' includes:", options: ["Forests, water resources, biodiversity, and minerals", "Only manufactured goods", "Human labor only", "Financial assets only"], correct: 0, points: 2 },
+        { text: "Which economic concept suggests that individuals undervalue future benefits due to impatience?", options: ["Hyperbolic discounting", "Rational expectations", "Pareto efficiency", "General equilibrium"], correct: 0, points: 2 },
+        { text: "In environmental economics, 'internalizing the externality' means:", options: ["Making decision-makers face the full social costs of their actions", "Ignoring environmental impacts", "Privatizing all resources", "Eliminating all regulations"], correct: 0, points: 2 }
+    ];
+    // Extend to exactly 50 multiple-type questions (add 20 more high-quality environmental economics items)
+    const extraMulti = [
+        { text: "What is 'regulatory capture'?", options: ["When regulatory agencies serve industry interests rather than public good", "When environmentalists control policy", "Strict enforcement of regulations", "Market-based environmental policy"], correct: 0, points: 2 },
+        { text: "Which of the following is a 'flow pollutant'?", options: ["Biodegradable sewage that dissipates quickly", "Long-lived CO₂", "Heavy metals in soil", "Plastic accumulating in oceans"], correct: 0, points: 2 },
+        { text: "The concept of 'Option Value' in environmental valuation refers to:", options: ["Value of preserving an environmental asset for potential future use", "Value of current extraction", "Market price of resources", "Discount rate"], correct: 0, points: 2 },
+        { text: "What does 'ambient standard' regulate?", options: ["Maximum allowable concentration of pollutant in the environment", "Total quantity of emissions", "Technology to be used", "Tax rate per unit"], correct: 0, points: 2 },
+        { text: "Which statement best describes 'free riding' in environmental public goods?", options: ["Benefiting from environmental quality without contributing to its provision", "Paying more than fair share", "Excessive regulation compliance", "Overexploitation of resources"], correct: 0, points: 2 },
+        { text: "The 'Lorenz Curve' in environmental justice relates to:", options: ["Distribution of environmental burdens across income groups", "Pollution reduction costs", "Carbon pricing efficiency", "Energy consumption patterns"], correct: 0, points: 2 },
+        { text: "Which of the following is an 'adaptive management' approach?", options: ["Learning and adjusting environmental policies based on outcomes", "Fixed regulations regardless of new data", "Complete deregulation", "Top-down command only"], correct: 0, points: 2 },
+        { text: "What is 'bioprospecting'?", options: ["Search for valuable genetic resources in biodiversity", "Fossil fuel exploration", "Water drilling", "Mining operations"], correct: 0, points: 2 },
+        { text: "The 'safe minimum standard' (SMS) approach advocates:", options: ["Avoiding irreversible environmental damage unless social costs are unacceptably high", "Maximizing economic growth", "Zero risk tolerance", "Cost-benefit analysis only"], correct: 0, points: 2 },
+        { text: "Which of the following best describes 'environmental justice'?", options: ["Fair distribution of environmental benefits and burdens regardless of race or income", "Only economic efficiency", "Privatization of resources", "Uniform pollution standards globally"], correct: 0, points: 2 },
+        { text: "What does 'contingent behavior' method measure?", options: ["How behavior would change under hypothetical environmental scenarios", "Actual market transactions", "Property price variations", "Health impact assessments"], correct: 0, points: 2 },
+        { text: "The 'rebound effect' in energy efficiency refers to:", options: ["Increased consumption offsetting efficiency gains", "Decrease in overall energy use", "Higher prices reducing demand", "Technological stagnation"], correct: 0, points: 2 },
+        { text: "Which of the following is a transboundary environmental issue?", options: ["Acid rain crossing national borders", "Local traffic congestion", "Municipal waste", "Neighborhood noise"], correct: 0, points: 2 },
+        { text: "What is 'environmental federalism' concerned with?", options: ["Allocation of environmental responsibilities among levels of government", "International treaties", "Corporate environmental management", "Non-governmental organizations"], correct: 0, points: 2 },
+        { text: "The concept of 'full-cost pricing' means:", options: ["Prices should reflect environmental and social costs", "Only private costs matter", "Subsidies for polluters", "Minimum price controls"], correct: 0, points: 2 },
+        { text: "Which term describes the phenomenon where pollution havens attract dirty industries due to lax regulations?", options: ["Pollution haven hypothesis", "Race to the top", "Environmental dumping", "Greenwashing"], correct: 0, points: 2 },
+        { text: "What does 'natural resource accounting' attempt to do?", options: ["Incorporate environmental assets and depletion into national accounts", "Track only financial assets", "Measure GDP exclusively", "Calculate private profits"], correct: 0, points: 2 },
+        { text: "The 'energy ladder' concept relates to:", options: ["Household transition from traditional to modern energy sources", "Energy pricing tiers", "Fuel efficiency standards", "Renewable portfolio standards"], correct: 0, points: 2 },
+        { text: "Which of the following is a market-based instrument for pollution control?", options: ["Emissions trading", "Technology mandate", "Performance standard", "Zoning regulation"], correct: 0, points: 2 },
+        { text: "What does 'circular economy' emphasize?", options: ["Waste reduction, reuse, and recycling to close material loops", "Linear production model", "Maximum extraction of resources", "Single-use products"], correct: 0, points: 2 }
+    ];
+    // Combine to 50 multi questions (first 30 + 20 extras = 50)
+    const FULL_MULTI = [...MULTI_QUESTIONS, ...extraMulti];
+    // Ensure exactly 50
+    while(FULL_MULTI.length < 50) FULL_MULTI.push({ text: "Environmental economics studies the interaction between economy and environment. Which principle is key?", options: ["All of the above", "Market failure", "Externalities", "Valuation"], correct: 0, points: 2 });
+    
+    // ======================= 50 TRUE/FALSE QUESTIONS (1 point each) =======================
+    const TF_QUESTIONS = [];
+    const tfTopics = [
+        "The precautionary principle suggests that scientific uncertainty should delay environmental action.", false,
+        "A Pigouvian tax sets the tax rate equal to the marginal external cost at the efficient outcome.", true,
+        "Cap-and-trade systems always specify a fixed price for emissions.", false,
+        "Non-excludability means it is impossible to prevent people from consuming a good.", true,
+        "The Environmental Kuznets Curve implies that all environmental problems automatically improve with growth.", false,
+        "Contingent valuation is a revealed preference method.", false,
+        "Discounting future benefits tends to give more weight to future generations.", false,
+        "A negative externality occurs when a third party bears costs without compensation.", true,
+        "Public goods are both rivalrous and excludable.", false,
+        "The Coase Theorem suggests that with zero transaction costs, private bargaining leads to efficient outcomes regardless of initial property rights.", true,
+        "Command-and-control regulations are generally more flexible than market-based instruments.", false,
+        "Marginal abatement cost curves show the cost of reducing an additional unit of pollution.", true,
+        "Global climate change is an example of a stock externality.", true,
+        "Ecosystem services include provisioning, regulating, cultural, and supporting services.", true,
+        "The 'tragedy of the commons' applies only to renewable resources.", false,
+        "Environmental justice focuses exclusively on wildlife conservation.", false,
+        "A carbon tax directly limits the quantity of emissions.", false,
+        "Benefit-cost analysis is the only criterion used in environmental policy decisions.", false,
+        "Non-market valuation techniques can estimate the value of clean air.", true,
+        "Strong sustainability requires that natural capital be maintained separately from manufactured capital.", true,
+        "The Montreal Protocol successfully addressed ozone layer depletion.", true,
+        "Green GDP adjusts traditional GDP for environmental degradation.", true,
+        "Externality problems can sometimes be solved through private bargaining according to Coase.", true,
+        "An emissions standard is an example of a market-based instrument.", false,
+        "Willingness to pay (WTP) is typically lower than willingness to accept (WTA) for the same environmental good.", true,
+        "The social discount rate should always be zero to protect future generations.", false,
+        "Pollution permits that are grandfathered create a potential for windfall profits.", true,
+        "Renewable energy sources are always completely carbon-neutral.", false,
+        "Environmental regulations have no impact on innovation.", false,
+        "Free riders undermine the private provision of public goods.", true,
+        "The 'double dividend' hypothesis suggests environmental taxes can reduce both pollution and distortionary taxes.", true,
+        "Hedonic pricing is used to value recreational fishing sites.", false,
+        "Travel cost method relies on actual behavior and expenditures to value recreation sites.", true,
+        "Ambient standards regulate total emissions from a source.", false,
+        "Ozone depletion is primarily caused by carbon dioxide emissions.", false,
+        "Environmental Kuznets Curve has been observed for some local pollutants like SO₂.", true,
+        "Common-pool resources are both rivalrous and non-excludable.", true,
+        "Mitigation refers to adapting to the effects of climate change.", false,
+        "Adaptation involves reducing greenhouse gas emissions.", false,
+        "The social cost of carbon is used in regulatory impact analysis.", true,
+        "Subsidies for fossil fuels are an example of environmentally harmful subsidies.", true,
+        "Biodiversity loss has no economic value.", false,
+        "The 'resource curse' suggests that natural resource abundance may hinder economic growth.", true,
+        "Hyperbolic discounting implies people are consistent over time.", false,
+        "Integrated assessment models combine climate and economic systems.", true,
+        "A technology-forcing standard pushes innovation beyond current capabilities.", true,
+        "Environmental impact statements are required under NEPA in the US.", true,
+        "Sustainable development requires meeting present needs without compromising future generations.", true,
+        "Circular economy principles aim to minimize waste and maximize resource reuse.", true,
+        "The polluter pays principle is universally applied in all countries without exception.", false
+    ];
+    for(let i=0; i<tfTopics.length; i+=2) {
+        if(TF_QUESTIONS.length < 50) {
+            TF_QUESTIONS.push({ text: tfTopics[i], isTrue: tfTopics[i+1], points: 1 });
+        }
+    }
+    while(TF_QUESTIONS.length < 50) TF_QUESTIONS.push({ text: "Environmental economics is only concerned with government regulation.", isTrue: false, points: 1 });
+    
+    // Combine all: first 50 multi (2 pts each), then 50 TF (1 pt each)
+    const ALL_QUESTIONS = [...FULL_MULTI, ...TF_QUESTIONS];
+    const MULTI_COUNT = FULL_MULTI.length;  // 50
+    const TF_COUNT = TF_QUESTIONS.length;    // 50
+    
+    let currentAnswers = new Array(ALL_QUESTIONS.length).fill(null);
+    let savedBest = null; // { name, score, maxScore, timestamp }
+    const STORAGE_KEY = "EnvEconFinalBest";
+    
+    function loadBestScore() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) {
+            try {
+                savedBest = JSON.parse(raw);
+                if(savedBest && typeof savedBest.score === 'number') updateBestDisplay();
+                else savedBest = null;
+            } catch(e) { savedBest = null; }
+        }
+        if(!savedBest) document.getElementById("bestScoreSpan").innerText = "—";
+        else updateBestDisplay();
+    }
+    function updateBestDisplay() {
+        if(savedBest) {
+            document.getElementById("bestScoreSpan").innerHTML = `${savedBest.score}/100 (${savedBest.name || 'Student'})`;
+        } else document.getElementById("bestScoreSpan").innerText = "—";
+    }
+    function maybeSaveNewScore(studentName, score) {
+        if(!studentName.trim()) studentName = "Anonymous";
+        let isBetter = false;
+        if(!savedBest) isBetter = true;
+        else if(score > savedBest.score) isBetter = true;
+        if(isBetter) {
+            savedBest = { name: studentName.trim(), score: score, maxScore: 100, timestamp: Date.now() };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedBest));
+            updateBestDisplay();
+            return true;
+        }
+        return false;
+    }
+    function clearSavedBest() {
+        localStorage.removeItem(STORAGE_KEY);
+        savedBest = null;
+        updateBestDisplay();
+        alert("🗑 Best saved score cleared.");
+    }
+    
+    function renderAllQuestions() {
+        const container = document.getElementById("questionsContainer");
+        if(!container) return;
+        let html = `<div class="section-title">📘 Part A: Multiple Choice (2 points each) — ${MULTI_COUNT} questions</div>`;
+        for(let i=0; i<MULTI_COUNT; i++) {
+            const q = ALL_QUESTIONS[i];
+            const selected = currentAnswers[i];
+            html += `<div class="question-card" data-qidx="${i}"><div class="q-text"><span class="q-num">Q${i+1}</span> ${escapeHtml(q.text)}</div><div class="options">`;
+            q.options.forEach((opt, optIdx) => {
+                const radioId = `mq${i}_opt${optIdx}`;
+                const isChecked = (selected === optIdx);
+                html += `<div class="option" onclick="document.getElementById('${radioId}').click();">
+                            <input type="radio" name="q${i}" id="${radioId}" value="${optIdx}" ${isChecked ? 'checked' : ''}>
+                            <label for="${radioId}">${escapeHtml(opt)}</label>
+                         </div>`;
+            });
+            html += `</div></div>`;
+        }
+        html += `<div class="section-title">✅ Part B: True or False (1 point each) — ${TF_COUNT} questions</div>`;
+        for(let i=0; i<TF_COUNT; i++) {
+            const idx = MULTI_COUNT + i;
+            const q = ALL_QUESTIONS[idx];
+            const selected = currentAnswers[idx];
+            html += `<div class="question-card"><div class="q-text"><span class="q-num">Q${idx+1}</span> ${escapeHtml(q.text)}</div><div class="options">`;
+            const tfOpts = ["True", "False"];
+            tfOpts.forEach((opt, optIdx) => {
+                const boolVal = (optIdx === 0); // true index0
+                const radioId = `tf${idx}_opt${optIdx}`;
+                const isChecked = (selected === optIdx);
+                html += `<div class="option" onclick="document.getElementById('${radioId}').click();">
+                            <input type="radio" name="q${idx}" id="${radioId}" value="${optIdx}" ${isChecked ? 'checked' : ''}>
+                            <label for="${radioId}">${opt}</label>
+                         </div>`;
+            });
+            html += `</div></div>`;
+        }
+        container.innerHTML = html;
+        for(let i=0; i<ALL_QUESTIONS.length; i++) {
+            const radios = document.querySelectorAll(`input[name="q${i}"]`);
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if(e.target.checked) currentAnswers[i] = parseInt(e.target.value);
+                });
+            });
+        }
+    }
+    
+    function computeScoreAndReceipt() {
+        let totalScore = 0;
+        const details = [];
+        for(let i=0; i<ALL_QUESTIONS.length; i++) {
+            const q = ALL_QUESTIONS[i];
+            const userChoice = currentAnswers[i];
+            let isCorrect = false;
+            let correctAns = "";
+            if(i < MULTI_COUNT) {
+                correctAns = q.options[q.correct];
+                isCorrect = (userChoice !== null && userChoice === q.correct);
+                if(isCorrect) totalScore += q.points;
+                details.push({ num: i+1, type: "MC", user: userChoice!==null ? q.options[userChoice] : "Not answered", correct: correctAns, status: isCorrect, points: q.points });
+            } else {
+                const tfCorrect = q.isTrue === true ? 0 : 1;
+                correctAns = q.isTrue ? "True" : "False";
+                isCorrect = (userChoice !== null && userChoice === tfCorrect);
+                if(isCorrect) totalScore += q.points;
+                details.push({ num: i+1, type: "TF", user: userChoice!==null ? (userChoice===0?"True":"False") : "Not answered", correct: correctAns, status: isCorrect, points: q.points });
+            }
+        }
+        const studentNameElem = document.getElementById("studentName");
+        const studentName = studentNameElem ? studentNameElem.value.trim() : "Anonymous";
+        const percent = (totalScore/100)*100;
+        const isNewBest = maybeSaveNewScore(studentName, totalScore);
+        let receiptStr = `===========================================\n`;
+        receiptStr += `   ENVIRONMENTAL ECONOMICS - FINAL EXAM\n`;
+        receiptStr += `===========================================\n`;
+        receiptStr += `👤 Student: ${studentName || "Not provided"}\n`;
+        receiptStr += `📅 Date: ${new Date().toLocaleString()}\n`;
+        receiptStr += `🎯 Total Score: ${totalScore} / 100 (${percent.toFixed(1)}%)\n`;
+        receiptStr += `📊 Part A (MC, 2pts each): score from ${MULTI_COUNT*2} possible\n`;
+        receiptStr += `📊 Part B (TF, 1pt each): score from ${TF_COUNT} possible\n`;
+        receiptStr += `-------------------------------------------\n`;
+        receiptStr += `DETAILED RESULTS (first 10 shown, full in console)\n`;
+        for(let i=0; i<Math.min(15, details.length); i++) {
+            const d = details[i];
+            receiptStr += `Q${d.num} [${d.type}]: ${d.status ? "✓" : "✗"} | Your: ${truncateStr(d.user, 30)} | Correct: ${truncateStr(d.correct,30)}\n`;
+        }
+        if(details.length > 15) receiptStr += `... (${details.length-15} more items. Full receipt printable)\n`;
+        receiptStr += `-------------------------------------------\n`;
+        receiptStr += isNewBest ? `🏆 NEW BEST SCORE SAVED! 🏆\n` : (savedBest ? `⭐ Current best: ${savedBest.score}/100 by ${savedBest.name}\n` : ``);
+        receiptStr += `⚡ Thank you for completing the exam.\n`;
+        document.getElementById("currentScoreBadge").innerHTML = `Current: ${totalScore} / 100`;
+        const receiptDiv = document.getElementById("receiptPanel");
+        const receiptTextDiv = document.getElementById("receiptText");
+        receiptTextDiv.innerText = receiptStr;
+        receiptDiv.style.display = "block";
+        return totalScore;
+    }
+    
+    function resetAllAnswers() {
+        currentAnswers.fill(null);
+        renderAllQuestions();
+        document.getElementById("currentScoreBadge").innerHTML = `Current: 0 / 100`;
+        document.getElementById("receiptPanel").style.display = "none";
+    }
+    
+    function truncateStr(str, len) { if(!str) return "—"; return str.length>len ? str.substring(0,len-2)+".." : str; }
+    function escapeHtml(s) { return s.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function printReceipt() {
+        const receiptContent = document.getElementById("receiptText");
+        if(!receiptContent || !receiptContent.innerText.trim()) { alert("Submit exam first to generate receipt."); return; }
+        const win = window.open('', '_blank', 'width=900,height=700');
+        win.document.write(`<html><head><title>Environmental Economics Exam Receipt</title><style>body{font-family:monospace; padding:2rem;}</style></head><body><pre>${receiptContent.innerText}</pre><hr><footer>Environmental Economics Final Exam</footer></body></html>`);
+        win.document.close();
+        win.print();
+    }
+    
+    document.getElementById("submitExamBtn").addEventListener("click", () => { computeScoreAndReceipt(); });
+    document.getElementById("resetAnswersBtn").addEventListener("click", resetAllAnswers);
+    document.getElementById("clearBestBtn").addEventListener("click", clearSavedBest);
+    document.getElementById("printReceiptBtn").addEventListener("click", printReceipt);
+    renderAllQuestions();
+    loadBestScore();
+</script>
+</body>
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Environmental Economics • Midterm Exam (100 pts)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #f0f4f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Georgia', serif;
+      padding: 20px 16px 50px;
+      color: #1a2e2a;
+    }
+
+    .exam-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* header with eco theme */
+    .hero {
+      background: linear-gradient(135deg, #1e4a3b 0%, #0f2c24 100%);
+      border-radius: 36px;
+      padding: 24px 22px;
+      color: white;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .hero .sub {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .points-badge {
+      background: rgba(255,255,240,0.2);
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* student info card */
+    .student-card {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+      border: 1px solid #dde6e0;
+    }
+    .student-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .student-row label {
+      font-weight: 600;
+      min-width: 100px;
+      color: #1e4a3b;
+    }
+    .student-row input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1.5px solid #cbdcd2;
+      border-radius: 60px;
+      font-size: 1rem;
+      background: #fefef7;
+      font-family: inherit;
+    }
+    .student-row input:focus {
+      outline: none;
+      border-color: #2c7a5e;
+      box-shadow: 0 0 0 2px rgba(44,122,94,0.2);
+    }
+    .save-name-btn {
+      background: #eef3ec;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #1e4a3b;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* progress + score panel */
+    .score-panel {
+      background: white;
+      border-radius: 28px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .score-box {
+      background: #e9f3ef;
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-weight: 700;
+    }
+    .score-box span {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #1e6b4c;
+    }
+    .reset-btn {
+      background: none;
+      border: 1.5px solid #bdd3c5;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .print-receipt {
+      background: #1e4a3b;
+      color: white;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* questions grid */
+    .questions-area {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+    .question-card {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      border: 1px solid #e2ecd9;
+      transition: all 0.1s;
+    }
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      gap: 10px;
+      border-left: 4px solid #2c7a5e;
+      padding-left: 14px;
+    }
+    .q-text {
+      font-weight: 650;
+      font-size: 1.05rem;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .points {
+      background: #f2f8f3;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #2c7a5e;
+    }
+    .options {
+      margin: 14px 0 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fafdf9;
+      padding: 10px 16px;
+      border-radius: 60px;
+      border: 1px solid #e0ecdf;
+      cursor: pointer;
+      transition: 0.05s linear;
+    }
+    .option.selected {
+      background: #e0f2e9;
+      border-color: #2c7a5e;
+    }
+    .option input {
+      width: 20px;
+      height: 20px;
+      accent-color: #2c7a5e;
+      cursor: pointer;
+    }
+    .option label {
+      flex: 1;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      background: #f8faf5;
+      border-left: 4px solid;
+    }
+    .feedback.correct {
+      background: #e8f3e5;
+      border-left-color: #2b8c5e;
+    }
+    .feedback.incorrect {
+      background: #fee9e6;
+      border-left-color: #c95a4a;
+    }
+    .feedback.neutral {
+      border-left-color: #b9cfc0;
+    }
+
+    /* receipt modal */
+    .receipt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+    .receipt-card {
+      max-width: 500px;
+      width: 100%;
+      background: #fffef7;
+      border-radius: 48px;
+      padding: 28px 24px;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.25);
+      font-family: monospace;
+    }
+    .receipt-card h2 {
+      font-family: system-ui;
+      border-bottom: 2px dashed #ccc;
+      padding-bottom: 12px;
+    }
+    .receipt-content {
+      margin: 20px 0;
+      line-height: 1.5;
+    }
+    .close-receipt {
+      background: #1e4a3b;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 60px;
+      width: 100%;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .print-btn-receipt {
+      background: #e9ece5;
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 60px;
+      font-weight: 500;
+      border: 1px solid #bbb;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .receipt-card, .receipt-card * {
+        visibility: visible;
+      }
+      .receipt-overlay {
+        position: absolute;
+        background: white;
+      }
+      .receipt-card {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="exam-wrapper">
+  <div class="hero">
+    <h1>🌿 Environmental Economics <br> Midterm Examination</h1>
+    <div class="sub">
+      <span>📈 Market failures • Externalities • Natural resource valuation</span>
+      <span class="points-badge">🏆 Total: 100 points</span>
+    </div>
+  </div>
+
+  <!-- Student info section -->
+  <div class="student-card">
+    <div class="student-row">
+      <label>📝 Student Name:</label>
+      <input type="text" id="studentNameInput" placeholder="e.g., Alex Rivera" autocomplete="off">
+      <button class="save-name-btn" id="saveNameBtn">💾 Save name</button>
+    </div>
+    <div style="font-size:0.75rem; color:#527a6b;">Name will appear on your printable receipt & auto-saved</div>
+  </div>
+
+  <!-- Score + actions panel -->
+  <div class="score-panel">
+    <div class="score-box">🎯 Score: <span id="totalScoreSpan">0</span> / 100 pts</div>
+    <div style="display: flex; gap: 12px;">
+      <button class="reset-btn" id="resetExamBtn">⟳ Reset all</button>
+      <button class="print-receipt" id="receiptBtn">🧾 Get Receipt</button>
+    </div>
+  </div>
+
+  <div id="questionsContainer" class="questions-area"></div>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // ENVIRONMENTAL ECONOMICS MIDTERM - 100 POINTS (10 questions)
+  // Each question has point value (sum = 100)
+  // --------------------------------------------------------------
+  const examQuestions = [
+    { 
+      text: "What is the 'Tragedy of the Commons' in environmental economics?",
+      options: [
+        "Overexploitation of shared resources due to lack of private property rights",
+        "The depletion of non-renewable energy sources",
+        "A tax policy that discourages green investment",
+        "The collapse of fish stocks only in international waters"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "Tragedy of the commons describes how individuals acting rationally deplete a shared resource, leading to collective ruin."
+    },
+    {
+      text: "Which of the following is an example of a negative externality?",
+      options: [
+        "A beekeeper’s bees pollinate neighboring crops",
+        "A factory emits pollution affecting nearby residents' health",
+        "Installing solar panels reduces electricity bills",
+        "Planting trees increases property values"
+      ],
+      correct: 1,
+      points: 10,
+      explanation: "Negative externalities occur when a production/consumption activity imposes costs on third parties (e.g., pollution)."
+    },
+    {
+      text: "The Coase Theorem suggests that private bargaining can solve externalities if:",
+      options: [
+        "Transaction costs are zero and property rights are clearly defined",
+        "Government imposes a Pigouvian tax",
+        "Subsidies are given to polluters",
+        "There is command-and-control regulation"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "Coase theorem: with clear property rights and negligible transaction costs, parties can negotiate efficient outcomes."
+    },
+    {
+      text: "What is the main purpose of a Pigouvian tax?",
+      options: [
+        "To subsidize green technology",
+        "To correct negative externalities by taxing the harmful activity",
+        "To reduce income inequality",
+        "To promote cap-and-trade systems"
+      ],
+      correct: 1,
+      points: 10,
+      explanation: "Pigouvian taxes set a price equal to the external damage, internalizing the externality."
+    },
+    {
+      text: "Which concept refers to the maximum amount of a renewable resource that can be harvested without reducing future stock?",
+      options: [
+        "Maximum sustainable yield (MSY)",
+        "Discount rate",
+        "Net present value",
+        "Carrying capacity threshold"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "MSY is the highest harvest rate that maintains resource stock over time, key in renewable resource economics."
+    },
+    {
+      text: "In cost-benefit analysis for environmental projects, future costs and benefits are discounted to present value because:",
+      options: [
+        "People prefer immediate benefits and future costs matter less due to time preference",
+        "Inflation always rises",
+        "It simplifies the math",
+        "Environmental damage is always linear"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "Discounting reflects social time preference — future generations' wellbeing is weighted less in standard analysis."
+    },
+    {
+      text: "Which policy instrument puts a cap on total emissions and allows trading of emission permits?",
+      options: [
+        "Green subsidy",
+        "Emissions trading system (Cap-and-trade)",
+        "Environmental impact assessment",
+        "Technology standard"
+      ],
+      correct: 1,
+      points: 10,
+      explanation: "Cap-and-trade limits aggregate emissions and lets firms trade allowances, achieving cost-effective reductions."
+    },
+    {
+      text: "What does 'willingness to pay' (WTP) measure in environmental valuation?",
+      options: [
+        "The maximum amount individuals would pay for an environmental improvement",
+        "The minimum compensation for environmental damage",
+        "Actual market price of ecosystem services",
+        "Government budget for conservation"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "WTP is used in contingent valuation to estimate non-market environmental benefits."
+    },
+    {
+      text: "Which of the following is a key challenge for non-renewable resource extraction according to Hotelling’s rule?",
+      options: [
+        "Resource price should rise at the rate of interest over time",
+        "Extraction must stop immediately",
+        "Renewable substitutes are always available",
+        "Marginal cost equals zero"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "Hotelling rule: price of exhaustible resource increases at the discount rate to balance present vs future extraction."
+    },
+    {
+      text: "Environmental Kuznets Curve (EKC) hypothesis suggests that:",
+      options: [
+        "Environmental degradation first increases then decreases with income per capita",
+        "Pollution rises monotonically with economic growth",
+        "Trade liberalization always harms environment",
+        "Environmental quality improves only after dictatorship"
+      ],
+      correct: 0,
+      points: 10,
+      explanation: "EKC proposes an inverted-U relationship: early growth degrades environment, later growth enables cleanup."
+    }
+  ];
+
+  // total points = sum of all points
+  const TOTAL_POINTS = examQuestions.reduce((sum, q) => sum + q.points, 0);
+  const TOTAL_QS = examQuestions.length;
+
+  // State: selected answers index per question (-1 = none)
+  let userSelections = new Array(TOTAL_QS).fill(-1);
+  let studentName = "";
+
+  // DOM elements
+  const container = document.getElementById("questionsContainer");
+  const totalScoreSpan = document.getElementById("totalScoreSpan");
+  const studentNameInput = document.getElementById("studentNameInput");
+  const saveNameBtn = document.getElementById("saveNameBtn");
+  const resetBtn = document.getElementById("resetExamBtn");
+  const receiptBtn = document.getElementById("receiptBtn");
+
+  // Helper: calculate current points earned
+  function computePointsEarned() {
+    let earned = 0;
+    for (let i = 0; i < TOTAL_QS; i++) {
+      if (userSelections[i] !== -1 && userSelections[i] === examQuestions[i].correct) {
+        earned += examQuestions[i].points;
+      }
+    }
+    return earned;
+  }
+
+  // update score display and optionally refresh all cards feedbacks
+  function updateGlobalScoreAndUI() {
+    const earned = computePointsEarned();
+    totalScoreSpan.innerText = earned;
+    // update each card's feedback styling
+    for (let i = 0; i < TOTAL_QS; i++) {
+      updateSingleFeedback(i);
+    }
+    // save selections & score to localStorage
+    saveToLocalStorage();
+  }
+
+  // update feedback and highlight for a specific question
+  function updateSingleFeedback(qIdx) {
+    const card = document.getElementById(`card-${qIdx}`);
+    if (!card) return;
+    const selected = userSelections[qIdx];
+    const question = examQuestions[qIdx];
+    const feedbackDiv = document.getElementById(`fb-${qIdx}`);
+    if (!feedbackDiv) return;
+
+    // also update option selected style
+    for (let opt = 0; opt < question.options.length; opt++) {
+      const optDiv = document.getElementById(`optDiv-${qIdx}-${opt}`);
+      if (optDiv) {
+        if (selected === opt) optDiv.classList.add("selected");
+        else optDiv.classList.remove("selected");
+      }
+      const radio = document.getElementById(`q${qIdx}_opt${opt}`);
+      if (radio) radio.checked = (selected === opt);
+    }
+
+    if (selected === -1) {
+      feedbackDiv.innerHTML = `<div class="explanation">📌 No answer yet — choose an option to check (${question.points} pts)</div>`;
+      feedbackDiv.className = "feedback neutral";
+      return;
+    }
+    const isCorrect = (selected === question.correct);
+    const correctLetter = String.fromCharCode(65 + question.correct);
+    const correctAnswerText = question.options[question.correct];
+    if (isCorrect) {
+      feedbackDiv.innerHTML = `<div class="explanation">✅ Correct! +${question.points} pts</div><div>${question.explanation}</div>`;
+      feedbackDiv.className = "feedback correct";
+    } else {
+      feedbackDiv.innerHTML = `<div class="explanation">❌ Incorrect (0 pts)</div><div>${question.explanation}<br><span style="font-weight:500;">✔ Correct answer: ${correctLetter}. ${correctAnswerText}</span></div>`;
+      feedbackDiv.className = "feedback incorrect";
+    }
+  }
+
+  // on selection handler
+  function onSelectOption(qIdx, optIdx) {
+    userSelections[qIdx] = optIdx;
+    updateGlobalScoreAndUI();
+    // optional: scroll effect? no needed
+  }
+
+  // reset all answers
+  function resetAllAnswers() {
+    userSelections = new Array(TOTAL_QS).fill(-1);
+    for (let i = 0; i < TOTAL_QS; i++) {
+      updateSingleFeedback(i);
+    }
+    updateGlobalScoreAndUI();
+    // do not reset student name
+  }
+
+  // local storage save (score + selections + student name)
+  function saveToLocalStorage() {
+    try {
+      localStorage.setItem("envEcon_selections", JSON.stringify(userSelections));
+      localStorage.setItem("envEcon_studentName", studentNameInput.value);
+      localStorage.setItem("envEcon_score", computePointsEarned());
+    } catch(e) {}
+  }
+
+  function loadFromLocalStorage() {
+    try {
+      const savedSelections = localStorage.getItem("envEcon_selections");
+      if (savedSelections) {
+        const parsed = JSON.parse(savedSelections);
+        if (Array.isArray(parsed) && parsed.length === TOTAL_QS) {
+          userSelections = parsed;
+          for (let i = 0; i < TOTAL_QS; i++) {
+            if (userSelections[i] < -1 || userSelections[i] >= examQuestions[i].options.length) userSelections[i] = -1;
+          }
+        }
+      }
+      const savedName = localStorage.getItem("envEcon_studentName");
+      if (savedName) {
+        studentNameInput.value = savedName;
+        studentName = savedName;
+      }
+      // rebuild UI sync
+      for (let i = 0; i < TOTAL_QS; i++) {
+        updateSingleFeedback(i);
+      }
+      updateGlobalScoreAndUI();
+    } catch(e) {}
+  }
+
+  // generate full exam HTML
+  function buildExam() {
+    let html = "";
+    for (let i = 0; i < examQuestions.length; i++) {
+      const q = examQuestions[i];
+      const qNumber = i+1;
+      const optionsHtml = q.options.map((opt, optIdx) => {
+        const optLetter = String.fromCharCode(65 + optIdx);
+        return `
+          <div class="option" id="optDiv-${i}-${optIdx}" data-qidx="${i}" data-optidx="${optIdx}">
+            <input type="radio" name="q${i}" id="q${i}_opt${optIdx}" value="${optIdx}">
+            <label for="q${i}_opt${optIdx}"><strong>${optLetter}.</strong> ${escapeHtml(opt)}</label>
+          </div>
+        `;
+      }).join('');
+
+      html += `
+        <div class="question-card" id="card-${i}">
+          <div class="q-header">
+            <div class="q-text">${qNumber}. ${escapeHtml(q.text)}</div>
+            <div class="points">${q.points} pts</div>
+          </div>
+          <div class="options" id="options-${i}">
+            ${optionsHtml}
+          </div>
+          <div class="feedback neutral" id="fb-${i}">
+            <div class="explanation">📌 Not answered (${q.points} pts possible)</div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+
+    // attach event listeners after render
+    for (let i = 0; i < examQuestions.length; i++) {
+      for (let opt = 0; opt < examQuestions[i].options.length; opt++) {
+        const radio = document.getElementById(`q${i}_opt${opt}`);
+        if (radio) {
+          radio.addEventListener('change', (function(qIdx, oIdx) {
+            return function(e) {
+              if (e.target.checked) {
+                onSelectOption(qIdx, oIdx);
+              }
+            };
+          })(i, opt));
+        }
+        const optionDiv = document.getElementById(`optDiv-${i}-${opt}`);
+        if (optionDiv) {
+          optionDiv.addEventListener('click', (function(qIdx, oIdx) {
+            return function(ev) {
+              const radioEl = document.getElementById(`q${qIdx}_opt${oIdx}`);
+              if (radioEl && !radioEl.checked) {
+                radioEl.checked = true;
+                const changeEvent = new Event('change', { bubbles: true });
+                radioEl.dispatchEvent(changeEvent);
+              }
+            };
+          })(i, opt));
+        }
+      }
+    }
+    // after building, refresh UI based on loaded selections
+    for (let i = 0; i < TOTAL_QS; i++) {
+      updateSingleFeedback(i);
+    }
+    updateGlobalScoreAndUI();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // PRINTABLE RECEIPT with student name, score and detailed answers
+  function showReceipt() {
+    const student = studentNameInput.value.trim() || "Anonymous Student";
+    const earnedPoints = computePointsEarned();
+    const percentage = ((earnedPoints / TOTAL_POINTS) * 100).toFixed(1);
+    const date = new Date().toLocaleString();
+
+    let answersDetails = "";
+    for (let i = 0; i < examQuestions.length; i++) {
+      const q = examQuestions[i];
+      const selectedIdx = userSelections[i];
+      const isCorrect = (selectedIdx !== -1 && selectedIdx === q.correct);
+      const selectedLetter = selectedIdx !== -1 ? String.fromCharCode(65 + selectedIdx) : "—";
+      const correctLetter = String.fromCharCode(65 + q.correct);
+      const pointsEarnedHere = (isCorrect ? q.points : 0);
+      answersDetails += `
+        <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dotted #ccc;">
+          <strong>Q${i+1} (${q.points} pts):</strong> ${q.text.substring(0, 80)}${q.text.length>80?'…':''}<br>
+          Your answer: ${selectedLetter} | Points: ${pointsEarnedHere}/${q.points} ${isCorrect ? '✓' : '✗'}<br>
+          <span style="font-size:0.75rem;">Correct: ${correctLetter}. ${q.options[q.correct]}</span>
+        </div>
+      `;
+    }
+
+    const receiptHTML = `
+      <div class="receipt-overlay" id="receiptOverlay">
+        <div class="receipt-card">
+          <h2>🌿 ENVIRONMENTAL ECONOMICS</h2>
+          <div style="font-family: monospace;">
+            <p><strong>MIDTERM OFFICIAL RECEIPT</strong></p>
+            <p>Student: ${escapeHtml(student)}</p>
+            <p>Date: ${date}</p>
+            <hr>
+            <p><strong>Total Score: ${earnedPoints} / ${TOTAL_POINTS} points (${percentage}%)</strong></p>
+            <hr>
+            <div style="max-height: 300px; overflow-y: auto; font-size: 0.8rem;">
+              ${answersDetails}
+            </div>
+            <hr>
+            <p style="text-align:center;">✧ Thank you for taking the exam ✧<br>This receipt is electronically generated.</p>
+            <button class="print-btn-receipt" id="printReceiptBtn">🖨️ Print / Save as PDF</button>
+            <button class="close-receipt" id="closeReceiptBtn">Close</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // remove existing overlay if any
+    const existing = document.getElementById("receiptOverlay");
+    if (existing) existing.remove();
+    document.body.insertAdjacentHTML('beforeend', receiptHTML);
+
+    const closeBtn = document.getElementById("closeReceiptBtn");
+    const printBtn = document.getElementById("printReceiptBtn");
+    const overlay = document.getElementById("receiptOverlay");
+
+    closeBtn.addEventListener("click", () => {
+      overlay.remove();
+    });
+    printBtn.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
+  // event binding for save name + reset + receipt
+  function bindGlobalActions() {
+    saveNameBtn.addEventListener("click", () => {
+      studentName = studentNameInput.value.trim();
+      saveToLocalStorage();
+      // optional mini feedback
+      alert(`Name saved: ${studentName || "Anonymous"}`);
+    });
+    resetBtn.addEventListener("click", () => {
+      if (confirm("Reset all answers? Your current progress will be lost.")) {
+        resetAllAnswers();
+      }
+    });
+    receiptBtn.addEventListener("click", () => {
+      showReceipt();
+    });
+    studentNameInput.addEventListener("input", () => {
+      saveToLocalStorage();
+    });
+  }
+
+  // initialize app
+  function init() {
+    buildExam();
+    loadFromLocalStorage();  // loads selections and name into userSelections & name field
+    bindGlobalActions();
+  }
+
+  init();
+</script>
+</body>
+</html>

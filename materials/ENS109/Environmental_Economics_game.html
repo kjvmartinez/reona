@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EcoEcon Balance: Environmental Economics Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* better for click events on game buttons */
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a472a 0%, #0e2a1a 100%);
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* main game panel */
+        .game-container {
+            max-width: 1300px;
+            width: 100%;
+            background: #fef7e0;
+            background-image: radial-gradient(circle at 10% 30%, rgba(200,230,170,0.2) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            border-radius: 64px 64px 48px 48px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,200,0.6);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* header section */
+        .game-header {
+            background: #2c5e2e;
+            padding: 1rem 2rem;
+            color: #ffefcf;
+            text-shadow: 2px 2px 0 #1e3a1e;
+            border-bottom: 4px solid #f3b33d;
+        }
+
+        .game-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .badge {
+            background: #f3b33d;
+            color: #1f3b1a;
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-weight: bold;
+            text-shadow: none;
+            box-shadow: inset 0 -1px 0 #a0661a, 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* dashboard: resources + pollution */
+        .stats-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px 30px;
+            background: #e9f0da;
+            border-bottom: 2px solid #cbdca0;
+            justify-content: space-between;
+        }
+
+        .stat-card {
+            background: #fff8ea;
+            border-radius: 40px;
+            padding: 10px 20px;
+            flex: 1;
+            min-width: 160px;
+            box-shadow: 0 5px 0 #b3b27a;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3b5a2b;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 5px 0;
+            color: #1f3b1a;
+        }
+
+        .trend {
+            font-size: 0.8rem;
+            background: #e9e0b0;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        /* game round and feedback */
+        .info-area {
+            padding: 15px 30px;
+            background: #fbf5e3;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid #e2d8b6;
+        }
+
+        .round-counter {
+            font-weight: bold;
+            background: #283e26;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #f7e05e;
+        }
+
+        .message-box {
+            background: #e9e0b0;
+            padding: 6px 18px;
+            border-radius: 32px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2b4823;
+            max-width: 500px;
+        }
+
+        /* policy cards grid */
+        .policies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            padding: 30px;
+        }
+
+        .policy-card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 10px 18px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease, box-shadow 0.2s;
+            cursor: pointer;
+            border-left: 8px solid #74b96a;
+            overflow: hidden;
+        }
+
+        .policy-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.3);
+        }
+
+        .policy-card.disabled {
+            opacity: 0.6;
+            filter: grayscale(0.1);
+            pointer-events: none;
+            transform: none;
+        }
+
+        .policy-title {
+            background: #f6f2e0;
+            padding: 14px 18px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c6e2c;
+            border-bottom: 1px solid #cfe2b0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .policy-desc {
+            padding: 14px 18px;
+            font-size: 0.85rem;
+            color: #2c3e2b;
+            background: #ffffff;
+            line-height: 1.4;
+            border-bottom: 1px solid #e9f0da;
+        }
+
+        .policy-effects {
+            padding: 12px 18px;
+            background: #faf7e6;
+            font-size: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .effect {
+            display: inline-block;
+            background: #eef3e0;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .green-effect {
+            color: #1f6d1f;
+        }
+        .red-effect {
+            color: #b13b2d;
+        }
+
+        .apply-btn {
+            display: block;
+            text-align: center;
+            background: #3b7a3e;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            margin: 8px 18px 18px 18px;
+            border-radius: 60px;
+            transition: 0.1s linear;
+            border: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .apply-btn:active {
+            transform: scale(0.97);
+            background: #245e26;
+        }
+
+        /* game over & reset */
+        .game-overlay {
+            position: relative;
+        }
+        .reset-area {
+            display: flex;
+            justify-content: center;
+            padding: 10px 30px 30px 30px;
+        }
+        .reset-btn {
+            background: #f3b33d;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 12px 32px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 5px 0 #a76f1a;
+            transition: 0.05s linear;
+            color: #2c3e1f;
+        }
+        .reset-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #a76f1a;
+        }
+
+        footer {
+            background: #1e3a1a;
+            text-align: center;
+            color: #bfdba2;
+            padding: 12px;
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 700px) {
+            .stats-panel { flex-direction: column; }
+            .policy-title { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameRoot">
+    <div class="game-header">
+        <h1>
+            🌿 EcoEcon Balance
+            <span class="badge">📘 Environmental Economics Simulator</span>
+        </h1>
+        <p style="margin:5px 0 0; font-size:0.8rem;">Balance GDP growth, pollution, and natural capital. Choose policies wisely!</p>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stat-card"><div class="stat-label">💰 GDP (million $)</div><div class="stat-value" id="gdpVal">500</div><div class="trend">📈 economic output</div></div>
+        <div class="stat-card"><div class="stat-label">🌫️ Pollution Index</div><div class="stat-value" id="pollutionVal">45</div><div class="trend">⚠️ lower is better</div></div>
+        <div class="stat-card"><div class="stat-label">🌲 Natural Capital</div><div class="stat-value" id="natureVal">70</div><div class="trend">🍃 ecosystem health</div></div>
+        <div class="stat-card"><div class="stat-label">📊 Public Approval</div><div class="stat-value" id="approvalVal">65</div><div class="trend">❤️ social license</div></div>
+    </div>
+
+    <div class="info-area">
+        <div class="round-counter">📅 Year <span id="roundNum">1</span> / <span id="maxRound">8</span></div>
+        <div class="message-box" id="feedbackMsg">🌱 Choose a policy to shape the economy & environment!</div>
+    </div>
+
+    <div id="policiesContainer" class="policies-grid"></div>
+
+    <div class="reset-area">
+        <button class="reset-btn" id="resetGameBtn">🔄 RESTART SIMULATION</button>
+    </div>
+    <footer>📚 Learning supplement: Environmental Economics — explore trade-offs between growth, pollution taxes, cap-and-trade, conservation & green subsidies.</footer>
+</div>
+
+<script>
+    // ----------------------------- GAME STATE ---------------------------------
+    let currentRound = 1;
+    const MAX_ROUNDS = 8;
+    let gameActive = true;
+    let gameOverReason = "";
+
+    // Core metrics
+    let gdp = 500;          // million $
+    let pollution = 45;     // 0-100 (higher is worse)
+    let naturalCapital = 70; // 0-100
+    let approval = 65;       // 0-100
+
+    // Policy definitions: each policy has effects on GDP, pollution, nature, approval, plus unique flavor
+    const POLICIES = [
+        {
+            id: "dirty_subsidy",
+            name: "🏭 Fossil Fuel Subsidy",
+            description: "Short-term boost to heavy industry, but increases pollution & degrades natural capital.",
+            effects: { gdp: 45, pollution: 18, nature: -12, approval: -8 },
+            flavor: "GDP jumps, but citizens worry about smog."
+        },
+        {
+            id: "carbon_tax",
+            name: "💰 Carbon Tax",
+            description: "Pigouvian tax: reduces pollution, raises revenue but slightly slows GDP growth. Public divided.",
+            effects: { gdp: -12, pollution: -22, nature: 5, approval: -2 },
+            flavor: "Emissions drop! Firms adapt, but some industries protest."
+        },
+        {
+            id: "cap_trade",
+            name: "📈 Cap-and-Trade",
+            description: "Market-based system: limits total emissions + flexibility. Boosts green innovation.",
+            effects: { gdp: 5, pollution: -18, nature: 8, approval: 6 },
+            flavor: "Emission permits create efficient pollution reduction."
+        },
+        {
+            id: "reforestation",
+            name: "🌳 Reforestation Grants",
+            description: "Restore natural capital, improves carbon sink. Public loves it, moderate cost.",
+            effects: { gdp: -8, pollution: -7, nature: 22, approval: 12 },
+            flavor: "Forests regrow, biodiversity increases, communities celebrate."
+        },
+        {
+            id: "green_subsidy",
+            name: "☀️ Green Energy Subsidy",
+            description: "Subsidize renewables → lowers pollution, creates new green jobs (small GDP boost long term).",
+            effects: { gdp: 12, pollution: -15, nature: 9, approval: 10 },
+            flavor: "Solar & wind boom! Air quality improves."
+        },
+        {
+            id: "laissez_faire",
+            name: "📉 Deregulation",
+            description: "Remove environmental rules: GDP grows fast, but pollution spikes & nature suffers.",
+            effects: { gdp: 55, pollution: 28, nature: -18, approval: -20 },
+            flavor: "Businesses cheer but activists protest. Rivers get murkier."
+        }
+    ];
+
+    // DOM elements
+    const gdpSpan = document.getElementById('gdpVal');
+    const pollutionSpan = document.getElementById('pollutionVal');
+    const natureSpan = document.getElementById('natureVal');
+    const approvalSpan = document.getElementById('approvalVal');
+    const roundNumSpan = document.getElementById('roundNum');
+    const maxRoundSpan = document.getElementById('maxRound');
+    const feedbackDiv = document.getElementById('feedbackMsg');
+    const policiesContainer = document.getElementById('policiesContainer');
+    const resetBtn = document.getElementById('resetGameBtn');
+
+    // Helper: clamp values between 0 and 100 (GDP can be below 0 but we treat as economic collapse condition)
+    function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function clampAllStats() {
+        // pollution & nature & approval always 0-100
+        pollution = clamp(pollution, 0, 100);
+        naturalCapital = clamp(naturalCapital, 0, 100);
+        approval = clamp(approval, 0, 100);
+        // GDP can go negative -> but game over if negative or too extreme
+        if (gdp < 0) gdp = 0;
+    }
+
+    // check lose/win conditions based on metrics
+    function evaluateGameOver() {
+        if (!gameActive) return true;
+        let reason = "";
+        if (pollution >= 95) reason = "☠️ Pollution reached catastrophic levels! Ecosystem collapse. Game over.";
+        else if (naturalCapital <= 10) reason = "🍂 Natural capital depleted beyond recovery. Society fails.";
+        else if (approval <= 10) reason = "📢 Public approval plummeted! Government overthrown.";
+        else if (gdp <= 30 && currentRound > 2) reason = "💸 Economic depression! No funds left for public services.";
+        else if (currentRound > MAX_ROUNDS) {
+            // win condition: survive 8 years with decent metrics
+            if (pollution <= 55 && naturalCapital >= 45 && approval >= 45) {
+                reason = "🏆 VICTORY! You led a sustainable economy with balanced growth & environmental stewardship. Congratulations, Minister!";
+            } else {
+                reason = "📅 Term ended. Final evaluation: Mixed results. " + 
+                         (pollution > 70 ? "High pollution. " : "") + 
+                         (naturalCapital < 40 ? "Weak natural assets. " : "") +
+                         "Better luck next term!";
+            }
+            gameActive = false;
+            gameOverReason = reason;
+            return true;
+        }
+        if (reason !== "") {
+            gameActive = false;
+            gameOverReason = reason;
+            return true;
+        }
+        return false;
+    }
+
+    function updateUI() {
+        gdpSpan.innerText = Math.floor(gdp);
+        pollutionSpan.innerText = Math.floor(pollution);
+        natureSpan.innerText = Math.floor(naturalCapital);
+        approvalSpan.innerText = Math.floor(approval);
+        roundNumSpan.innerText = currentRound;
+        maxRoundSpan.innerText = MAX_ROUNDS;
+        
+        if (!gameActive) {
+            feedbackDiv.innerHTML = `⛔ ${gameOverReason} ⛔  Click RESTART to play again.`;
+            // disable all policy buttons
+            document.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = "0.5";
+                btn.style.pointerEvents = "none";
+            });
+        } else {
+            // ensure buttons are enabled if game active
+            document.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "auto";
+            });
+        }
+    }
+
+    // apply policy effects
+    function applyPolicy(policy) {
+        if (!gameActive) return false;
+        const eff = policy.effects;
+        // apply delta changes
+        gdp += eff.gdp;
+        pollution += eff.pollution;
+        naturalCapital += eff.nature;
+        approval += eff.approval;
+        
+        // clamp all within reasonable ranges
+        clampAllStats();
+        
+        // additional sanity: if any metric hits extreme, game over might trigger
+        const gameEnded = evaluateGameOver();
+        updateUI();
+        
+        // provide feedback message flavor + actual numbers
+        let deltaMsg = [];
+        if (eff.gdp !== 0) deltaMsg.push(`GDP ${eff.gdp>0 ? '+' : ''}${eff.gdp}`);
+        if (eff.pollution !== 0) deltaMsg.push(`Pollution ${eff.pollution>0 ? '+' : ''}${eff.pollution}`);
+        if (eff.nature !== 0) deltaMsg.push(`Nature ${eff.nature>0 ? '+' : ''}${eff.nature}`);
+        if (eff.approval !== 0) deltaMsg.push(`Approval ${eff.approval>0 ? '+' : ''}${eff.approval}`);
+        
+        feedbackDiv.innerHTML = `📌 ${policy.name}: ${policy.flavor} (${deltaMsg.join(', ')})`;
+        
+        // advance round after applying policy (year passes)
+        if (!gameEnded) {
+            currentRound++;
+            // check again for end-of-term after increment
+            evaluateGameOver();
+            updateUI();
+            if (currentRound <= MAX_ROUNDS && gameActive) {
+                feedbackDiv.innerHTML = `✅ Year ${currentRound-1} policy enacted. → Now Year ${currentRound}. ${feedbackDiv.innerHTML}`;
+            } else {
+                // force re-evaluate if game just ended
+                if(gameActive) evaluateGameOver();
+                updateUI();
+            }
+        }
+        return true;
+    }
+
+    // render policy cards dynamically
+    function renderPolicies() {
+        policiesContainer.innerHTML = "";
+        POLICIES.forEach(policy => {
+            const card = document.createElement('div');
+            card.className = 'policy-card';
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'policy-title';
+            titleDiv.innerHTML = `${policy.name}`;
+            
+            const descDiv = document.createElement('div');
+            descDiv.className = 'policy-desc';
+            descDiv.innerText = policy.description;
+            
+            const effectsDiv = document.createElement('div');
+            effectsDiv.className = 'policy-effects';
+            const gdpEff = policy.effects.gdp;
+            const polEff = policy.effects.pollution;
+            const natEff = policy.effects.nature;
+            const appEff = policy.effects.approval;
+            
+            effectsDiv.innerHTML = `
+                <span class="effect ${gdpEff>=0 ? 'green-effect' : 'red-effect'}">💰 ${gdpEff>=0?'+':''}${gdpEff}</span>
+                <span class="effect ${polEff<=0 ? 'green-effect' : 'red-effect'}">🌫️ ${polEff>=0?'+':''}${polEff}</span>
+                <span class="effect ${natEff>=0 ? 'green-effect' : 'red-effect'}">🌲 ${natEff>=0?'+':''}${natEff}</span>
+                <span class="effect ${appEff>=0 ? 'green-effect' : 'red-effect'}">❤️ ${appEff>=0?'+':''}${appEff}</span>
+            `;
+            
+            const applyButton = document.createElement('button');
+            applyButton.innerText = "📋 Implement Policy";
+            applyButton.className = "apply-btn";
+            applyButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!gameActive) {
+                    feedbackDiv.innerHTML = "⚠️ Game over. Press restart to begin a new simulation.";
+                    return;
+                }
+                if (currentRound > MAX_ROUNDS) {
+                    feedbackDiv.innerHTML = "🏁 Term finished. Please restart to play again.";
+                    return;
+                }
+                applyPolicy(policy);
+                // re-render might reflect disabled state after game over, but also update card styles if needed
+                if (!gameActive) renderPolicies(); // refresh to disable buttons visually
+                else {
+                    // subtle: update UI highlights maybe not needed, but keep card active
+                }
+            });
+            
+            card.appendChild(titleDiv);
+            card.appendChild(descDiv);
+            card.appendChild(effectsDiv);
+            card.appendChild(applyButton);
+            policiesContainer.appendChild(card);
+        });
+    }
+
+    // full reset function
+    function resetGame() {
+        currentRound = 1;
+        gameActive = true;
+        gameOverReason = "";
+        gdp = 500;
+        pollution = 45;
+        naturalCapital = 70;
+        approval = 65;
+        clampAllStats();
+        updateUI();
+        renderPolicies();  // fresh cards with active buttons
+        feedbackDiv.innerHTML = "🌱 New term! Choose your first environmental-economic policy. Balance is key!";
+        // ensure any disabled buttons from previous game over are re-enabled
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.style.pointerEvents = "auto";
+        });
+        // edge: re-evaluate any conditions (none)
+        evaluateGameOver(); // should return false
+        updateUI();
+    }
+
+    // additional dynamic game hints for extra learning (tooltips)
+    function attachLearningTooltips() {
+        // simple hover effect - we can add descriptive static titles
+        const statCards = document.querySelectorAll('.stat-card');
+        if(statCards.length){
+            statCards[0].setAttribute('title', 'Gross Domestic Product: market value of goods & services. Environmental policies often impact GDP growth.');
+            statCards[1].setAttribute('title', 'Pollution Index: higher = more air/water pollution. Negative externalities require regulation.');
+            statCards[2].setAttribute('title', 'Natural Capital: forests, clean water, biodiversity. Key for long-term sustainability.');
+            statCards[3].setAttribute('title', 'Public Approval: social acceptance of policies. Environmental justice matters.');
+        }
+    }
+
+    // initialization and event listener
+    function init() {
+        renderPolicies();
+        updateUI();
+        resetBtn.addEventListener('click', () => resetGame());
+        attachLearningTooltips();
+        // Extra: display a starting message about game mechanics
+        feedbackDiv.innerHTML = "🎓 Welcome to Environmental Economics! Select policies each year. Monitor GDP, pollution, natural capital & approval. Survive 8 years for success!";
+        // manual clamp to make sure start is consistent
+        clampAllStats();
+        updateUI();
+    }
+    
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Environmental Economics | 100-Item Comprehensive Exam</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f1f5f9;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #0f172a;
+      line-height: 1.5;
+    }
+    .main-container {
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .exam-masthead {
+      background: linear-gradient(105deg, #0b3d5f 0%, #1b6b8f 100%);
+      color: white;
+      border-radius: 1.5rem;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .exam-title h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .exam-title p {
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    .student-card {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      padding: 1rem 1.5rem;
+      border-radius: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .student-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .student-field label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+    .student-field input {
+      background: white;
+      border: none;
+      border-radius: 0.7rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #0b3d5f;
+      width: 180px;
+    }
+    .student-field input:focus {
+      outline: 2px solid #ffb347;
+    }
+    .score-panel {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 1.4rem;
+      padding: 1.2rem 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 0.8rem;
+      z-index: 20;
+    }
+    .score-area {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .score-badge {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #e9eef3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #334155;
+      transition: 0.3s;
+    }
+    .score-badge.pass { background: #10b981; color: white; }
+    .score-badge.fail { background: #ef4444; color: white; }
+    .action-buttons { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .btn {
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: white;
+      border: 1px solid #cbd5e1;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .btn-primary { background: #0b3d5f; border-color: #0b3d5f; color: white; }
+    .btn-primary:hover { background: #124e72; }
+    .btn-outline { border-color: #0b3d5f; color: #0b3d5f; }
+    .btn-outline:hover { background: #e6f0f5; }
+    .btn-accent { background: #ea580c; border-color: #ea580c; color: white; }
+    .btn-accent:hover { background: #c2410c; }
+    .btn:disabled { opacity: 0.5; pointer-events: none; }
+    .section {
+      margin-bottom: 1.8rem;
+      border: 1px solid #dee6ef;
+      border-radius: 1.4rem;
+      overflow: hidden;
+    }
+    .section-header {
+      background: #f1f5f9;
+      padding: 1rem 1.8rem;
+      font-weight: 700;
+      color: #0b3d5f;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-body { padding: 1.2rem 1.8rem 1.8rem; }
+    .collapsed .section-body { display: none; }
+    .question {
+      margin-bottom: 1.8rem;
+      border-bottom: 1px dashed #dce3eb;
+      padding-bottom: 1rem;
+    }
+    .q-num { font-weight: 700; color: #0b3d5f; }
+    .options { margin-top: 0.4rem; padding-left: 1.2rem; }
+    .option {
+      display: block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-bottom: 0.2rem;
+    }
+    .option:hover { background: #f8fafc; }
+    .correct-highlight { background: #d1fae5; border:1px solid #6ee7b7; font-weight: 600; }
+    .selected-incorrect { background: #fee2e2; border:1px solid #fca5a5; text-decoration: line-through; }
+    .tf-group { display: flex; gap: 1.5rem; margin-top: 0.4rem; }
+    .tf-option {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid #cbd5e1;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .match-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .match-term { font-weight: 600; min-width: 190px; }
+    select {
+      padding: 0.5rem 1rem;
+      border-radius: 0.8rem;
+      border: 1px solid #cbd5e1;
+      background: white;
+    }
+    .id-input {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 0.8rem;
+      border: 1px solid #cbd5e1;
+      margin-top: 0.3rem;
+    }
+    .feedback { font-size: 0.85rem; margin-top: 0.3rem; }
+    @media print {
+      body { background: white; }
+      .score-panel, .btn, .section-header { display: none; }
+      .section-body { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="main-container" id="examApp">
+  <div class="exam-masthead">
+    <div class="exam-title">
+      <h1>📘 Environmental Economics</h1>
+      <p>Comprehensive Examination (100 items)</p>
+      <span id="timerDisplay" style="margin-left:1rem; font-weight:600;">00:00:00</span>
+    </div>
+    <div class="student-card">
+      <div class="student-field">
+        <label>Student Name</label>
+        <input type="text" id="studentName" placeholder="Full name">
+      </div>
+      <div class="student-field">
+        <label>Student Number</label>
+        <input type="text" id="studentNumber" placeholder="ID number">
+      </div>
+    </div>
+  </div>
+
+  <div class="score-panel">
+    <div class="score-area">
+      <div class="score-badge" id="scoreBadge">—</div>
+      <div>
+        <div class="stat" id="scoreFraction">0 / 100</div>
+        <div id="scorePercent">0%</div>
+        <div id="statusText">Not graded</div>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-primary" id="gradeBtn">✅ Grade Exam</button>
+      <button class="btn btn-outline" id="resetBtn">🔄 Reset</button>
+      <button class="btn btn-accent" id="printBtn" disabled>🖨️ Print Receipt</button>
+    </div>
+  </div>
+
+  <div id="sectionsContainer"></div>
+</div>
+
+<script>
+  (function() {
+    // ---------- ANSWER KEYS ----------
+    const mcKey = {
+      1:'b',2:'d',3:'c',4:'b',5:'c',6:'d',7:'c',8:'c',9:'b',10:'b',
+      11:'b',12:'c',13:'c',14:'c',15:'b',16:'b',17:'c',18:'c',19:'d',20:'c',
+      21:'b',22:'c',23:'c',24:'b',25:'c',26:'b',27:'b',28:'c',29:'d',30:'b',
+      31:'c',32:'d',33:'c',34:'c',35:'b',36:'b',37:'b',38:'b',39:'c',40:'c',
+      41:'b',42:'b',43:'c',44:'c',45:'b',46:'b',47:'c',48:'b',49:'c',50:'b',
+      51:'b',52:'b',53:'c',54:'c',55:'b',56:'b',57:'b',58:'b',59:'b',60:'a'
+    };
+    const tfKey = {
+      61:false,62:true,63:false,64:false,65:false,66:true,67:false,68:true,
+      69:false,70:false,71:false,72:false,73:false,74:true,75:false
+    };
+    const matchKey = {
+      76:'D',77:'O',78:'I',79:'C',80:'G',81:'H',82:'A',83:'B',84:'F',
+      85:'M',86:'K',87:'E',88:'J',89:'L',90:'N'
+    };
+    const idKey = {
+      91: { keywords: ["technology-based","technology standard","command-and-control","command and control","tech standard"], answer:"Technology-based standard (command-and-control)"},
+      92: { keywords: ["emissions tax","pollution tax","pigouvian tax","carbon tax","price-based","tax"], answer:"Emissions tax / pollution tax (price-based instrument)"},
+      93: { keywords: ["contingent valuation","cvm","stated preference","survey"], answer:"Contingent Valuation Method (CVM)"},
+      94: { keywords: ["shadow price","shadow"], answer:"Shadow price"},
+      95: { keywords: ["free-rider","free rider"], answer:"Free-rider problem"},
+      96: { keywords: ["cap-and-trade","cap and trade","tradable permits","emissions trading"], answer:"Cap-and-trade (tradable permits)"},
+      97: { keywords: ["polluter pays","polluter-pays"], answer:"Polluter Pays Principle"},
+      98: { keywords: ["pecuniary externality","pecuniary","price externality"], answer:"Pecuniary externality (operates through prices, not resource misallocation)"},
+      99: { keywords: ["discount rate","discounting"], answer:"Discount rate (used to convert future values to present value)"},
+      100: { keywords: ["marginal abatement cost","mac","abatement cost"], answer:"Marginal Abatement Cost (MAC)"}
+    };
+
+    const mcQuestions = [
+      "The fundamental economic problem that environmental economics seeks to address is:",
+      "The cost of the next best alternative foregone when a choice is made is known as:",
+      "A point inside a PPF for 'Market Goods' and 'Environmental Quality' represents:",
+      "Equimarginal principle suggests a consumer maximizes utility when:",
+      "If demand rises when income falls, the good is:",
+      "Single seller with high barriers to entry characterizes:",
+      "Environmental market failure often occurs because resources are treated as:",
+      "Characteristic of perfect competition violated by pollution externalities:",
+      "Tragedy of the Commons results from:",
+      "Information asymmetry in used cars illustrates:",
+      "Negative production externality shifts SMC relative to PMC:",
+      "Socially optimal pollution level occurs where:",
+      "Bees pollinating orchard is an example of:",
+      "Pure public good characteristics:",
+      "Primary problem with private provision of public goods:",
+      "Pigouvian tax is designed to:",
+      "Coase Theorem efficient solution requires:",
+      "Best example of a public good:",
+      "Total economic value of a national park includes:",
+      "Travel Cost Method primarily estimates:",
+      "Contingent Valuation is a ________ technique.",
+      "Hypothetical bias in CVM refers to:",
+      "Hedonic Pricing reveals environmental value through:",
+      "Avertive expenditure method values environmental bad by:",
+      "Which is a stated preference technique?",
+      "Existence value means valuing:",
+      "Value of Statistical Life often estimated via:",
+      "Shadow price is used when:",
+      "Discounting converts future values to:",
+      "Higher discount rate favors projects with:",
+      "Discount rate controversy is greatest for:",
+      "Project worthwhile if NPV is:",
+      "Distributional weights address:",
+      "Sensitivity analysis tests:",
+      "GDP limitation regarding environment:",
+      "Technology mandate is a:",
+      "Critique of uniform standards:",
+      "Cap-and-trade cost-effective because:",
+      "Market-based instruments encourage:",
+      "Deposit-refund targets:",
+      "Polluter Pays Principle:",
+      "Under emissions tax, firm abates until:",
+      "Challenge of pollution tax:",
+      "Environmental bond is a:",
+      "Subsidies for pollution control may:",
+      "Which sets quantity and lets market set price?",
+      "Double dividend hypothesis suggests:",
+      "Strict liability aims to:",
+      "Main advantage of market-based instruments:",
+      "For non-point agricultural pollution, economists favor:",
+      "Small group benefits while majority pays:",
+      "Hardin's Tragedy assumes users are:",
+      "Not a typical CBA step:",
+      "Option value example:",
+      "Few interdependent firms characterize:",
+      "Non-rival good means:",
+      "Installing scrubbers is a(n):",
+      "Human capital approach flaw:",
+      "Wetland water filtration is:",
+      "Moral hazard example:"
+    ];
+    const mcOptions = [
+      ["Unlimited resources and limited wants","Scarcity of resources relative to unlimited wants","Government intervention","Lack of innovation"],
+      ["Sunk cost","Marginal cost","Total cost","Opportunity cost"],
+      ["Unattainable","Efficient","Inefficient/unemployment","Optimal trade-off"],
+      ["Total utility equal","Marginal utility per dollar equal","Prices equal","Cheapest good max utility"],
+      ["Normal good","Luxury good","Inferior good","Substitute"],
+      ["Perfect competition","Monopolistic competition","Oligopoly","Monopoly"],
+      ["Private goods","Club goods","Public goods/common-pool resources","Capital goods"],
+      ["Many buyers/sellers","Perfect information","Well-defined property rights","Homogeneous products"],
+      ["Government regulation","Rivalry and non-excludability","Private property rights","High extraction cost"],
+      ["Moral hazard","Adverse selection","Coase Theorem","Pecuniary externality"],
+      ["Below PMC","Above PMC","Same as PMC","Right of demand"],
+      ["Zero pollution","Total cost = total cleanup","MAC = marginal damage","Government mandate"],
+      ["Negative consumption externality","Negative production externality","Positive production externality","Pecuniary externality"],
+      ["Excludable & rival","Non-excludable & rival","Non-excludable & non-rival","Excludable & non-rival"],
+      ["Over-production","Free-rider problem","Inflation","Natural monopoly"],
+      ["Pay administrative costs","Internalize external cost","Subsidize polluter","Lower market price"],
+      ["High transaction costs","Government assigns rights to polluter","Low transaction costs & clear rights","Large diffuse groups"],
+      ["Congested toll road","Private timber stock","Clean air (global)","Fishery in international waters"],
+      ["Use value only","Non-use value only","Option & bequest only","Use, option, non-use values"],
+      ["Existence value","Option value","Recreational use value","Damage cost"],
+      ["Hedonic Pricing","Contingent Valuation","Travel Cost","Avertive behavior"],
+      ["Strategic bias","Information bias","Hypothetical bias","Starting point bias"],
+      ["Travel cost","Stated price in survey","Impact on related market good (housing)","Replacement cost"],
+      ["Lost wages","Spending to avoid bad (filters)","Restoration cost","House price differences"],
+      ["Hedonic Pricing","Travel Cost","Contingent Valuation","Cost of Illness"],
+      ["Future hunting","Knowing they exist","Passing to future generations","Whale watching"],
+      ["Travel cost method","Hedonic wage method","Funeral costs","Insurance CVM"],
+      ["Market prices distorted","Inflation high","Retail unavailable","Wholesale needed"],
+      ["Compounding","Amortization","Depreciation","Discounting"],
+      ["Long-term benefits","Short-term benefits","No costs","Distant future benefits"],
+      ["Job creation","Short-term costs","Intergenerational impacts (climate)","Market goods"],
+      ["Less than 1","Equal to 0","Negative","Greater than 0"],
+      ["Discounting","Hedonic pricing","Distributional weights","Shadow pricing"],
+      ["Political sensitivity","Inflate benefits","Robustness to assumptions","Non-use value"],
+      ["Overestimates household work","Ignores resource depletion & degradation","Deducts cleanup","Wrong discount rate"],
+      ["Market-based instrument","Technology-based standard","Performance-based standard","Liability rule"],
+      ["Incentivize innovation","Not cost-effective (different MACs)","Generate revenue","Flexibility"],
+      ["Same % reduction","High-cost firms buy from low-cost firms","Government picks technology","Fixed permit price"],
+      ["Lobbying","Hiding data","Technological innovation","Relocation"],
+      ["Industrial air pollution","Non-point water pollution","Solid waste/litter","GHG emissions"],
+      ["Precautionary Principle","Polluter Pays Principle","Free-Rider Principle","Coase Principle"],
+      ["Zero pollution","MAC = tax rate","MAC = 0","Total abatement = tax bill"],
+      ["No innovation incentive","Mandates technology","Determining correct tax rate","Always popular"],
+      ["Performance standard","Command-and-control","Deposit-refund system","Tradable permit"],
+      ["Increase abatement cost","Encourage entry into polluting industry","Internalize externality","Polluter Pays"],
+      ["Pollution tax","Cap-and-trade","Technology standard","Liability rule"],
+      ["Fund polluter expansion","Distort economy","Reduce other distortionary taxes","Increase deficit"],
+      ["Subsidize cleanup","Incentivize optimal precaution","Set national standard","Create permit market"],
+      ["Political simplicity","Emission certainty per source","Static & dynamic cost-effectiveness","Lower admin costs"],
+      ["End-of-pipe standard","Tax on runoff/input permit","Fertilizer subsidy","Coasean negotiation"],
+      ["Prisoner's dilemma","Free-rider problem","Sucker's payoff","Single-shot game"],
+      ["Cooperative & future-oriented","Short-term self-interested, no communication","Enforce norms","Collective management"],
+      ["Define scope","Quantify & monetize impacts","Set mandatory emission limits","Discount flows"],
+      ["Current hiking satisfaction","Timber sale income","WTP to preserve for future visit","Existence of tribe"],
+      ["Pure monopoly","Oligopoly","Monopsony","Perfect competition"],
+      ["Pay to use","One's use doesn't diminish availability","Easy to exclude","Depletable"],
+      ["Pollution damage cost","Abatement cost","External cost","Enforcement cost"],
+      ["Overestimate high-wage","Values life via foregone earnings (zero for retired)","Stated preference","Adds non-use value"],
+      ["Direct use value","Indirect use value","Option value","Existence value"],
+      ["Insurance reduces care","Seller knows defect","Cannot exclude from park","Park congestion"]
+    ];
+
+    const tfStatements = {
+      61:"The optimal level of pollution is zero.",
+      62:"A pure private good is both rival and excludable.",
+      63:"A positive externality leads to over-provision in a free market.",
+      64:"Contingent Valuation is a revealed preference technique.",
+      65:"Higher discount rate increases present value of benefits 50 years from now.",
+      66:"Hedonic pricing can estimate air quality value via housing prices.",
+      67:"Command-and-control regulations are generally more cost-effective than market-based instruments.",
+      68:"A carbon tax is price-based; cap-and-trade is quantity-based.",
+      69:"Coase Theorem claims government regulation is always most efficient.",
+      70:"Polluter Pays Principle means general tax revenues fund cleanup.",
+      71:"Common-pool resource is non-rival and non-excludable.",
+      72:"Pigouvian subsidy generates government revenue.",
+      73:"Non-use values can be measured using standard market prices.",
+      74:"Sensitivity analysis and Monte Carlo handle CBA uncertainty.",
+      75:"Ostrom proved communities always fail without government."
+    };
+
+    const matchTerms = {
+      76:"Pigouvian Tax",77:"Coase Theorem",78:"Free-Rider Problem",79:"Contingent Valuation",
+      80:"Discount Rate",81:"Cap-and-Trade",82:"Shadow Price",83:"Externality",
+      84:"Public Good",85:"Non-Use Value",86:"Hedonic Pricing",87:"Tragedy of the Commons",
+      88:"Marginal Abatement Cost",89:"Polluter Pays Principle",90:"Liability Rule"
+    };
+    const matchDescs = {
+      A:"True economic value when market price distorted",
+      B:"Uncompensated impact on bystander",
+      C:"Stated preference survey for non-use values",
+      D:"Tax equal to marginal external damage",
+      E:"Depletion of shared resource by self-interest",
+      F:"Non-excludable & non-rival good",
+      G:"Rate converting future to present value",
+      H:"Sets emission cap, allows permit trading",
+      I:"Benefiting without paying (non-excludability)",
+      J:"Cost of reducing one more pollution unit",
+      K:"Revealed preference via market good price decomposition",
+      L:"Responsible party bears cost of pollution",
+      M:"Value from mere existence (non-use)",
+      N:"Legal responsibility for damages",
+      O:"Private bargaining solves externality with low costs & clear rights"
+    };
+
+    const idQuestions = {
+      91:"Regulation requiring specific technology (e.g., scrubbers) is a:",
+      92:"A $30 per ton CO2 charge is what type of instrument?",
+      93:"Survey-based method capturing use and non-use values:",
+      94:"Price used in CBA when market price is distorted:",
+      95:"Problem arising because people cannot be excluded from a public good:",
+      96:"System that sets a total emissions limit and allows trading:",
+      97:"Principle stating polluter should bear damage cost:",
+      98:"Externality operating through price changes, not resource misallocation:",
+      99:"Rate used to convert future benefits to present value:",
+      100:"Cost of reducing one additional unit of pollution:"
+    };
+
+    let userMC = {}, userTF = {}, userMatch = {}, userID = {};
+    let graded = false;
+    let timer = 0;
+    let timerInterval;
+
+    function renderApp() {
+      let html = '';
+      // Section I MC
+      html += '<div class="section"><div class="section-header" onclick="toggleSection(this)">Section I: Multiple Choice (1–60) <span>▼</span></div><div class="section-body">';
+      for(let i=1; i<=60; i++){
+        html += `<div class="question"><span class="q-num">${i}.</span> ${mcQuestions[i-1]}<div class="options">`;
+        const letters = ['a','b','c','d'];
+        letters.forEach((l,idx)=>{
+          html += `<label class="option" id="opt-mc-${i}-${l}"><input type="radio" name="mc-${i}" value="${l}" onchange="window.selectMC(${i},'${l}')"> ${l}) ${mcOptions[i-1][idx]}</label>`;
+        });
+        html += `</div><div class="feedback" id="fb-mc-${i}"></div></div>`;
+      }
+      html += '</div></div>';
+
+      // Section II TF
+      html += '<div class="section"><div class="section-header" onclick="toggleSection(this)">Section II: True or False (61–75) <span>▼</span></div><div class="section-body">';
+      for(let i=61; i<=75; i++){
+        html += `<div class="question"><span class="q-num">${i}.</span> ${tfStatements[i]}<div class="tf-group">`;
+        html += `<label class="tf-option" id="tf-${i}-true"><input type="radio" name="tf-${i}" value="true" onchange="window.selectTF(${i},true)"> True</label>`;
+        html += `<label class="tf-option" id="tf-${i}-false"><input type="radio" name="tf-${i}" value="false" onchange="window.selectTF(${i},false)"> False</label>`;
+        html += `</div><div class="feedback" id="fb-tf-${i}"></div></div>`;
+      }
+      html += '</div></div>';
+
+      // Section III Matching
+      html += '<div class="section"><div class="section-header" onclick="toggleSection(this)">Section III: Matching (76–90) <span>▼</span></div><div class="section-body">';
+      for(let i=76; i<=90; i++){
+        html += `<div class="match-row"><span class="match-term">${i}. ${matchTerms[i]}</span>`;
+        html += `<select id="match-${i}" onchange="window.selectMatch(${i})"><option value="">-- Select --</option>`;
+        for(let [key,desc] of Object.entries(matchDescs)){
+          html += `<option value="${key}">${key}: ${desc}</option>`;
+        }
+        html += `</select><span class="feedback" id="fb-match-${i}"></span></div>`;
+      }
+      html += '</div></div>';
+
+      // Section IV Identification
+      html += '<div class="section"><div class="section-header" onclick="toggleSection(this)">Section IV: Identification (91–100) <span>▼</span></div><div class="section-body">';
+      for(let i=91; i<=100; i++){
+        html += `<div class="question"><span class="q-num">${i}.</span> ${idQuestions[i]}<input class="id-input" id="id-${i}" placeholder="Type your answer..." oninput="window.selectID(${i})"><div class="feedback" id="fb-id-${i}"></div></div>`;
+      }
+      html += '</div></div>';
+
+      document.getElementById('sectionsContainer').innerHTML = html;
+    }
+
+    window.toggleSection = function(header) {
+      header.parentElement.classList.toggle('collapsed');
+    };
+
+    window.selectMC = function(num, val) { if(!graded) userMC[num]=val; };
+    window.selectTF = function(num, val) { if(!graded) userTF[num]=val; };
+    window.selectMatch = function(num) {
+      if(!graded) userMatch[num] = document.getElementById(`match-${num}`).value;
+    };
+    window.selectID = function(num) {
+      if(!graded) userID[num] = document.getElementById(`id-${num}`).value.trim();
+    };
+
+    function gradeNow() {
+      const studentName = document.getElementById('studentName').value.trim();
+      const studentNum = document.getElementById('studentNumber').value.trim();
+      if(!studentName || !studentNum){
+        alert("Please enter both student name and student number before grading.");
+        return;
+      }
+      graded = true;
+      clearInterval(timerInterval);
+      let score = 0;
+      // MC
+      for(let i=1; i<=60; i++){
+        let correct = mcKey[i];
+        let user = userMC[i];
+        let fb = document.getElementById(`fb-mc-${i}`);
+        document.querySelectorAll(`[id^="opt-mc-${i}-"]`).forEach(el=> el.classList.remove('correct-highlight','selected-incorrect'));
+        if(user){
+          if(user===correct){ score++; document.getElementById(`opt-mc-${i}-${user}`).classList.add('correct-highlight'); fb.innerHTML='✓'; fb.style.color='green';}
+          else { document.getElementById(`opt-mc-${i}-${user}`).classList.add('selected-incorrect'); document.getElementById(`opt-mc-${i}-${correct}`).classList.add('correct-highlight'); fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red';}
+        } else {
+          document.getElementById(`opt-mc-${i}-${correct}`).classList.add('correct-highlight'); fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red';
+        }
+      }
+      // TF
+      for(let i=61; i<=75; i++){
+        let correct = tfKey[i];
+        let user = userTF[i];
+        let fb = document.getElementById(`fb-tf-${i}`);
+        if(user!==undefined){
+          if(user===correct){ score++; fb.innerHTML='✓'; fb.style.color='green';}
+          else { fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red'; }
+        } else { fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red'; }
+      }
+      // Matching
+      for(let i=76; i<=90; i++){
+        let correct = matchKey[i];
+        let user = userMatch[i];
+        let fb = document.getElementById(`fb-match-${i}`);
+        if(user){
+          if(user===correct){ score++; fb.innerHTML='✓'; fb.style.color='green';}
+          else { fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red'; }
+        } else { fb.innerHTML=`✗ Correct: ${correct}`; fb.style.color='red'; }
+      }
+      // Identification
+      for(let i=91; i<=100; i++){
+        let ans = (userID[i] || '').toLowerCase();
+        let fb = document.getElementById(`fb-id-${i}`);
+        if(ans.length>1){
+          let matched = idKey[i].keywords.some(kw=> ans.includes(kw));
+          if(matched){ score++; fb.innerHTML='✓ Accepted'; fb.style.color='green';}
+          else { fb.innerHTML=`✗ Expected: ${idKey[i].answer}`; fb.style.color='red';}
+        } else { fb.innerHTML=`✗ Expected: ${idKey[i].answer}`; fb.style.color='red';}
+      }
+      updateDashboard(score);
+      document.getElementById('printBtn').disabled = false;
+      document.getElementById('gradeBtn').disabled = true;
+    }
+
+    function updateDashboard(score){
+      const pct = Math.round(score/100*100);
+      document.getElementById('scoreBadge').textContent = score;
+      document.getElementById('scoreFraction').textContent = `${score} / 100`;
+      document.getElementById('scorePercent').textContent = `${pct}%`;
+      const badge = document.getElementById('scoreBadge');
+      badge.classList.remove('pass','fail');
+      if(pct>=60){ badge.classList.add('pass'); document.getElementById('statusText').textContent='✅ Passed'; }
+      else { badge.classList.add('fail'); document.getElementById('statusText').textContent='❌ Failed'; }
+    }
+
+    function resetExam(){
+      if(confirm('Reset all answers and timer?')){
+        graded = false;
+        userMC={}; userTF={}; userMatch={}; userID={};
+        timer=0; updateTimerDisplay();
+        document.getElementById('gradeBtn').disabled = false;
+        document.getElementById('printBtn').disabled = true;
+        document.getElementById('scoreBadge').textContent = '—';
+        document.getElementById('scoreFraction').textContent = '0 / 100';
+        document.getElementById('scorePercent').textContent = '0%';
+        document.getElementById('statusText').textContent = 'Not graded';
+        renderApp();
+        startTimer();
+      }
+    }
+
+    function printReceipt(){
+      const name = document.getElementById('studentName').value;
+      const num = document.getElementById('studentNumber').value;
+      const scoreText = document.getElementById('scoreFraction').textContent;
+      const win = window.open('','_blank','width=500,height=600');
+      win.document.write(`<html><head><title>Exam Receipt</title></head><body style="font-family:sans-serif;padding:2rem;"><h2>Environmental Economics Exam Receipt</h2><p><strong>Student:</strong> ${name} (${num})</p><p><strong>Score:</strong> ${scoreText}</p><p>Date: ${new Date().toLocaleString()}</p></body></html>`);
+      win.document.close();
+      win.print();
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(()=>{ timer++; updateTimerDisplay(); },1000);
+    }
+    function updateTimerDisplay(){
+      let hrs = Math.floor(timer/3600), mins = Math.floor((timer%3600)/60), secs = timer%60;
+      document.getElementById('timerDisplay').textContent = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
+
+    window.onload = function(){
+      renderApp();
+      startTimer();
+      document.getElementById('gradeBtn').addEventListener('click', gradeNow);
+      document.getElementById('resetBtn').addEventListener('click', resetExam);
+      document.getElementById('printBtn').addEventListener('click', printReceipt);
+    };
+  })();
+</script>
+</body>
+</html>

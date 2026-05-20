@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EcoLearn: Optimal Extraction & Maximum Sustainable Yield</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* better for sliders, but text can be selected if needed */
+        }
+        body {
+            background: linear-gradient(145deg, #dce9f0 0%, #b0c4ce 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+        }
+        /* main card */
+        .module-card {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px rgba(0, 20, 20, 0.3);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        /* header */
+        .header {
+            background: #1e3e3f;
+            color: white;
+            padding: 1.2rem 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.85;
+            font-style: italic;
+        }
+        /* two-column layout */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .control-panel {
+            flex: 1.2;
+            min-width: 260px;
+            background: #f4f9fc;
+            padding: 1.8rem 1.8rem;
+            border-right: 1px solid #cbdbe2;
+        }
+        .visualization {
+            flex: 2.2;
+            min-width: 380px;
+            padding: 1.5rem 1.8rem;
+            background: #ffffffea;
+        }
+        /* sliders & labels */
+        .param-group {
+            margin-bottom: 2rem;
+        }
+        .param-group label {
+            font-weight: 600;
+            color: #1e4a4b;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            background: #cfe3e8;
+            height: 5px;
+            border-radius: 10px;
+            accent-color: #2c7a6e;
+        }
+        .param-value {
+            font-family: 'Courier New', monospace;
+            background: #eef3f5;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin: 1.5rem 0 1rem;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid #2c7a6e;
+        }
+        .stat-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+            color: #1f5e5a;
+        }
+        .stat-number {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #0b4f4a;
+            line-height: 1;
+        }
+        .small-note {
+            font-size: 0.75rem;
+            color: #4f6f6b;
+            margin-top: 0.5rem;
+        }
+        .msy-badge {
+            background: #1e6b5e20;
+            border-radius: 28px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+        button {
+            background: #2c7a6e;
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        button:hover {
+            background: #1e5f55;
+            transform: scale(0.97);
+        }
+        canvas {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 1.2rem;
+            border: 1px solid #dce9ec;
+        }
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            margin: 0.5rem 0 0.5rem;
+        }
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .explanation {
+            background: #f0f6f3;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #1f3e3b;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #cbdbe2;
+        }
+        @media (max-width: 800px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .control-panel {
+                border-right: none;
+                border-bottom: 1px solid #cbdbe2;
+            }
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 1rem;
+            background: #eef2f0;
+            color: #2f5e58;
+        }
+    </style>
+</head>
+<body>
+<div class="module-card">
+    <div class="header">
+        <h1>📈 Optimal Extraction Rate & Maximum Sustainable Yield (MSY)</h1>
+        <p>Interactive Fisheries & Resource Management Model | Logistic Growth + Harvest</p>
+    </div>
+    <div class="dashboard">
+        <!-- LEFT: controls & key metrics -->
+        <div class="control-panel">
+            <div class="param-group">
+                <label>🌱 Intrinsic Growth Rate (<em>r</em>) <span id="rValDisplay" class="param-value">0.60</span></label>
+                <input type="range" id="rSlider" min="0.1" max="1.2" step="0.01" value="0.6">
+                <div class="small-note">Higher r → faster population rebound</div>
+            </div>
+            <div class="param-group">
+                <label>🏞️ Carrying Capacity (<em>K</em>) <span id="KValDisplay" class="param-value">1000</span></label>
+                <input type="range" id="KSlider" min="300" max="2000" step="10" value="1000">
+                <div class="small-note">Max population size supported by environment</div>
+            </div>
+            <div class="param-group">
+                <label>⚙️ Harvest / Extraction Rate (<em>E</em>) <span id="EValDisplay" class="param-value">0.30</span></label>
+                <input type="range" id="ESlider" min="0" max="1.2" step="0.005" value="0.30">
+                <div class="small-note">Effort multiplier (proportional to population)</div>
+            </div>
+            <div class="stat-card">
+                <h3>📊 Current Sustainable Yield</h3>
+                <div class="stat-number" id="currentYield">0</div>
+                <div class="small-note">Annual harvest at equilibrium (if stable)</div>
+                <h3 style="margin-top:12px">📉 Equilibrium Population <span id="equilPop">0</span></h3>
+                <div class="small-note">* Non-trivial equilibrium (if exists & stable)</div>
+            </div>
+            <div class="stat-card">
+                <h3>🎯 Maximum Sustainable Yield (MSY)</h3>
+                <div class="stat-number" id="msyValue">—</div>
+                <div class="small-note">Optimal harvest = <span id="optHarvestRate">—</span> at population <span id="optPop">—</span></div>
+                <button id="setOptimalBtn">⚡ Apply Optimal Extraction Rate</button>
+            </div>
+            <div class="explanation">
+                <strong>📘 Learning corner</strong><br>
+                <strong>Maximum Sustainable Yield (MSY)</strong> = largest catch that can be taken indefinitely without reducing the population. <br>
+                For logistic growth: <em>MSY = r·K/4</em> achieved when population = K/2 and harvest rate E = r/2.<br>
+                <strong>Optimal extraction rate</strong> balances growth: if E > r, population crashes. Below r/2 → under-harvesting.
+            </div>
+        </div>
+
+        <!-- RIGHT: visualization + dynamic plot -->
+        <div class="visualization">
+            <canvas id="growthCanvas" width="700" height="380" style="width:100%; height:auto; max-width:700px; aspect-ratio:700/380"></canvas>
+            <div class="legend">
+                <span><div class="color-dot" style="background:#2c7a6e;"></div> Sustainable Yield Curve (Harvest vs Population)</span>
+                <span><div class="color-dot" style="background:#f4b942;"></div> Current Harvest Line (Y = E·N)</span>
+                <span><div class="color-dot" style="background:#d45d5d;"></div> Equilibrium Point(s)</span>
+                <span><div class="color-dot" style="background:#2c6e9e;"></div> MSY Reference (K/2)</span>
+            </div>
+            <canvas id="timeCanvas" width="700" height="220" style="width:100%; height:auto; max-width:700px; aspect-ratio:700/220; margin-top: 8px;"></canvas>
+            <div class="legend" style="justify-content:space-between">
+                <span>📈 Population dynamics over time (N₀ = K/3)</span>
+                <span style="font-size:0.7rem">→ converges to equilibrium</span>
+            </div>
+            <div class="explanation" style="margin-top: 12px; background:#eef3fc;">
+                💡 <strong>Interactive insight:</strong> Adjust extraction rate E. If E exceeds intrinsic growth rate <em>r</em>, the population collapses (extinction). The optimal E = r/2 yields MSY. Explore overharvesting vs sustainable management!
+            </div>
+        </div>
+    </div>
+    <footer>
+        🌿 Logistic model: dN/dt = rN(1 - N/K) - H(N) , with harvest H = E·N (proportional harvesting). Equilibrium when E = r(1 - N/K) → N* = K(1 - E/r) for E ≤ r.
+    </footer>
+</div>
+
+<script>
+    (function() {
+        // DOM elements
+        const rSlider = document.getElementById('rSlider');
+        const KSlider = document.getElementById('KSlider');
+        const ESlider = document.getElementById('ESlider');
+        const rValDisplay = document.getElementById('rValDisplay');
+        const KValDisplay = document.getElementById('KValDisplay');
+        const EValDisplay = document.getElementById('EValDisplay');
+        const currentYieldSpan = document.getElementById('currentYield');
+        const equilPopSpan = document.getElementById('equilPop');
+        const msyValueSpan = document.getElementById('msyValue');
+        const optHarvestRateSpan = document.getElementById('optHarvestRate');
+        const optPopSpan = document.getElementById('optPop');
+        const setOptimalBtn = document.getElementById('setOptimalBtn');
+
+        const growthCanvas = document.getElementById('growthCanvas');
+        const ctxGrowth = growthCanvas.getContext('2d');
+        const timeCanvas = document.getElementById('timeCanvas');
+        const ctxTime = timeCanvas.getContext('2d');
+
+        // Set dimensions (maintain crispness)
+        function setCanvasSize() {
+            const container = growthCanvas.parentElement;
+            const width = Math.min(700, container.clientWidth - 20);
+            growthCanvas.width = width;
+            growthCanvas.height = Math.floor(width * 380/700);
+            timeCanvas.width = width;
+            timeCanvas.height = Math.floor(width * 220/700);
+        }
+        window.addEventListener('resize', () => { setCanvasSize(); updateAll(); });
+        
+        // Model parameters
+        let r = 0.6;
+        let K = 1000;
+        let E = 0.3;
+        
+        // Helper: equilibrium population (non-trivial, positive)
+        function computeEquilibrium(r_val, K_val, E_val) {
+            if (E_val >= r_val) return 0;   // overharvest → extinction equilibrium
+            // logistic with proportional harvest: equilibrium N* = K*(1 - E/r)
+            let Nstar = K_val * (1 - E_val / r_val);
+            return Nstar > 0 ? Nstar : 0;
+        }
+        
+        // Sustainable yield at equilibrium: Y = E * N*
+        function sustainableYield(r_val, K_val, E_val) {
+            const Nstar = computeEquilibrium(r_val, K_val, E_val);
+            return E_val * Nstar;
+        }
+        
+        // MSY calculations: based on logistic model, max of yield curve Y(N) = rN(1-N/K)
+        function computeMSY(r_val, K_val) {
+            const N_msy = K_val / 2;
+            const Y_msy = r_val * N_msy * (1 - N_msy / K_val); // = r*K/4
+            const E_opt = r_val / 2;
+            return { msy: Y_msy, optimalPop: N_msy, optimalE: E_opt };
+        }
+        
+        // Update UI numbers and recalc MSY
+        function updateStats() {
+            const Nstar = computeEquilibrium(r, K, E);
+            const yieldVal = sustainableYield(r, K, E);
+            currentYieldSpan.innerText = yieldVal.toFixed(2);
+            equilPopSpan.innerText = Nstar.toFixed(1);
+            
+            const msyInfo = computeMSY(r, K);
+            msyValueSpan.innerText = msyInfo.msy.toFixed(2);
+            optHarvestRateSpan.innerText = msyInfo.optimalE.toFixed(3);
+            optPopSpan.innerText = msyInfo.optimalPop.toFixed(1);
+        }
+        
+        // Draw the Yield vs Population curve + harvest line
+        function drawGrowthCurve() {
+            if (!ctxGrowth) return;
+            const w = growthCanvas.width;
+            const h = growthCanvas.height;
+            if (w === 0 || h === 0) return;
+            ctxGrowth.clearRect(0, 0, w, h);
+            
+            // Background
+            ctxGrowth.fillStyle = '#FEFDF6';
+            ctxGrowth.fillRect(0, 0, w, h);
+            ctxGrowth.save();
+            
+            // Axes: Population (N) from 0 to K, Yield from 0 to maxYield (slightly above MSY)
+            const maxN = K;
+            const msyInfo = computeMSY(r, K);
+            let maxYield = Math.max(msyInfo.msy * 1.2, sustainableYield(r, K, E) * 1.2, 0.1);
+            if (maxYield <= 0) maxYield = 0.5;
+            
+            // mapping functions
+            function mapX(N) { return 40 + (N / maxN) * (w - 80); }
+            function mapY(Y) { return h - 30 - (Y / maxYield) * (h - 70); }
+            
+            // draw axes
+            ctxGrowth.beginPath();
+            ctxGrowth.strokeStyle = '#5c6e6a';
+            ctxGrowth.lineWidth = 1.2;
+            // X axis
+            ctxGrowth.moveTo(30, h-30);
+            ctxGrowth.lineTo(w-20, h-30);
+            // Y axis
+            ctxGrowth.moveTo(40, 20);
+            ctxGrowth.lineTo(40, h-30);
+            ctxGrowth.stroke();
+            
+            // labels
+            ctxGrowth.fillStyle = '#2c5a55';
+            ctxGrowth.font = '12px "Segoe UI"';
+            ctxGrowth.fillText("Population (N)", w/2 - 40, h-8);
+            ctxGrowth.save();
+            ctxGrowth.translate(20, h/2);
+            ctxGrowth.rotate(-Math.PI/2);
+            ctxGrowth.fillText("Sustainable Yield (Harvest)", -25, 10);
+            ctxGrowth.restore();
+            
+            // Ticks
+            for (let i = 0; i <= 4; i++) {
+                let Ntick = (i * maxN / 4).toFixed(0);
+                let xt = mapX(i * maxN / 4);
+                ctxGrowth.fillText(Ntick, xt-12, h-18);
+            }
+            for (let i = 0; i <= 4; i++) {
+                let Ytick = (i * maxYield / 4).toFixed(1);
+                let yt = mapY(i * maxYield / 4);
+                ctxGrowth.fillText(Ytick, 18, yt+4);
+            }
+            
+            // 1) Yield curve: Y(N) = r*N*(1 - N/K)
+            ctxGrowth.beginPath();
+            ctxGrowth.strokeStyle = '#2c7a6e';
+            ctxGrowth.lineWidth = 3;
+            let first = true;
+            for (let xN = 0; xN <= maxN; xN += maxN / 200) {
+                let yieldVal = r * xN * (1 - xN / K);
+                if (yieldVal < 0) yieldVal = 0;
+                let px = mapX(xN);
+                let py = mapY(yieldVal);
+                if (first) { ctxGrowth.moveTo(px, py); first = false; }
+                else { ctxGrowth.lineTo(px, py); }
+            }
+            ctxGrowth.stroke();
+            
+            // 2) Harvest line: H = E * N
+            ctxGrowth.beginPath();
+            ctxGrowth.strokeStyle = '#f4b942';
+            ctxGrowth.lineWidth = 2.8;
+            ctxGrowth.setLineDash([6, 6]);
+            let harvestStart = mapX(0);
+            let harvestEndN = maxN;
+            let endHarvestY = E * harvestEndN;
+            if (endHarvestY > maxYield * 1.5) {
+                // clamp for visual, but we just draw to boundary
+            }
+            ctxGrowth.moveTo(mapX(0), mapY(0));
+            ctxGrowth.lineTo(mapX(maxN), mapY(E * maxN));
+            ctxGrowth.stroke();
+            ctxGrowth.setLineDash([]);
+            
+            // 3) Equilibrium point (if exists and E<r)
+            const Nstar = computeEquilibrium(r, K, E);
+            if (Nstar > 0 && E < r) {
+                let Ystar = E * Nstar;
+                let xEq = mapX(Nstar);
+                let yEq = mapY(Ystar);
+                ctxGrowth.fillStyle = '#d45d5d';
+                ctxGrowth.beginPath();
+                ctxGrowth.arc(xEq, yEq, 8, 0, 2*Math.PI);
+                ctxGrowth.fill();
+                ctxGrowth.fillStyle = '#9e4242';
+                ctxGrowth.font = 'bold 11px monospace';
+                ctxGrowth.fillText(`Equilibrium (${Nstar.toFixed(0)}, ${Ystar.toFixed(1)})`, xEq+8, yEq-6);
+            } else if (E >= r && Nstar === 0) {
+                ctxGrowth.fillStyle = '#aa3e3e';
+                ctxGrowth.font = 'italic 12px';
+                ctxGrowth.fillText("⚠️ Overharvest → Extinction risk", w-180, 45);
+            }
+            
+            // 4) MSY reference vertical line at K/2
+            const N_msy_ref = K/2;
+            const y_msy_curve = r * N_msy_ref * (1 - N_msy_ref/K);
+            ctxGrowth.beginPath();
+            ctxGrowth.strokeStyle = '#2c6e9e';
+            ctxGrowth.lineWidth = 1.8;
+            ctxGrowth.setLineDash([8, 6]);
+            ctxGrowth.moveTo(mapX(N_msy_ref), mapY(0));
+            ctxGrowth.lineTo(mapX(N_msy_ref), mapY(y_msy_curve));
+            ctxGrowth.stroke();
+            ctxGrowth.fillStyle = '#2c6e9e';
+            ctxGrowth.fillText("MSY target (K/2)", mapX(N_msy_ref)-35, mapY(y_msy_curve)-8);
+            ctxGrowth.setLineDash([]);
+            
+            // Additional info
+            ctxGrowth.fillStyle = '#2e5c57';
+            ctxGrowth.font = 'bold 10px "Segoe UI"';
+            ctxGrowth.fillText(`r = ${r.toFixed(2)}   |   K = ${K.toFixed(0)}`, w-150, 30);
+            ctxGrowth.restore();
+        }
+        
+        // dynamic simulation over time using discrete logistic + harvest
+        // show population trajectory starting from N0 = K/3, for 150 time steps
+        let animationFrame = null;
+        function drawTimeSeries() {
+            if (!ctxTime) return;
+            const w = timeCanvas.width;
+            const h = timeCanvas.height;
+            if (w === 0 || h === 0) return;
+            ctxTime.clearRect(0, 0, w, h);
+            ctxTime.fillStyle = '#FAFCFB';
+            ctxTime.fillRect(0, 0, w, h);
+            
+            const steps = 150;
+            let N = K / 3;   // initial population
+            const dt = 0.2;   // smooth discrete-time steps
+            let history = [{t:0, N:N}];
+            for (let i = 1; i <= steps; i++) {
+                let dN = r * N * (1 - N/K) - E * N;
+                N += dN * dt;
+                if (N < 0.01) N = 0;
+                history.push({t: i*dt, N: N});
+            }
+            
+            // axes
+            const maxPop = K * 1.05;
+            const minPop = 0;
+            const maxT = steps * dt;
+            
+            function mapX(t) { return 50 + (t / maxT) * (w - 80); }
+            function mapY(Nval) { return h - 30 - (Nval / maxPop) * (h - 70); }
+            
+            // axes
+            ctxTime.beginPath();
+            ctxTime.strokeStyle = '#7a8e89';
+            ctxTime.lineWidth = 1;
+            ctxTime.moveTo(45, h-30);
+            ctxTime.lineTo(w-20, h-30);
+            ctxTime.moveTo(50, 20);
+            ctxTime.lineTo(50, h-30);
+            ctxTime.stroke();
+            ctxTime.fillStyle = '#2f665e';
+            ctxTime.fillText("Time (arb. units)", w/2-40, h-8);
+            ctxTime.save();
+            ctxTime.translate(25, h/2);
+            ctxTime.rotate(-Math.PI/2);
+            ctxTime.fillText("Population N(t)", -20, 8);
+            ctxTime.restore();
+            
+            // equilibrium line
+            const Nstar = computeEquilibrium(r, K, E);
+            if (Nstar > 0) {
+                ctxTime.beginPath();
+                ctxTime.strokeStyle = '#b5838a';
+                ctxTime.lineWidth = 1.5;
+                ctxTime.setLineDash([5, 5]);
+                let yEq = mapY(Nstar);
+                ctxTime.moveTo(45, yEq);
+                ctxTime.lineTo(w-15, yEq);
+                ctxTime.stroke();
+                ctxTime.fillStyle = '#b05e6e';
+                ctxTime.font = '10px monospace';
+                ctxTime.fillText(`Equilibrium = ${Nstar.toFixed(1)}`, w-130, yEq-4);
+                ctxTime.setLineDash([]);
+            }
+            
+            // plot trajectory
+            ctxTime.beginPath();
+            ctxTime.strokeStyle = '#1f7a6b';
+            ctxTime.lineWidth = 2.5;
+            let first = true;
+            for (let point of history) {
+                let x = mapX(point.t);
+                let y = mapY(point.N);
+                if (first) { ctxTime.moveTo(x, y); first = false; }
+                else { ctxTime.lineTo(x, y); }
+            }
+            ctxTime.stroke();
+            
+            // add extinction note
+            if (Nstar === 0 && E >= r) {
+                ctxTime.fillStyle = '#c23b22';
+                ctxTime.font = 'bold 12px';
+                ctxTime.fillText("⚠️ Population collapses toward extinction", w-220, 45);
+            } else if (Nstar > 0 && Nstar < K*0.2) {
+                ctxTime.fillStyle = '#d48c46';
+                ctxTime.fillText("⚠️ Low equilibrium, vulnerable", w-180, 50);
+            }
+        }
+        
+        // update all from sliders
+        function updateAll() {
+            r = parseFloat(rSlider.value);
+            K = parseFloat(KSlider.value);
+            E = parseFloat(ESlider.value);
+            
+            rValDisplay.innerText = r.toFixed(2);
+            KValDisplay.innerText = Math.round(K);
+            EValDisplay.innerText = E.toFixed(3);
+            
+            updateStats();
+            drawGrowthCurve();
+            drawTimeSeries();
+        }
+        
+        // set optimal extraction rate (r/2)
+        function applyOptimal() {
+            const msyInfo = computeMSY(r, K);
+            const optimalE = msyInfo.optimalE;
+            ESlider.value = optimalE;
+            // also ensure within bounds
+            if (optimalE > parseFloat(ESlider.max)) ESlider.value = ESlider.max;
+            if (optimalE < parseFloat(ESlider.min)) ESlider.value = ESlider.min;
+            E = parseFloat(ESlider.value);
+            EValDisplay.innerText = E.toFixed(3);
+            updateAll();
+        }
+        
+        // event listeners
+        rSlider.addEventListener('input', () => { updateAll(); });
+        KSlider.addEventListener('input', () => { updateAll(); });
+        ESlider.addEventListener('input', () => { updateAll(); });
+        setOptimalBtn.addEventListener('click', applyOptimal);
+        
+        // initial setup
+        setCanvasSize();
+        updateAll();
+        
+        // handle canvas resize after fonts etc
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            updateAll();
+        });
+        
+        // extra: double-check canvas drawing after any layout shift
+        setTimeout(() => { updateAll(); }, 100);
+    })();
+</script>
+</body>
+</html>

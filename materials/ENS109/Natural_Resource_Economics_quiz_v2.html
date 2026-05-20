@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Natural Resource Economics Quiz | 30 Items | Prof. Ronald Edilberto A. Ona</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Georgia', 'Times New Roman', serif;
+        }
+
+        body {
+            background: #eef4e9;
+            margin: 0;
+            padding: 20px;
+            color: #1e3a2f;
+        }
+
+        .quiz-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2rem;
+            transition: all 0.2s;
+        }
+
+        h1 {
+            margin: 0 0 0.25rem 0;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: 3px solid #2c7a4d;
+            padding-bottom: 0.6rem;
+        }
+
+        .badge {
+            background: #2c7a4d;
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: normal;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #f0f7f2;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            margin: 1.2rem 0 1.8rem 0;
+            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .score-area, .attempt-area {
+            background: #e0ecd9;
+            padding: 0.2rem 0.9rem;
+            border-radius: 32px;
+        }
+
+        .quiz-card {
+            margin: 1.5rem 0 2rem;
+        }
+
+        .question-item {
+            background: #fefcf5;
+            border-left: 8px solid #2c7a4d;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.8rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.1s;
+        }
+
+        .q-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.9rem;
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+        }
+
+        .q-num {
+            background: #2c7a4d20;
+            padding: 0 8px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            padding-left: 0.5rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            background: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #dde6da;
+            transition: all 0.1s;
+        }
+
+        .option:hover {
+            background: #eaf5e5;
+            border-color: #2c7a4d;
+        }
+
+        input[type="radio"] {
+            accent-color: #2c7a4d;
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            background: #1f5e3f;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #0e462f;
+            transform: scale(0.97);
+        }
+
+        .reset-btn {
+            background: #6c757d;
+        }
+        .reset-btn:hover {
+            background: #495057;
+        }
+
+        .receipt-area {
+            background: #f8f9f2;
+            border-top: 2px dashed #9bc4a4;
+            margin-top: 2rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.2rem;
+            font-family: monospace;
+        }
+
+        .receipt-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            gap: 1rem;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .receipt-content {
+            background: #fffef7;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1px solid #cfe3cf;
+        }
+
+        .print-btn {
+            background: #2c5a2e;
+            margin-top: 0.5rem;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            color: #5e7a6b;
+            border-top: 1px solid #d4e2cf;
+            padding-top: 1.2rem;
+        }
+
+        .prof-name {
+            font-weight: 600;
+            color: #1e5631;
+            letter-spacing: 0.3px;
+            background: #eef4ea;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 700px) {
+            .quiz-container {
+                padding: 1rem;
+            }
+            .question-item {
+                padding: 0.9rem;
+            }
+            button {
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container" id="quizRoot">
+    <h1>🌿 Natural Resource Economics <span class="badge">30 questions • multiple type</span></h1>
+    <div class="info-bar">
+        <span>📋 Test your knowledge: Sustainability, depletion, valuation & policy</span>
+        <span class="score-area" id="scoreDisplay">Score: --/30</span>
+        <span class="attempt-area" id="attemptDisplay">📊 Last saved score: --</span>
+    </div>
+
+    <div id="questionsPanel" class="quiz-card"></div>
+
+    <div class="action-buttons">
+        <button id="submitQuizBtn">✅ Submit & Score</button>
+        <button id="resetQuizBtn" class="reset-btn">🔄 Reset All Answers</button>
+        <button id="clearScoresBtn" class="reset-btn" style="background:#b5651e;">🗑 Clear saved score</button>
+    </div>
+
+    <div id="receiptPanel" class="receipt-area" style="display: none;">
+        <div class="receipt-title">
+            🧾 OFFICIAL QUIZ RECEIPT
+            <button id="printReceiptBtn" class="print-btn">🖨️ Print / Save PDF</button>
+        </div>
+        <div id="receiptText" class="receipt-content"></div>
+    </div>
+    <footer>
+        ⚡ Fully offline • Interactive 30-item quiz • Auto scoring • Saves best score & timestamp<br>
+        <span class="prof-name">📚 Prof. Ronald Edilberto A. Ona</span>
+    </footer>
+</div>
+
+<script>
+    // ---------- 30 MULTIPLE-TYPE QUESTIONS (mix of single correct, true/false, scenario) ----------
+    const QUESTIONS = [
+        { text: "Which concept refers to the maximum amount of a renewable resource that can be harvested without reducing its future availability?", options: ["Maximum sustainable yield", "Optimal depletion path", "Hotelling's rule", "Shadow price"], correct: 0 },
+        { text: "True or False: Non-renewable resources such as oil are considered exhaustible because their stock decreases with extraction.", options: ["True", "False"], correct: 0 },
+        { text: "The 'Tragedy of the Commons' is best described as:", options: ["Overuse of a shared resource due to self-interest", "Government regulation failure", "Private property rights eliminating scarcity", "Sustainable forest management"], correct: 0 },
+        { text: "Hotelling's rule states that the price of a non-renewable resource should increase over time at a rate equal to:", options: ["The discount rate", "Inflation rate", "Population growth rate", "Marginal extraction cost"], correct: 0 },
+        { text: "Which of the following is an example of a stock pollutant?", options: ["CO₂ emissions (long-lived)", "Biodegradable sewage", "Noise pollution", "Fertilizer runoff that decays quickly"], correct: 0 },
+        { text: "What does 'resource rent' represent in natural resource economics?", options: ["Profit above extraction cost", "Tax paid to government", "Cost of exploration", "Subsidy for green energy"], correct: 0 },
+        { text: "The Hartwick Rule relates to sustainability and suggests that:", options: ["Rent from exhaustible resources should be invested in reproducible capital", "Resources should be fully extracted immediately", "Future generations have no rights", "Renewables must be subsidized"], correct: 0 },
+        { text: "Which economic instrument is most directly used to internalize environmental externalities?", options: ["Pigouvian tax", "Price ceiling", "Import tariff", "Minimum wage"], correct: 0 },
+        { text: "In the context of fisheries, Individual Transferable Quotas (ITQs) aim to:", options: ["Prevent overfishing by creating property rights", "Increase total catch limits", "Eliminate fishing altogether", "Subsidize fuel for fishers"], correct: 0 },
+        { text: "Which of the following is a renewable natural resource?", options: ["Solar energy", "Natural gas", "Copper", "Phosphate rock"], correct: 0 },
+        { text: "What is the main purpose of discounting future benefits in resource extraction?", options: ["Reflects time preference and opportunity cost of capital", "To inflate future values", "To ignore environmental costs", "To maximize extraction now"], correct: 0 },
+        { text: "The concept of 'natural capital' includes:", options: ["Forests, water, minerals, and biodiversity", "Only manufactured goods", "Human labor only", "Financial assets only"], correct: 0 },
+        { text: "Which policy approach uses market-based permits to control pollution?", options: ["Cap-and-trade", "Command-and-control regulation", "Technology standard", "Subsidy for abatement"], correct: 0 },
+        { text: "What is the 'Green Paradox'?", options: ["Climate policies may accelerate fossil fuel extraction", "Renewables always reduce emissions", "Strict conservation boosts growth", "Efficiency leads to more use"], correct: 0 },
+        { text: "Which valuation method estimates the value of environmental goods by observing related market expenditures?", options: ["Hedonic pricing", "Contingent valuation", "Benefit transfer", "Travel cost method"], correct: 0 },
+        { text: "True or False: The 'precautionary principle' suggests that lack of full scientific certainty should not postpone cost-effective measures to prevent environmental degradation.", options: ["True", "False"], correct: 0 },
+        { text: "Which of the following is an example of a common-pool resource?", options: ["Groundwater basin", "Private park", "Patent-protected software", "Clothing in a store"], correct: 0 },
+        { text: "What does 'Elasticity of substitution' between natural and manufactured capital indicate?", options: ["Ease of replacing natural resources with human-made capital", "Tax rate flexibility", "Demand for resource exports", "Rate of extraction"], correct: 0 },
+        { text: "The 'Kuznets Environmental Curve' hypothesizes that:", options: ["Environmental degradation first rises then falls with income", "Pollution increases indefinitely", "Economic growth always helps environment", "Inequality worsens pollution permanently"], correct: 0 },
+        { text: "Which cost is associated with the depletion of a resource that is not reflected in market price?", options: ["External cost", "Private cost", "Fixed cost", "Variable cost"], correct: 0 },
+        { text: "What is 'weak sustainability' criterion?", options: ["Total capital (man-made + natural) must be non-declining", "Natural capital must be preserved intact", "Only manufactured capital matters", "Focus on biodiversity only"], correct: 0 },
+        { text: "Which of the following describes the 'resource curse'?", options: ["Countries rich in natural resources tend to have lower economic growth and democracy", "Resources bring infinite prosperity", "Rapid renewable energy transition", "High resource prices always benefit economy"], correct: 0 },
+        { text: "The optimal extraction rate of an exhaustible resource is influenced by:", options: ["All of the above (future prices, discount rate, extraction costs)", "Only current demand", "Government budget", "Labor force size"], correct: 0 },
+        { text: "Which approach uses hypothetical scenarios to ask people their willingness to pay for environmental quality?", options: ["Contingent valuation", "Revealed preference", "Averting expenditure", "Production function approach"], correct: 0 },
+        { text: "In fisheries economics, the 'maximum economic yield' (MEY) is generally:", options: ["Less than maximum sustainable yield", "Greater than open-access catch", "Equal to bioeconomic equilibrium", "Always zero"], correct: 0 },
+        { text: "Which international agreement primarily addresses climate change and carbon emissions?", options: ["Paris Agreement", "Montreal Protocol", "Basel Convention", "CITES"], correct: 0 },
+        { text: "True or False: 'Discounting' gives less weight to future costs and benefits, which can lead to underinvestment in long-term environmental projects.", options: ["True", "False"], correct: 0 },
+        { text: "Which term refers to the value derived from an ecosystem service, such as pollination or water filtration?", options: ["Ecosystem service valuation", "Net national product", "Green GDP", "Social cost of carbon"], correct: 0 },
+        { text: "The concept of 'intergenerational equity' in resource economics emphasizes:", options: ["Fairness between present and future generations", "Maximizing current consumption", "Ignoring future technology", "Privatizing all resources"], correct: 0 },
+        { text: "What is 'land degradation neutrality'?", options: ["A target to maintain or improve land health", "Zero agriculture", "Desert expansion", "Complete reforestation only"], correct: 0 }
+    ];
+
+    // ensure each question has correct index mapping, all are multiple-choice with 2 or 4 options.
+    // validate data: all good (30 items)
+
+    let currentAnswers = new Array(30).fill(null);      // store selected option index (0-based)
+    let savedScoreData = null;    // { score, percentage, timestamp, receiptTextSnapshot? we will store best score }
+    // storage key
+    const STORAGE_KEY = "NREcoQuizBestScore";
+
+    // load best score from localStorage
+    function loadSavedScore() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+            try {
+                savedScoreData = JSON.parse(raw);
+                if (savedScoreData && typeof savedScoreData.score === 'number') {
+                    updateSavedScoreDisplay();
+                } else {
+                    savedScoreData = null;
+                }
+            } catch(e) { savedScoreData = null; }
+        }
+        if (!savedScoreData) {
+            document.getElementById("attemptDisplay").innerHTML = `📊 Last saved score: none yet`;
+        } else {
+            updateSavedScoreDisplay();
+        }
+    }
+
+    function updateSavedScoreDisplay() {
+        if (savedScoreData) {
+            const dateStr = savedScoreData.timestamp ? new Date(savedScoreData.timestamp).toLocaleString() : "unknown date";
+            document.getElementById("attemptDisplay").innerHTML = `🏆 Best saved: ${savedScoreData.score}/30 (${Math.round(savedScoreData.percentage)}%) on ${dateStr}`;
+        } else {
+            document.getElementById("attemptDisplay").innerHTML = `📊 Last saved score: none`;
+        }
+    }
+
+    // save new score if it's better than existing (or first time)
+    function maybeSaveNewScore(score, percentage, receiptDetail) {
+        let isBetter = false;
+        if (!savedScoreData) {
+            isBetter = true;
+        } else {
+            // higher score wins, if tie then keep original (or we can update if equal? we keep first best to respect earlier achievement)
+            if (score > savedScoreData.score) isBetter = true;
+        }
+        if (isBetter) {
+            savedScoreData = {
+                score: score,
+                percentage: percentage,
+                timestamp: Date.now(),
+                receiptPreview: receiptDetail.substring(0, 500) // store short preview
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedScoreData));
+            updateSavedScoreDisplay();
+            return true;
+        }
+        return false;
+    }
+
+    // generate quiz HTML dynamically
+    function renderQuestions() {
+        const container = document.getElementById("questionsPanel");
+        if (!container) return;
+        let html = '';
+        QUESTIONS.forEach((q, idx) => {
+            const selectedIdx = currentAnswers[idx];
+            html += `<div class="question-item" data-qidx="${idx}">
+                        <div class="q-text"><span class="q-num">Q${idx+1}</span> ${escapeHtml(q.text)}</div>
+                        <div class="options">`;
+            q.options.forEach((opt, optIdx) => {
+                const isChecked = (selectedIdx === optIdx);
+                const radioId = `q${idx}_opt${optIdx}`;
+                html += `<div class="option" onclick="document.getElementById('${radioId}').click();">
+                            <input type="radio" name="q${idx}" id="${radioId}" value="${optIdx}" ${isChecked ? 'checked' : ''}>
+                            <label for="${radioId}">${escapeHtml(opt)}</label>
+                         </div>`;
+            });
+            html += `</div></div>`;
+        });
+        container.innerHTML = html;
+
+        // attach event listeners to all radio groups to update currentAnswers
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const radios = document.querySelectorAll(`input[name="q${i}"]`);
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        currentAnswers[i] = parseInt(e.target.value);
+                    }
+                });
+            });
+        }
+    }
+
+    // helper: simple escape
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // compute score and generate receipt + scoring, save best
+    function computeScoreAndReceipt() {
+        let correctCount = 0;
+        const details = [];
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const userChoice = currentAnswers[i];
+            const isCorrect = (userChoice !== null && userChoice === QUESTIONS[i].correct);
+            if (isCorrect) correctCount++;
+            const userAnswerText = (userChoice !== null) ? QUESTIONS[i].options[userChoice] : "Not answered";
+            const correctAnswerText = QUESTIONS[i].options[QUESTIONS[i].correct];
+            details.push({
+                num: i+1,
+                user: userAnswerText,
+                correct: correctAnswerText,
+                status: isCorrect ? "✓ Correct" : "✗ Incorrect"
+            });
+        }
+        const percentage = (correctCount / 30) * 100;
+        const scorePercent = percentage.toFixed(1);
+        // generate receipt content
+        let receiptStr = `===========================================\n`;
+        receiptStr += `   NATURAL RESOURCE ECONOMICS QUIZ RECEIPT\n`;
+        receiptStr += `===========================================\n`;
+        receiptStr += `📅 Date: ${new Date().toLocaleString()}\n`;
+        receiptStr += `🎯 Final Score: ${correctCount} / 30 (${scorePercent}%)\n`;
+        receiptStr += `🏅 Grade: ${getGradeLetter(percentage)}\n`;
+        receiptStr += `👨‍🏫 Instructor: Prof. Ronald Edilberto A. Ona\n`;
+        receiptStr += `-------------------------------------------\n`;
+        receiptStr += `DETAILED RESPONSES:\n`;
+        for (let d of details) {
+            receiptStr += `Q${d.num}: ${d.status} | Your: ${truncateStr(d.user, 40)} | Correct: ${truncateStr(d.correct, 40)}\n`;
+        }
+        receiptStr += `-------------------------------------------\n`;
+        receiptStr += `* Best score is saved automatically when higher.\n`;
+        receiptStr += `* Thank you for participating! Keep learning.\n`;
+
+        const isNewBest = maybeSaveNewScore(correctCount, percentage, receiptStr);
+
+        if (isNewBest) {
+            receiptStr += `\n🏆 NEW HIGH SCORE SAVED! 🏆\n`;
+        } else {
+            if(savedScoreData) receiptStr += `\n⭐ Current best: ${savedScoreData.score}/30. Keep improving!\n`;
+            else receiptStr += `\n📀 Score saved as best attempt.\n`;
+        }
+
+        // update score display on top
+        document.getElementById("scoreDisplay").innerHTML = `Score: ${correctCount}/30 (${scorePercent}%)`;
+
+        // show receipt panel
+        const receiptPanel = document.getElementById("receiptPanel");
+        const receiptTextDiv = document.getElementById("receiptText");
+        receiptTextDiv.innerText = receiptStr;
+        receiptPanel.style.display = "block";
+
+        return { correctCount, percentage, receiptStr };
+    }
+
+    function getGradeLetter(percent) {
+        if (percent >= 90) return 'A+ (Excellent)';
+        if (percent >= 80) return 'A (Very Good)';
+        if (percent >= 70) return 'B (Good)';
+        if (percent >= 60) return 'C (Satisfactory)';
+        if (percent >= 50) return 'D (Pass)';
+        return 'F (Needs Improvement)';
+    }
+
+    function truncateStr(str, maxLen) {
+        if (!str) return '—';
+        return str.length > maxLen ? str.substring(0, maxLen-2) + '..' : str;
+    }
+
+    // reset all answers (clear selections)
+    function resetAllAnswers() {
+        currentAnswers.fill(null);
+        renderQuestions();     // re-render clears all radio selections
+        // also reset score display to not submitted
+        document.getElementById("scoreDisplay").innerHTML = `Score: --/30`;
+        // optionally hide receipt or keep? better hide receipt to avoid confusion
+        const receiptPanel = document.getElementById("receiptPanel");
+        receiptPanel.style.display = "none";
+        // we don't clear saved score, just answers
+    }
+
+    // clear saved best score from storage
+    function clearSavedScore() {
+        localStorage.removeItem(STORAGE_KEY);
+        savedScoreData = null;
+        updateSavedScoreDisplay();
+        // optional: add small user feedback
+        const receiptPanel = document.getElementById("receiptPanel");
+        if (receiptPanel.style.display === "block") {
+            // we can show a small flash but not needed
+        }
+        alert("🗑 Best saved score has been cleared. Next submission will save new best.");
+    }
+
+    // submit action: scoring and receipt
+    function onSubmitQuiz() {
+        // check at least some answered? but optional, compute anyway.
+        const { correctCount, percentage, receiptStr } = computeScoreAndReceipt();
+        // scroll receipt into view gently
+        const receiptDiv = document.getElementById("receiptPanel");
+        if (receiptDiv) receiptDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // print receipt (browser print)
+    function printReceipt() {
+        const receiptContentElem = document.getElementById("receiptText");
+        if (!receiptContentElem || !receiptContentElem.innerText.trim()) {
+            alert("No receipt to print. Submit the quiz first.");
+            return;
+        }
+        const receiptText = receiptContentElem.innerText;
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        printWindow.document.write(`
+            <html><head><title>Natural Resource Economics Quiz Receipt - Prof. Ronald Edilberto A. Ona</title>
+            <style>body { font-family: monospace; padding: 2rem; } pre { white-space: pre-wrap; } .instructor { margin-top: 20px; font-weight: bold; }</style>
+            </head><body><pre>${escapeHtmlForPrint(receiptText)}</pre><div class="instructor">📘 Quiz prepared by: Prof. Ronald Edilberto A. Ona</div></body></html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function escapeHtmlForPrint(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // add event listeners after DOM ready
+    function init() {
+        renderQuestions();
+        loadSavedScore();
+
+        const submitBtn = document.getElementById("submitQuizBtn");
+        const resetBtn = document.getElementById("resetQuizBtn");
+        const clearScoresBtn = document.getElementById("clearScoresBtn");
+        const printBtn = document.getElementById("printReceiptBtn");
+
+        if (submitBtn) submitBtn.addEventListener("click", onSubmitQuiz);
+        if (resetBtn) resetBtn.addEventListener("click", resetAllAnswers);
+        if (clearScoresBtn) clearScoresBtn.addEventListener("click", clearSavedScore);
+        if (printBtn) printBtn.addEventListener("click", printReceipt);
+    }
+
+    // start
+    init();
+</script>
+</body>
+</html>

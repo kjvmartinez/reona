@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>EcoGuardian: Resort Challenge</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* Prevents accidental text selection on taps */
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #1e3c2c 0%, #0f2a1c 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* Game container - card style */
+        .game-container {
+            max-width: 600px;
+            width: 100%;
+            background: #fef9e8;
+            border-radius: 64px 48px 64px 48px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        /* Header with score and eco-level */
+        .stats {
+            background: #2b5e3b;
+            padding: 20px 20px 16px;
+            color: white;
+            text-align: center;
+            border-bottom: 4px solid #f5b642;
+            position: relative;
+        }
+
+        .help-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-btn:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .score-box {
+            font-size: 2.4rem;
+            font-weight: bold;
+            background: #1e3a2a;
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 60px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -2px 0 #0c1f12, 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .eco-meter {
+            background: #3c2a1f;
+            border-radius: 30px;
+            height: 18px;
+            width: 90%;
+            margin: 12px auto 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .eco-fill {
+            background: #f5b642;
+            width: 70%;
+            height: 100%;
+            border-radius: 30px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 6px #ffd966;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-top: 5px;
+            padding: 0 20px;
+            color: #e9e2c7;
+        }
+
+        /* Main content */
+        .game-content {
+            padding: 28px 22px 32px;
+        }
+
+        .scenario {
+            background: #fff6e5;
+            border-radius: 48px;
+            padding: 22px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 0 #e0cfb0;
+            border: 1px solid #f3e5c9;
+        }
+
+        .scenario h2 {
+            margin: 0 0 12px 0;
+            font-size: 1.5rem;
+            color: #2c5e2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .scenario p {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: #2c2b26;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin: 20px 0 28px;
+        }
+
+        .choice-btn {
+            background: #e9e2d0;
+            border: none;
+            border-radius: 100px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e2b;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.15s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .choice-btn:active {
+            transform: scale(0.97);
+            background: #ddd2bc;
+        }
+
+        .choice-prefix {
+            background: #5f8b5c;
+            color: white;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .feedback {
+            background: #f0e5d2;
+            border-left: 8px solid #f5b642;
+            padding: 16px 20px;
+            border-radius: 32px;
+            margin: 12px 0 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #2b3b26;
+            font-weight: 500;
+        }
+
+        .next-btn {
+            background: #2b5e3b;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 18px 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 60px;
+            letter-spacing: 1px;
+            transition: 0.1s linear;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 5px 0 #17421f;
+        }
+
+        .next-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #17421f;
+        }
+
+        .reset-area {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            color: #8b6b42;
+            text-decoration: underline;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        footer {
+            background: #e2d4be;
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 14px;
+            color: #5c4b2e;
+        }
+
+        /* Modal Styles for Instructions */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fef9e8;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85%;
+            border-radius: 48px;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: #2b5e3b;
+            color: white;
+            padding: 24px 20px;
+            border-radius: 48px 48px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-modal:active {
+            transform: scale(0.9);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .modal-body {
+            padding: 24px;
+            color: #2c3e2b;
+        }
+
+        .instruction-section {
+            margin-bottom: 24px;
+        }
+
+        .instruction-section h3 {
+            color: #2b5e3b;
+            font-size: 1.3rem;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f5b642;
+            padding-bottom: 8px;
+        }
+
+        .instruction-section p, .instruction-section ul {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 12px 0;
+        }
+
+        .instruction-section ul {
+            padding-left: 24px;
+        }
+
+        .instruction-section li {
+            margin: 8px 0;
+        }
+
+        .tip-box {
+            background: #e9e2d0;
+            border-radius: 24px;
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 4px solid #f5b642;
+        }
+
+        .eco-badge {
+            display: inline-block;
+            background: #2b5e3b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px 4px 0 0;
+        }
+
+        @media (max-width: 500px) {
+            .game-content {
+                padding: 18px 16px 24px;
+            }
+            .choice-btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+            .scenario p {
+                font-size: 1rem;
+            }
+            .modal-body {
+                padding: 20px;
+            }
+            .instruction-section h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameRoot">
+    <div class="stats">
+        <button class="help-btn" id="helpButton">❔</button>
+        <div class="score-box">🌿 <span id="scoreValue">0</span> pts</div>
+        <div class="eco-meter">
+            <div class="eco-fill" id="ecoFill" style="width: 50%"></div>
+        </div>
+        <div class="meter-label">
+            <span>⚠️ Fragile</span>
+            <span>⚖️ Balanced</span>
+            <span>🌟 Thriving</span>
+        </div>
+    </div>
+    <div class="game-content" id="gameContent">
+        <!-- dynamic content injected -->
+    </div>
+    <footer>
+        🏞️ EcoGuardian — Be the change, travel responsibly
+    </footer>
+</div>
+
+<!-- Instructions Modal -->
+<div id="instructionsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🌱 How to Play</h2>
+            <button class="close-modal" id="closeModalBtn">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="instruction-section">
+                <h3>🎯 Your Mission</h3>
+                <p>You are the manager of an <strong>eco-resort</strong>. Your goal is to balance <strong>profit</strong> with <strong>environmental protection</strong> and <strong>community well-being</strong>.</p>
+            </div>
+
+            <div class="instruction-section">
+                <h3>📊 Game Stats</h3>
+                <ul>
+                    <li><strong>🌿 Sustainability Score:</strong> Your total points. Make wise choices to increase it!</li>
+                    <li><strong>📈 Eco-Meter:</strong> Shows how healthy your environment is.
+                        <br><span class="eco-badge">⚠️ Fragile (0-33%)</span> 
+                        <span class="eco-badge">⚖️ Balanced (34-66%)</span>
+                        <span class="eco-badge">🌟 Thriving (67-100%)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="instruction-section">
+                <h3>🎮 How to Play</h3>
+                <ul>
+                    <li><strong>1. Read the Scenario:</strong> Each round presents a real-world ecotourism challenge.</li>
+                    <li><strong>2. Choose Wisely:</strong> Tap on one of the three choices (A, B, or C).</li>
+                    <li><strong>3. Learn from Feedback:</strong> See how your choice affected your score and eco-meter. Read the detailed explanation!</li>
+                    <li><strong>4. Next Challenge:</strong> Tap "NEXT CHALLENGE" to face a new situation.</li>
+                    <li><strong>5. Keep Playing:</strong> The game randomly selects from 10+ scenarios. Try to achieve the highest sustainability score!</li>
+                </ul>
+            </div>
+
+            <div class="instruction-section">
+                <h3>💡 Pro Tips</h3>
+                <div class="tip-box">
+                    <p>✅ <strong>Think like an ecotourist:</strong> What benefits nature AND the local community?</p>
+                    <p>✅ <strong>Balance is key:</strong> Sometimes the most profitable choice harms the environment.</p>
+                    <p>✅ <strong>Learn from mistakes:</strong> If your eco-meter drops, you can recover with better choices!</p>
+                    <p>✅ <strong>Real-world lessons:</strong> Every scenario is based on actual ecotourism challenges.</p>
+                </div>
+            </div>
+
+            <div class="instruction-section">
+                <h3>🏆 Goal</h3>
+                <p>Become an <strong>EcoGuardian Champion</strong> by making decisions that create a sustainable, thriving resort that benefits nature, local communities, and your business!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ------------------------------------------------------------
+    // SCENARIO BANK – each with three choices, impact on score and eco %
+    // and custom feedback.
+    // Every choice affects 'score' (sustainability points) and 'ecoPercent'
+    // EcoPercent ranges 0-100, Score can be negative or positive.
+    // ------------------------------------------------------------
+    const SCENARIOS = [
+        {
+            id: 1,
+            title: "🌊 Water Crisis",
+            text: "During a drought, guests keep demanding fresh towels daily and long showers. Your water reserves are dropping fast.",
+            choices: [
+                { text: "🚫 Enforce towel reuse & limit showers to 5 mins", effect: { score: 12, eco: 8 }, feedback: "Excellent! Guests grumble but adapt, water consumption drops 30%. Community appreciates your leadership." },
+                { text: "💧 Import expensive bottled water for unlimited use", effect: { score: -8, eco: -12 }, feedback: "Bad move. Plastic waste piles up and local water sources feel exploited. Eco reputation suffers." },
+                { text: "🚿 Offer luxury spa 'rain experience' using recycled greywater", effect: { score: 5, eco: 4 }, feedback: "Creative! Guests love the novelty. Saves fresh water but installation costs reduce profit slightly." }
+            ]
+        },
+        {
+            id: 2,
+            title: "🐢 Turtle Nesting",
+            text: "A protected sea turtle species is trying to nest on your beachfront. Bright lights and loud music disturb them.",
+            choices: [
+                { text: "🔦 Install red-shield lights & quiet zone after 8 PM", effect: { score: 15, eco: 12 }, feedback: "Perfect! Turtles nest safely and guests enjoy natural evenings. Eco-tourists book more rooms." },
+                { text: "🎸 Keep beach party — it's good for business", effect: { score: -10, eco: -18 }, feedback: "Disastrous. Turtles abandon the site. Conservation groups criticize you heavily." },
+                { text: "📸 Offer guided turtle watching tours with strict rules", effect: { score: 9, eco: 7 }, feedback: "Smart! Generates extra income and educates tourists about conservation. Balanced win." }
+            ]
+        },
+        {
+            id: 3,
+            title: "🌽 Local Farmers",
+            text: "Big hotel chains offer imported food. Local farmers near your resort struggle to sell organic produce.",
+            choices: [
+                { text: "🍅 Source 80% of ingredients from local farmers", effect: { score: 10, eco: 6 }, feedback: "Community loves you! Fresh organic menu becomes a highlight. Slightly higher cost but worth it." },
+                { text: "📦 Stick with cheap imports to maximize profit", effect: { score: -5, eco: -4 }, feedback: "Farmers protest outside. Tourists notice the lack of authentic local flavor." },
+                { text: "🌾 Create 'farm-to-table' experience for guests", effect: { score: 14, eco: 9 }, feedback: "Huge success! Guests pay premium for tours and meals, local economy booms." }
+            ]
+        },
+        {
+            id: 4,
+            title: "🗑️ Plastic Ban",
+            text: "The government proposes banning single-use plastics in tourism zones. Your lobby opposes.",
+            choices: [
+                { text: "♻️ Embrace ban early: compostable amenities & refill stations", effect: { score: 12, eco: 14 }, feedback: "You become a regional leader in sustainability. Media praises your resort. Occupancy rises." },
+                { text: "💸 Lobby against the ban to keep plastic bottles", effect: { score: -12, eco: -15 }, feedback: "Activists boycott your resort. The ban passes anyway, and you look out-of-touch." },
+                { text: "🧴 Offer plastic 'alternatives' that are still harmful", effect: { score: -3, eco: -6 }, feedback: "Greenwashing exposed! Reputation drops and you get fined." }
+            ]
+        },
+        {
+            id: 5,
+            title: "🚶‍♂️ Trail Erosion",
+            text: "Tourists keep hiking off marked trails in the nearby rainforest, causing erosion and disturbing wildlife.",
+            choices: [
+                { text: "🪵 Build elevated boardwalks and hire local guides", effect: { score: 10, eco: 10 }, feedback: "Trail restoration works. Employment for locals increases. Wildlife returns to the area." },
+                { text: "🚧 Close the forest entirely to tourists", effect: { score: -5, eco: 3 }, feedback: "Too extreme. Guests are disappointed and bookings drop. Conservation is good but income suffers." },
+                { text: "📱 Create an AR app trail with eco-penalties", effect: { score: 6, eco: 5 }, feedback: "Modern approach! Reduces erosion but some older guests struggle with tech." }
+            ]
+        },
+        {
+            id: 6,
+            title: "🔋 Energy Crisis",
+            text: "The island has frequent power cuts. Most resorts use diesel generators, polluting the air.",
+            choices: [
+                { text: "☀️ Install solar panels + battery storage", effect: { score: 14, eco: 18 }, feedback: "Costly upfront but your resort becomes energy independent. Carbon footprint plummets!" },
+                { text: "🛢️ Buy more diesel generators", effect: { score: -7, eco: -12 }, feedback: "Noise and fumes upset guests and nearby community. Short-term fix, long-term loss." },
+                { text: "🔌 Offer guests 'energy-saving credits' for low usage", effect: { score: 5, eco: 3 }, feedback: "Modest improvement but still relies on fossil fuels. Better than nothing." }
+            ]
+        },
+        {
+            id: 7,
+            title: "🐒 Monkey Encounters",
+            text: "Endemic monkeys are fed by tourists, becoming aggressive and dependent on junk food.",
+            choices: [
+                { text: "📋 Install signs & staff educate guests not to feed", effect: { score: 8, eco: 7 }, feedback: "Monkeys slowly return to natural diet. Fewer incidents reported." },
+                { text: "🍌 Set up official 'monkey feeding stations' with fruit", effect: { score: -3, eco: -5 }, feedback: "Creates unnatural dependence. Monkeys lose fear of humans, causing conflicts." },
+                { text: "🌿 Create a wildlife corridor away from resort", effect: { score: 11, eco: 12 }, feedback: "Excellent! Animals stay wild and guests enjoy ethical sightings." }
+            ]
+        },
+        {
+            id: 8,
+            title: "🏺 Cultural Heritage",
+            text: "An ancient indigenous site is near your property. Developers want to build a souvenir shop there.",
+            choices: [
+                { text: "🛡️ Protect the site and invite elders to share stories", effect: { score: 15, eco: 8 }, feedback: "Cultural tourism flourishes. Indigenous community endorses your resort. Unique experience!" },
+                { text: "🏪 Build the shop but use 'cultural' themes", effect: { score: -10, eco: -8 }, feedback: "Accusations of exploitation. Protests damage your brand." },
+                { text: "🏛️ Create a small museum with fair profit share", effect: { score: 12, eco: 5 }, feedback: "Win-win! Site preserved, community earns income, guests love authentic history." }
+            ]
+        },
+        {
+            id: 9,
+            title: "🚲 Transport Trouble",
+            text: "Guests rent gas scooters that pollute and clog narrow village roads.",
+            choices: [
+                { text: "⚡ Provide free electric bicycles and shuttle", effect: { score: 9, eco: 12 }, feedback: "Silence and clean air! Locals love the reduced traffic. Great for health." },
+                { text: "🛵 Keep scooters, it's guest preference", effect: { score: -4, eco: -6 }, feedback: "Village complaints rise. Wildlife disturbed by noise." },
+                { text: "🚶‍♀️ Promote walking tours and car-free zones", effect: { score: 6, eco: 5 }, feedback: "Positive vibe but some guests demand motorized options. Partial success." }
+            ]
+        },
+        {
+            id: 10,
+            title: "🌱 Coral Reef Snorkeling",
+            text: "Your reef attracts thousands of tourists. Sunscreen chemicals are killing the coral.",
+            choices: [
+                { text: "🧴 Mandate reef-safe sunscreen & sell eco-friendly brands", effect: { score: 10, eco: 14 }, feedback: "Corals start recovering. You become a reef conservation hero." },
+                { text: "🏊 Ignore the issue, guests love convenience", effect: { score: -12, eco: -20 }, feedback: "Bleached corals become a sad sight. Scientists warn of ecosystem collapse." },
+                { text: "🌊 Limit visitors + install mooring buoys", effect: { score: 7, eco: 9 }, feedback: "Sustainable approach. Reef gets breathing space, visitor experience more exclusive." }
+            ]
+        }
+    ];
+
+    // Game state
+    let currentScenario = null;
+    let totalScore = 0;
+    let ecoPercent = 50;                // 0-100 (50 = balanced)
+    let waitingForNext = false;          // after choice, show next button
+    let lastFeedback = "";
+    let lastChoiceEffects = null;
+
+    // Modal elements
+    const modal = document.getElementById('instructionsModal');
+    const helpBtn = document.getElementById('helpButton');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    // Helper: clamp ecoPercent
+    function clampEco(value) {
+        return Math.min(100, Math.max(0, value));
+    }
+
+    // update UI for score and eco meter
+    function updateStatsUI() {
+        document.getElementById('scoreValue').innerText = totalScore;
+        const fillElem = document.getElementById('ecoFill');
+        fillElem.style.width = ecoPercent + '%';
+        // optional color hint
+        if (ecoPercent < 30) fillElem.style.backgroundColor = "#d97747";
+        else if (ecoPercent > 70) fillElem.style.backgroundColor = "#6fbf4c";
+        else fillElem.style.backgroundColor = "#f5b642";
+    }
+
+    // Get a random scenario
+    function getRandomScenario() {
+        const randomIndex = Math.floor(Math.random() * SCENARIOS.length);
+        return { ...SCENARIOS[randomIndex] };
+    }
+
+    // Render the game view
+    function renderGame() {
+        const container = document.getElementById('gameContent');
+        if (!container) return;
+
+        if (waitingForNext && currentScenario) {
+            // Feedback mode - show results and next button
+            let choicesHtml = '';
+            if (lastChoiceEffects) {
+                choicesHtml = `<div class="feedback">🌟 ${lastFeedback}</div>`;
+            }
+            container.innerHTML = `
+                <div class="scenario">
+                    <h2>📋 ${currentScenario.title}</h2>
+                    <p>${currentScenario.text}</p>
+                </div>
+                ${choicesHtml}
+                <button class="next-btn" id="nextScenarioBtn">🌱 NEXT CHALLENGE ➡️</button>
+                <div class="reset-area">
+                    <button class="reset-btn" id="resetGameBtn">⟳ Restart Game</button>
+                </div>
+            `;
+            document.getElementById('nextScenarioBtn')?.addEventListener('click', () => {
+                waitingForNext = false;
+                loadNewScenario();
+            });
+            document.getElementById('resetGameBtn')?.addEventListener('click', resetGame);
+            return;
+        }
+
+        // Normal mode: show scenario and choices
+        if (!currentScenario) {
+            loadNewScenario();
+            return;
+        }
+
+        let choicesHtml = '';
+        currentScenario.choices.forEach((choice, idx) => {
+            const prefixLetter = String.fromCharCode(65 + idx); // A, B, C
+            choicesHtml += `
+                <button class="choice-btn" data-choice-index="${idx}">
+                    <span class="choice-prefix">${prefixLetter}</span>
+                    <span>${choice.text}</span>
+                </button>
+            `;
+        });
+
+        container.innerHTML = `
+            <div class="scenario">
+                <h2>🌿 ${currentScenario.title}</h2>
+                <p>${currentScenario.text}</p>
+            </div>
+            <div class="choices" id="choicesArea">
+                ${choicesHtml}
+            </div>
+            <div class="reset-area">
+                <button class="reset-btn" id="resetGameBtn">⟳ Restart Game</button>
+            </div>
+        `;
+
+        // Attach event listeners to choice buttons
+        const btns = document.querySelectorAll('.choice-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (waitingForNext) return;
+                const idx = parseInt(btn.dataset.choiceIndex);
+                if (!isNaN(idx) && currentScenario.choices[idx]) {
+                    applyChoice(idx);
+                }
+            });
+        });
+        document.getElementById('resetGameBtn')?.addEventListener('click', resetGame);
+    }
+
+    function applyChoice(choiceIndex) {
+        const choice = currentScenario.choices[choiceIndex];
+        if (!choice) return;
+
+        const deltaScore = choice.effect.score;
+        const deltaEco = choice.effect.eco;
+
+        totalScore += deltaScore;
+        ecoPercent = clampEco(ecoPercent + deltaEco);
+        lastFeedback = choice.feedback;
+        lastChoiceEffects = choice;
+
+        updateStatsUI();
+
+        // set waiting mode to show feedback
+        waitingForNext = true;
+        renderGame();
+    }
+
+    function loadNewScenario() {
+        currentScenario = getRandomScenario();
+        waitingForNext = false;
+        lastFeedback = "";
+        lastChoiceEffects = null;
+        renderGame();
+    }
+
+    function resetGame() {
+        totalScore = 0;
+        ecoPercent = 50;
+        updateStatsUI();
+        waitingForNext = false;
+        lastFeedback = "";
+        lastChoiceEffects = null;
+        loadNewScenario();
+    }
+
+    // Modal functions
+    function openModal() {
+        modal.classList.add('active');
+        // Prevent body scrolling when modal is open
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal when clicking outside the content
+    function handleModalClick(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Initial load
+    function init() {
+        resetGame();
+        
+        // Add event listeners for modal
+        helpBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', handleModalClick);
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>

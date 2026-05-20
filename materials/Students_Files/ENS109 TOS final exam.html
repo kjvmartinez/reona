@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table of Specifications | Environmental Economics Final Exam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Georgia', 'Times New Roman', serif;
+            background: #eef3ec;
+            padding: 40px 24px;
+            color: #1e3a2a;
+        }
+        .tos-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 2rem 2rem 2.5rem;
+        }
+        h1 {
+            font-size: 2rem;
+            border-left: 8px solid #2a6e47;
+            padding-left: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #1c4d2d;
+        }
+        .subtitle {
+            color: #3a6b4a;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+            font-weight: 500;
+            border-bottom: 1px solid #cde0ca;
+            padding-bottom: 0.75rem;
+        }
+        .meta-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            background: #f6faf2;
+            padding: 1rem 1.8rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .meta-card {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1.8rem 0 1rem 0;
+            background: #e2edd9;
+            display: inline-block;
+            padding: 0.2rem 1.3rem;
+            border-radius: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0 1.8rem;
+            font-size: 0.85rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        th {
+            background: #2a6e47;
+            color: white;
+            padding: 12px 8px;
+            font-weight: 600;
+            border: 1px solid #40835c;
+        }
+        td {
+            border: 1px solid #cfe0ca;
+            padding: 10px 8px;
+            vertical-align: top;
+            background-color: #fefefb;
+        }
+        .sub-table {
+            background: #fafdf5;
+        }
+        .highlight {
+            background: #eaf5e3;
+            font-weight: 600;
+        }
+        .totals-row {
+            background: #e0ecd6;
+            font-weight: 700;
+        }
+        .note-box {
+            background: #fef7e0;
+            border-left: 6px solid #cb9e2e;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #bdd6b2;
+            font-size: 0.75rem;
+            color: #4e6e58;
+        }
+        .badge {
+            background: #2a6e47;
+            color: white;
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 0.7rem;
+            font-weight: normal;
+            display: inline-block;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0.2in;
+            }
+            .tos-container {
+                box-shadow: none;
+                padding: 0;
+            }
+            .meta-grid {
+                background: #f3f7ef;
+                break-inside: avoid;
+            }
+            table {
+                break-inside: avoid;
+            }
+            button {
+                display: none;
+            }
+        }
+        .print-btn {
+            background: #2c6e47;
+            border: none;
+            padding: 8px 20px;
+            color: white;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            float: right;
+            font-size: 0.85rem;
+            transition: 0.1s;
+        }
+        .print-btn:hover {
+            background: #1d4f33;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+<div class="tos-container">
+    <div class="clearfix">
+        <button class="print-btn" onclick="window.print();">🖨️ Print / Save as PDF</button>
+    </div>
+    <h1>📊 Table of Specifications (TOS)</h1>
+    <div class="subtitle">Final Examination in Environmental Economics | 100 Items | 100 Total Points</div>
+    
+    <div class="meta-grid">
+        <div class="meta-card">📋 Total Items: <strong>100</strong></div>
+        <div class="meta-card">🎯 Total Points: <strong>100</strong></div>
+        <div class="meta-card">✍️ Multiple Choice: 50 items (1 pt each)</div>
+        <div class="meta-card">✅ True or False: 50 items (1 pt each)</div>
+        <div class="meta-card">⏱️ Estimated Time: 90–120 min</div>
+    </div>
+
+    <!-- Exam Structure Overview Table -->
+    <span class="section-title">📌 Exam Structure Overview</span>
+    <table>
+        <thead>
+            <tr><th>Part</th><th>Question Type</th><th>Number of Items</th><th>Points per Item</th><th>Total Points</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>A</td><td>Multiple Choice</td><td>50</td><td>1</td><td>50</td></tr>
+            <tr><td>B</td><td>True or False</td><td>50</td><td>1</td><td>50</td></tr>
+            <tr class="totals-row"><td colspan="4"><strong>Total</strong></td><td><strong>100</strong></td></tr>
+        </tbody>
+    </table>
+
+    <!-- Content Areas Coverage (Main TOS) -->
+    <span class="section-title">🌿 Content Areas & Item Distribution</span>
+    <table>
+        <thead>
+            <tr><th>Content Area</th><th>Topics Included</th><th>MC Items</th><th>TF Items</th><th>Total Items</th><th>Percentage</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>I. Foundations of Environmental Economics</strong></td><td>Externalities, Coase Theorem, Pigouvian taxes, market failure, public goods, property rights</td><td>8</td><td>8</td><td>16</td><td>16%</td></tr>
+            <tr><td><strong>II. Environmental Valuation</strong></td><td>Contingent valuation, hedonic pricing, travel cost method, WTP/WTA, non-market valuation, ecosystem services</td><td>8</td><td>6</td><td>14</td><td>14%</td></tr>
+            <tr><td><strong>III. Environmental Policy Instruments</strong></td><td>Cap-and-trade, emissions trading, command-and-control, subsidies, carbon tax, Pigouvian tax, permit systems</td><td>8</td><td>8</td><td>16</td><td>16%</td></tr>
+            <tr><td><strong>IV. Sustainability & Intergenerational Equity</strong></td><td>Weak vs. strong sustainability, natural capital, Hartwick Rule, intergenerational equity, discounting</td><td>6</td><td>6</td><td>12</td><td>12%</td></tr>
+            <tr><td><strong>V. Climate Change Economics</strong></td><td>Social cost of carbon, Paris Agreement, carbon pricing, green paradox, adaptation/mitigation, stock pollutants</td><td>6</td><td>6</td><td>12</td><td>12%</td></tr>
+            <tr><td><strong>VI. Resource Economics & Commons</strong></td><td>Tragedy of the Commons, common-pool resources, open access, fisheries economics, ITQs, MSY</td><td>6</td><td>6</td><td>12</td><td>12%</td></tr>
+            <tr><td><strong>VII. Environmental Justice & Political Economy</strong></td><td>Environmental justice, regulatory capture, pollution havens, environmental federalism, resource curse</td><td>4</td><td>4</td><td>8</td><td>8%</td></tr>
+            <tr><td><strong>VIII. Special Topics & Emerging Concepts</strong></td><td>Circular economy, rebound effect, precautionary principle, safe minimum standard, adaptive management, EKC</td><td>4</td><td>6</td><td>10</td><td>10%</td></tr>
+            <tr class="totals-row"><td colspan="3"><strong>TOTAL</strong></td><td><strong>50</strong></td><td><strong>50</strong></td><td><strong>100</strong></td><td><strong>100%</strong></td></tr>
+        </tbody>
+    </table>
+
+    <!-- Detailed Sub-topic Breakdown -->
+    <span class="section-title">🔍 Detailed Item Breakdown by Sub-topic</span>
+    <table>
+        <thead><tr><th>Content Area</th><th>Sub-topic / Specific Concept</th><th>Multiple Choice</th><th>True/False</th></tr></thead>
+        <tbody>
+            <tr><td rowspan="5">I. Foundations</td><td>Externalities (negative/positive, production/consumption)</td><td>2</td><td>2</td></tr>
+            <tr><td>Coase Theorem and transaction costs</td><td>2</td><td>2</td></tr>
+            <tr><td>Pigouvian tax and subsidy</td><td>2</td><td>1</td></tr>
+            <tr><td>Public goods (characteristics, free riding)</td><td>1</td><td>2</td></tr>
+            <tr><td>Property rights and market failure</td><td>1</td><td>1</td></tr>
+            <tr style="background:#f6faf2;"><td colspan="4"></td></tr>
+            <tr><td rowspan="6">II. Valuation</td><td>Contingent valuation method (CVM)</td><td>2</td><td>1</td></tr>
+            <tr><td>Hedonic pricing</td><td>1</td><td>1</td></tr>
+            <tr><td>Travel cost method</td><td>1</td><td>1</td></tr>
+            <tr><td>Willingness to pay (WTP) vs. WTA</td><td>1</td><td>1</td></tr>
+            <tr><td>Non-market valuation principles</td><td>1</td><td>1</td></tr>
+            <tr><td>Ecosystem services (provisioning, regulating, cultural)</td><td>2</td><td>1</td></tr>
+            <tr><td rowspan="5">III. Policy Instruments</td><td>Cap-and-trade / emissions trading</td><td>2</td><td>2</td></tr>
+            <tr><td>Carbon tax vs. emissions tax</td><td>1</td><td>1</td></tr>
+            <tr><td>Command-and-control regulations (standards)</td><td>2</td><td>1</td></tr>
+            <tr><td>Subsidies and incentives</td><td>1</td><td>1</td></tr>
+            <tr><td>Market-based instruments comparison</td><td>2</td><td>3</td></tr>
+            <tr><td rowspan="5">IV. Sustainability</td><td>Weak vs. strong sustainability</td><td>2</td><td>2</td></tr>
+            <tr><td>Natural capital concept</td><td>1</td><td>1</td></tr>
+            <tr><td>Hartwick Rule</td><td>1</td><td>1</td></tr>
+            <tr><td>Discounting and intergenerational equity</td><td>1</td><td>1</td></tr>
+            <tr><td>Sustainable development definitions</td><td>1</td><td>1</td></tr>
+            <tr><td rowspan="5">V. Climate Economics</td><td>Social cost of carbon (SCC)</td><td>2</td><td>1</td></tr>
+            <tr><td>Paris Agreement and international frameworks</td><td>1</td><td>1</td></tr>
+            <tr><td>Carbon pricing mechanisms</td><td>1</td><td>1</td></tr>
+            <tr><td>Green paradox</td><td>1</td><td>1</td></tr>
+            <tr><td>Stock pollutants and atmospheric accumulation</td><td>1</td><td>2</td></tr>
+            <tr><td rowspan="4">VI. Commons & Resources</td><td>Tragedy of the Commons</td><td>2</td><td>2</td></tr>
+            <tr><td>Common-pool resources (rivalry, non-excludability)</td><td>1</td><td>1</td></tr>
+            <tr><td>Fisheries economics (ITQs, MSY, MEY)</td><td>2</td><td>1</td></tr>
+            <tr><td>Open access and rent dissipation</td><td>1</td><td>2</td></tr>
+            <tr><td rowspan="4">VII. Justice & Political Economy</td><td>Environmental justice concepts</td><td>1</td><td>1</td></tr>
+            <tr><td>Regulatory capture</td><td>1</td><td>1</td></tr>
+            <tr><td>Pollution haven hypothesis</td><td>1</td><td>1</td></tr>
+            <tr><td>Environmental federalism</td><td>1</td><td>1</td></tr>
+            <tr><td rowspan="6">VIII. Special Topics</td><td>Environmental Kuznets Curve (EKC)</td><td>1</td><td>1</td></tr>
+            <tr><td>Circular economy principles</td><td>1</td><td>1</td></tr>
+            <tr><td>Precautionary principle</td><td>1</td><td>1</td></tr>
+            <tr><td>Rebound effect</td><td>1</td><td>1</td></tr>
+            <tr><td>Safe minimum standard</td><td>0</td><td>1</td></tr>
+            <tr><td>Adaptive management</td><td>0</td><td>1</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Cognitive Level Distribution -->
+    <span class="section-title">🧠 Cognitive Level Distribution</span>
+    <table>
+        <thead><tr><th>Cognitive Level</th><th>Description</th><th>Number of Items</th><th>Percentage</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Remembering</strong></td><td>Recall of definitions, concepts, basic facts</td><td>25</td><td>25%</td></tr>
+            <tr><td><strong>Understanding</strong></td><td>Explaining concepts, interpreting principles</td><td>30</td><td>30%</td></tr>
+            <tr><td><strong>Applying</strong></td><td>Using concepts in familiar contexts, problem-solving</td><td>25</td><td>25%</td></tr>
+            <tr><td><strong>Analyzing</strong></td><td>Distinguishing between similar concepts, comparing policies</td><td>12</td><td>12%</td></tr>
+            <tr><td><strong>Evaluating</strong></td><td>Assessing policy effectiveness, making judgments</td><td>8</td><td>8%</td></tr>
+            <tr class="totals-row"><td colspan="2"><strong>Total</strong></td><td><strong>100</strong></td><td><strong>100%</strong></td></tr>
+        </tbody>
+    </table>
+
+    <!-- Summary and Validity Notes -->
+    <div class="note-box">
+        <strong>📐 TOS Validity & Alignment</strong><br>
+        This Table of Specifications ensures content validity by mapping each exam item to specific learning objectives across eight major content domains in environmental economics. The distribution reflects instructional emphasis: Foundations (16%), Policy Instruments (16%), Valuation (14%), Sustainability (12%), Climate Economics (12%), Resource Economics (12%), Justice & Political Economy (8%), and Emerging Topics (10%). Cognitive levels progress from foundational recall to higher-order evaluation, supporting comprehensive assessment of student learning.
+    </div>
+
+    <div class="note-box">
+        <strong>⚖️ Scoring Rationale</strong><br>
+        Each multiple-choice item is weighted 1 point (50 items = 50 points) and each true/false item is weighted 1 point (50 items = 50 points), totaling 100 points. This aligns with the exam interface and simplifies calculation. The exam also features automatic scoring, local storage of highest score, printable receipt, and full offline functionality.
+    </div>
+
+    <!-- Quick Reference Table -->
+    <span class="section-title">📊 Quick Summary Table</span>
+    <table>
+        <thead><tr><th>Category</th><th>Details</th></tr></thead>
+        <tbody>
+            <tr><td>Total Items</td><td>100 (50 Multiple Choice + 50 True/False)</td></tr>
+            <tr><td>Total Points</td><td>100</td></tr>
+            <tr><td>Content Areas Covered</td><td>8 major domains</td></tr>
+            <tr><td>Cognitive Levels Assessed</td><td>5 levels (Remembering to Evaluating)</td></tr>
+            <tr><td>Estimated Completion Time</td><td>90–120 minutes</td></tr>
+            <tr><td>Exam Format</td><td>Offline HTML-based interactive quiz with auto-scoring, receipt generation, and local storage</td></tr>
+            <tr><td>Instructor</td><td>Prof. Ronald Edilberto A. Ona</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        📚 Table of Specifications prepared for the Final Examination in Environmental Economics.<br>
+        This document is a standalone reference guide. The interactive exam includes all 100 items aligned with this TOS.<br>
+        ✅ Generated: March 2026 | For educational use only.
+    </div>
+</div>
+<script>
+    // ensure print friendly
+    console.log("TOS document ready — standalone Table of Specifications");
+</script>
+</body>
+</html>
