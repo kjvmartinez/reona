@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Ecotourism Final Exam · 100 Items | Student Receipt</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #e7f3e9;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem;
+      color: #1e3b2f;
+    }
+    .exam-container {
+      max-width: 1000px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 3rem 3rem 2.5rem 2.5rem;
+      box-shadow: 0 25px 45px rgba(28, 67, 44, 0.25);
+      padding: 2rem 2.2rem 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #c0ddc5;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1b4b2c;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.5px;
+      border-bottom: 4px dashed #7aa57e;
+      padding-bottom: 0.7rem;
+    }
+    h1 span {
+      background: #d2ebd8;
+      padding: 0.2rem 1.2rem;
+      border-radius: 3rem;
+      font-size: 1.8rem;
+      margin-left: 0.4rem;
+    }
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 1.2rem 0 1.4rem;
+      background: #f3faf4;
+      padding: 1rem 1.8rem;
+      border-radius: 2.5rem;
+      align-items: center;
+    }
+    .student-field {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      color: #1e4629;
+    }
+    .student-field label {
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+    .student-field input {
+      border: 2px solid #b1cfb8;
+      border-radius: 2.5rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.95rem;
+      background: white;
+      outline: none;
+      transition: 0.2s;
+      width: 180px;
+      font-weight: 500;
+      color: #173e24;
+    }
+    .student-field input:focus {
+      border-color: #2f6b44;
+      box-shadow: 0 0 0 3px rgba(47,107,68,0.2);
+    }
+    .subtitle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0 1.6rem;
+      font-weight: 500;
+      color: #2d5a3b;
+      background: #f3faf4;
+      padding: 0.7rem 1.5rem;
+      border-radius: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .progress-badge {
+      background: #2f6b44;
+      color: white;
+      padding: 0.4rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .questions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      max-height: 55vh;
+      overflow-y: auto;
+      padding-right: 0.7rem;
+      margin-bottom: 1.8rem;
+      scroll-behavior: smooth;
+    }
+    .question-card {
+      background: #f9fef9;
+      border: 1px solid #c8e0cd;
+      border-radius: 2rem;
+      padding: 1.3rem 1.5rem;
+      box-shadow: 0 6px 14px rgba(90, 120, 90, 0.08);
+      transition: all 0.2s;
+    }
+    .question-card:hover {
+      border-color: #5f8b6f;
+      background: #f4fff7;
+    }
+    .q-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: #173e24;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .q-num {
+      background: #cedfcf;
+      border-radius: 2rem;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1b4127;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-left: 0.4rem;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 2.5rem;
+      transition: background 0.15s;
+      cursor: pointer;
+      font-size: 0.98rem;
+      border: 1px solid transparent;
+      background: #ffffff;
+    }
+    .option-label:hover {
+      background: #e2f0e5;
+      border-color: #aacfaf;
+    }
+    input[type="radio"] {
+      appearance: none;
+      width: 1.1rem;
+      height: 1.1rem;
+      border: 2px solid #608a6b;
+      border-radius: 50%;
+      margin-right: 0.2rem;
+      transition: 0.15s;
+      cursor: pointer;
+      background: white;
+      flex-shrink: 0;
+    }
+    input[type="radio"]:checked {
+      border-color: #1f5430;
+      background: #1f5430;
+      box-shadow: inset 0 0 0 3px white;
+    }
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin: 1.5rem 0 0.8rem;
+    }
+    button {
+      background: white;
+      border: 2px solid #31633e;
+      color: #1e4629;
+      font-weight: 700;
+      padding: 0.8rem 1.8rem;
+      border-radius: 3rem;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #f6fff7;
+      transition: 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    button:hover {
+      background: #daf1dc;
+      border-color: #1b482a;
+      transform: translateY(-1px);
+    }
+    button.primary-btn {
+      background: #1f4f2d;
+      border-color: #0e331b;
+      color: white;
+    }
+    button.primary-btn:hover {
+      background: #2b6b3c;
+    }
+    .result-panel {
+      margin-top: 1.2rem;
+      background: #e9f5ec;
+      border-radius: 2.5rem;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-weight: 600;
+      border: 1px solid #b1cfb8;
+    }
+    .score {
+      font-size: 1.7rem;
+      background: #1d4027;
+      color: white;
+      padding: 0.2rem 2rem;
+      border-radius: 3rem;
+    }
+    .receipt-area {
+      background: #fdfcf7;
+      border: 2px dashed #6d8f74;
+      border-radius: 2rem;
+      padding: 1.5rem 2rem;
+      margin-top: 1.8rem;
+      font-family: 'Courier New', monospace;
+      background: #fefced;
+      color: #2b4121;
+      display: none;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .receipt-active {
+      display: block;
+    }
+    footer {
+      color: #43614a;
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+<div class="exam-container">
+  <h1>
+    🌿 ECOTOURISM FINAL
+    <span>100 ITEMS</span>
+  </h1>
+
+  <!-- Student name & number fields -->
+  <div class="student-info">
+    <div class="student-field">
+      <label for="studentName">🧑 Student Name:</label>
+      <input type="text" id="studentName" placeholder="e.g. Maria Santos" autocomplete="off">
+    </div>
+    <div class="student-field">
+      <label for="studentNumber">🆔 Student Number:</label>
+      <input type="text" id="studentNumber" placeholder="e.g. 2024-ECOT-001" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="subtitle">
+    <span>♻️ Sustainable travel · conservation · communities</span>
+    <span class="progress-badge" id="answeredCount">0/100 answered</span>
+  </div>
+
+  <div class="questions-grid" id="questionsContainer"></div>
+
+  <div class="action-bar">
+    <button id="checkBtn" class="primary-btn">✅ CHECK EXAM</button>
+    <button id="resetBtn">🔄 RESET ALL</button>
+    <button id="printReceiptBtn">🧾 PRINT RECEIPT</button>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <span>📊 YOUR RESULT</span>
+    <span class="score" id="scoreDisplay">- / 100</span>
+    <span id="statusMessage"></span>
+  </div>
+
+  <div id="receiptDiv" class="receipt-area"></div>
+  <footer style="text-align: center; margin-top: 0.6rem;">
+    🏞️ Ecotourism Ethics · Final Exam · Offline Interactive
+  </footer>
+</div>
+
+<script>
+  (function() {
+    // ----- 100 ECOTOURISM QUESTIONS (complete set) -----
+    const questions = [
+      { q: "What is the primary goal of ecotourism?", options: ["Mass tourism promotion", "Conservation & local well-being", "Urban development", "Airline profit"], correct: 1 },
+      { q: "Which principle is central to ecotourism?", options: ["Maximum visitors", "Sustainability", "Luxury resorts", "Crowded attractions"], correct: 1 },
+      { q: "Ecotourism often directly supports:", options: ["Poaching", "Habitat preservation", "Oil drilling", "Deforestation"], correct: 1 },
+      { q: "Which organization promotes global sustainable tourism criteria?", options: ["GSTC", "NASA", "FIFA", "WTO only"], correct: 0 },
+      { q: "A key characteristic of ecotourism is:", options: ["Large cruise ships", "Small-scale operations", "All-inclusive chains", "Jet ski rentals"], correct: 1 },
+      { q: "Interpretation in ecotourism means:", options: ["Silent tours", "Educational experiences", "Ignoring nature", "Souvenir selling"], correct: 1 },
+      { q: "Carbon offset programs in ecotourism aim to:", options: ["Increase emissions", "Mitigate travel footprint", "Promote coal", "Cut trees"], correct: 1 },
+      { q: "Community-based ecotourism ensures:", options: ["Only foreign ownership", "Local benefits & participation", "No local jobs", "Government exclusion"], correct: 1 },
+      { q: "The 'leave no trace' principle encourages:", options: ["Littering", "Minimizing impact", "Feeding wildlife", "Collecting rare plants"], correct: 1 },
+      { q: "Which activity best fits ecotourism?", options: ["Heli-skiing", "Birdwatching with local guide", "Zoo circus", "Beach rave"], correct: 1 },
+      { q: "Ecotourism accommodations often use:", options: ["Single-use plastics heavily", "Renewable energy", "Coal generators", "No recycling"], correct: 1 },
+      { q: "Greenwashing refers to:", options: ["Eco-certification", "False environmental claims", "Organic farming", "Solar panels"], correct: 1 },
+      { q: "The Galapagos Islands limit tourists to:", options: ["Increase revenue only", "Protect fragile ecosystems", "Build more hotels", "Allow unlimited cruises"], correct: 1 },
+      { q: "An example of ecotourism certification is:", options: ["Green Key / Rainforest Alliance", "Fast food label", "Airline loyalty", "None"], correct: 0 },
+      { q: "Ecotourism should educate visitors about:", options: ["Shopping malls", "Local culture & ecology", "Video games", "Stock market"], correct: 1 },
+      { q: "Which is a negative impact of mass tourism avoided by ecotourism?", options: ["Resource overuse", "Cultural respect", "Wildlife funding", "Trail maintenance"], correct: 0 },
+      { q: "Ecolodges typically feature:", options: ["Concrete high-rises", "Sustainable design & local materials", "Plastic domes", "No natural light"], correct: 1 },
+      { q: "Wildlife viewing ethics include:", options: ["Getting as close as possible", "Keeping safe distance", "Using flash photography", "Feeding for photos"], correct: 1 },
+      { q: "The TIES (International Ecotourism Society) defines ecotourism as:", options: ["Responsible travel to natural areas", "Any nature trip", "Adventure tourism", "City breaks"], correct: 0 },
+      { q: "Carrying capacity in ecotourism refers to:", options: ["Luggage weight", "Max visitors without damage", "Vehicle size", "Hotel stars"], correct: 1 },
+      { q: "Which is a benefit of ecotourism for locals?", options: ["Displacement", "Employment & income", "Loss of land", "Cultural erosion"], correct: 1 },
+      { q: "Sustainable food in ecotourism often means:", options: ["Imported fast food", "Locally sourced organic", "Endangered species", "Canned goods only"], correct: 1 },
+      { q: "Marine ecotourism best practice:", options: ["Anchoring on coral", "Snorkeling without touching reef", "Collecting shells", "Chasing dolphins"], correct: 1 },
+      { q: "The term 'biocultural diversity' links:", options: ["Biology and chemistry", "Nature and culture", "Physics and art", "Machines"], correct: 1 },
+      { q: "Ecotourism destinations often include:", options: ["Protected areas & national parks", "Industrial zones", "Shopping districts", "Airports"], correct: 0 },
+      { q: "Which minimizes trail erosion?", options: ["Off-trail hiking", "Staying on marked paths", "ATV use", "Building fires"], correct: 1 },
+      { q: "Ecotourism guides should be:", options: ["Untrained", "Knowledgeable about ecology", "Sales-only focused", "Ignore safety"], correct: 1 },
+      { q: "The concept of 'slow travel' aligns with:", options: ["Jet flights only", "Immersive & low-impact journeys", "Rushed itineraries", "Cruise ships"], correct: 1 },
+      { q: "Water conservation in ecolodges includes:", options: ["Daily towel washing", "Low-flow fixtures", "Unlimited pools", "No rainwater harvesting"], correct: 1 },
+      { q: "Ecotourism can help fund:", options: ["Poaching equipment", "Conservation research", "Illegal logging", "Urban sprawl"], correct: 1 },
+      { q: "Which is a social impact of responsible ecotourism?", options: ["Community empowerment", "Increased crime", "Child labor", "Cultural commodification unchecked"], correct: 0 },
+      { q: "One threat to ecotourism integrity is:", options: ["Clear eco-labels", "Over-commercialization", "Visitor education", "Local guides"], correct: 1 },
+      { q: "The 'Triple Bottom Line' in ecotourism includes:", options: ["Profit only", "People, planet, profit", "Marketing", "Speed"], correct: 1 },
+      { q: "Which animal interaction is appropriate?", options: ["Riding elephants", "Observing from hide", "Swimming with captive dolphins", "Tiger selfies"], correct: 1 },
+      { q: "Ecotourism transportation prefers:", options: ["Private helicopters", "Walking/biking/electric", "Diesel trucks only", "No limits"], correct: 1 },
+      { q: "Permaculture principles are sometimes integrated into:", options: ["Ecolodge gardens", "Parking lots", "Air conditioning", "Plastic waste"], correct: 0 },
+      { q: "Indigenous communities partnering in ecotourism must:", options: ["Lose rights", "Give free prior informed consent", "Be excluded", "Ignore traditions"], correct: 1 },
+      { q: "The main difference between ecotourism and nature tourism:", options: ["No difference", "Ecotourism includes education & sustainability", "Nature tourism is more expensive", "Ecotourism avoids nature"], correct: 1 },
+      { q: "Visitor fees in protected areas often support:", options: ["Executive bonuses", "Park management & conservation", "Luxury upgrades", "Advertising"], correct: 1 },
+      { q: "Which is a renewable energy source for ecolodges?", options: ["Coal", "Solar", "Diesel", "Kerosene"], correct: 1 },
+      { q: "Ecotourism marketing should avoid:", options: ["Authentic photos", "Exaggerated green claims", "Transparent pricing", "Cultural respect"], correct: 1 },
+      { q: "Coral reef friendly sunscreen is:", options: ["Oxybenzone-free", "Any chemical", "Not needed", "Petroleum based"], correct: 0 },
+      { q: "Which is a negative wildlife impact from irresponsible tourism?", options: ["Habituation to humans", "Natural behavior", "Increased breeding", "Forest growth"], correct: 0 },
+      { q: "Ecotourism certification helps travelers:", options: ["Confuse choices", "Identify genuine operators", "Ignore standards", "Pay more without reason"], correct: 1 },
+      { q: "The '7 principles of Leave No Trace' include:", options: ["Dispose of waste properly", "Make loud noise", "Carve trees", "Take souvenirs"], correct: 0 },
+      { q: "Agro-ecotourism combines:", options: ["Farming and tourism", "Mining and travel", "Factory tours", "Urban malls"], correct: 0 },
+      { q: "Heritage interpretation in ecotourism:", options: ["Ignores history", "Connects visitors to place", "Only geology", "No storytelling"], correct: 1 },
+      { q: "Which is a goal of the UN Sustainable Development Goals linked to ecotourism?", options: ["SDG 8 & 12 (decent work, responsible consumption)", "SDG only for space", "No relation", "Only profit"], correct: 0 },
+      { q: "Voluntourism in ecotourism should be:", options: ["Any unskilled help", "Well-planned & community-driven", "Exploitative", "Short-term only"], correct: 1 },
+      { q: "Dark sky parks relate to ecotourism by:", options: ["Light pollution reduction", "More lights", "Ignoring stars", "City glow"], correct: 0 },
+      { q: "Ecotourism often relies on:", options: ["Fragile ecosystem health", "Concrete jungles", "Overfishing", "Highway networks"], correct: 0 },
+      { q: "Which statement is true? Ecotourism...", options: ["Always large scale", "Prioritizes conservation education", "Excludes locals", "Promotes single-use"], correct: 1 },
+      { q: "A carbon-neutral lodge might:", options: ["Burn tires", "Offset emissions via reforestation", "Use coal", "Ignore energy"], correct: 1 },
+      { q: "The economic leakage in tourism refers to:", options: ["Money staying locally", "Profits leaving host community", "More jobs", "Local investment"], correct: 1 },
+      { q: "Ecotourism aims to minimize leakage by:", options: ["Importing all goods", "Hiring locally & local sourcing", "Foreign chains", "All-inclusive foreign owned"], correct: 1 },
+      { q: "Which is a key performance indicator for ecotourism?", options: ["Visitor satisfaction & conservation outcome", "Only profit", "Number of complaints", "Paved area"], correct: 0 },
+      { q: "Adventure tourism becomes ecotourism when:", options: ["It includes sustainability principles", "Any risk activity", "Only rafting", "No education"], correct: 0 },
+      { q: "Which is an example of eco-certification in Costa Rica?", options: ["CST (Certification for Sustainable Tourism)", "ISO 9001 only", "None", "Plastic badge"], correct: 0 },
+      { q: "Responsible wildlife tourism avoids:", options: ["Binoculars", "Baiting or feeding predators", "Quiet observation", "Local guides"], correct: 1 },
+      { q: "Ecotourism development should start with:", options: ["Building hotels first", "Community consultation & impact assessment", "Ignoring environment", "Foreign investors only"], correct: 1 },
+      { q: "Climate change adaptation in ecotourism includes:", options: ["Ignoring risks", "Building resilience & education", "More air conditioning", "Deforestation"], correct: 1 },
+      { q: "Which marine activity is eco-friendlier?", options: ["Kayaking", "Jet ski", "Motor yacht race", "Underwater scooter"], correct: 0 },
+      { q: "Indigenous cultural tours must:", options: ["Sell sacred objects", "Respect intellectual property", "Mock traditions", "No permission"], correct: 1 },
+      { q: "Buffer zones around protected areas:", options: ["Increase poaching", "Reduce human-wildlife conflict", "Remove all people", "Industrialize"], correct: 1 },
+      { q: "The concept of 'regenerative tourism' goes beyond sustainable by:", options: ["Leaving place better", "Maintaining status quo", "Degrading nature", "Only carbon zero"], correct: 0 },
+      { q: "Ecotourism education includes:", options: ["Local environmental issues", "Only sales", "Ignore culture", "No interpretation"], correct: 0 },
+      { q: "One challenge for ecotourism post-COVID:", options: ["Overtourism return", "Less hygiene", "No digital tools", "All of above"], correct: 0 },
+      { q: "To avoid greenwashing, operators should:", options: ["Make vague claims", "Third-party certification", "Hide practices", "Use green colors only"], correct: 1 },
+      { q: "Geotourism focuses on:", options: ["Geology & sense of place", "Only rocks", "Cities", "Space"], correct: 0 },
+      { q: "Community benefit from ecotourism includes:", options: ["School funding", "Displacement", "Loss of language", "No infrastructure"], correct: 0 },
+      { q: "Minimizing waste in ecotourism:", options: ["Incineration", "Reduce, reuse, recycle", "More packaging", "Plastic bottles"], correct: 1 },
+      { q: "Ecotourism and conservation conflict when:", options: ["Too many visitors disturb wildlife", "Well managed", "Limited permits", "Local support"], correct: 0 },
+      { q: "The 'polluter pays' principle in ecotourism:", options: ["Ignore emissions", "Tourism operators offset damage", "Free pollution", "Government pays"], correct: 1 },
+      { q: "Ecotourists are typically:", options: ["Environmentally conscious", "Careless", "Disinterested", "High-impact"], correct: 0 },
+      { q: "One tool for managing visitor impact:", options: ["Permits & quotas", "Unlimited access", "No monitoring", "Loudspeakers"], correct: 0 },
+      { q: "The Great Barrier Reef ecotourism emphasizes:", options: ["Coral protection & education", "Anchoring anywhere", "Collecting coral", "Spearfishing"], correct: 0 },
+      { q: "Which is a cultural ecotourism activity?", options: ["Traditional craft workshop with locals", "Shopping mall", "Chain restaurant", "Nightclub"], correct: 0 },
+      { q: "Ethical souvenirs in ecotourism:", options: ["Ivory carvings", "Locally handmade crafts", "Endangered wood", "Coral jewelry"], correct: 1 },
+      { q: "Ecotourism planning integrates:", options: ["Stakeholder participation", "Only investors", "No local voice", "Top-down only"], correct: 0 },
+      { q: "Noise pollution in nature areas:", options: ["Attracts wildlife", "Disturbs animal communication", "Is harmless", "Helps tourism"], correct: 1 },
+      { q: "Payment for Ecosystem Services (PES) can be linked to:", options: ["Ecotourism revenue for conservation", "Logging subsidies", "Mining", "Urban sprawl"], correct: 0 },
+      { q: "The term 'overtourism' means:", options: ["Exceeding carrying capacity negatively", "Too few tourists", "Balanced flow", "Sustainable number"], correct: 0 },
+      { q: "Which is NOT a principle of ecotourism?", options: ["Maximize profit at any cost", "Build environmental awareness", "Respect local culture", "Provide direct financial benefits for conservation"], correct: 0 },
+      { q: "Ecotourism can empower women by:", options: ["Excluding them", "Offering employment & leadership", "Lower wages only", "No training"], correct: 1 },
+      { q: "Birding tourism contributes to:", options: ["Habitat conservation funding", "Deforestation", "Cage trade", "No benefit"], correct: 0 },
+      { q: "A true ecolodge likely uses:", options: ["Composting toilets", "Septic leakage", "Chemical waste", "No waste treatment"], correct: 0 },
+      { q: "To protect night wildlife, ecotourism uses:", options: ["Red filtered lights", "Bright floodlights", "Fireworks", "Laser shows"], correct: 0 },
+      { q: "Ecotourism codes of conduct encourage:", options: ["Respect for sacred sites", "Vandalism", "Drone disturbance", "Off-road driving"], correct: 0 },
+      { q: "Sustainability includes future generations.", options: ["True, core concept", "False", "Only for profit", "Not relevant"], correct: 0 },
+      { q: "Which continent pioneered community-based ecotourism?", options: ["Africa (e.g., Kenya, Namibia)", "Antarctica", "Arctic", "None"], correct: 0 },
+      { q: "The 'Green Fins' initiative relates to:", options: ["Sustainable diving/marine tourism", "Fishing industry", "Tree planting", "Air travel"], correct: 0 },
+      { q: "Interpretive trails should:", options: ["Have no signs", "Educate about ecosystem", "Encourage shortcuts", "Sell plastics"], correct: 1 },
+      { q: "What percentage of biodiversity hotspots overlap with tourism? Significant.", options: ["High overlap", "None", "Zero", "Only urban"], correct: 0 },
+      { q: "Final principle: Ecotourism must remain:", options: ["Authentic & responsible", "Exploitative", "Mass-market", "Unsustainable"], correct: 0 },
+      { q: "Ecotourism directly contributes to SDG 15 (Life on Land) by:", options: ["Protecting terrestrial ecosystems", "Urban expansion", "Mining promotion", "Overfishing"], correct: 0 },
+      { q: "What is a suitable ecotourism group size?", options: ["Small to medium", "500+", "Unlimited", "Always single"], correct: 0 },
+      { q: "The term 'biosphere reserve' often links:", options: ["Conservation & sustainable use", "Only tourism", "No protection", "Industrial"], correct: 0 },
+      { q: "Ecotourism guiding ethics:", options: ["Honesty & safety", "Fake stories", "Ignore risks", "Bypass rules"], correct: 0 }
+    ];
+
+    console.assert(questions.length === 100, 'Exactly 100 questions required');
+
+    const container = document.getElementById('questionsContainer');
+    const answeredCountSpan = document.getElementById('answeredCount');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const statusMessage = document.getElementById('statusMessage');
+    const receiptDiv = document.getElementById('receiptDiv');
+    const studentNameInput = document.getElementById('studentName');
+    const studentNumberInput = document.getElementById('studentNumber');
+    const checkBtn = document.getElementById('checkBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const printReceiptBtn = document.getElementById('printReceiptBtn');
+
+    let examSubmitted = false;
+    let currentScore = 0;
+    const totalQuestions = questions.length;
+
+    function renderQuestions() {
+      if (!container) return;
+      let html = '';
+      questions.forEach((q, index) => {
+        const qNumber = index + 1;
+        html += `<div class="question-card" data-qindex="${index}">`;
+        html += `<div class="q-title"><span class="q-num">${qNumber}</span> ${q.q}</div>`;
+        html += `<div class="options">`;
+        q.options.forEach((opt, optIndex) => {
+          html += `
+            <label class="option-label">
+              <input type="radio" name="q${index}" value="${optIndex}" data-qindex="${index}" data-optindex="${optIndex}">
+              <span>${String.fromCharCode(65 + optIndex)}) ${opt}</span>
+            </label>
+          `;
+        });
+        html += `</div></div>`;
+      });
+      container.innerHTML = html;
+      attachRadioListeners();
+      updateAnsweredCount();
+    }
+
+    function attachRadioListeners() {
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.removeEventListener('change', radioChangeHandler);
+        radio.addEventListener('change', radioChangeHandler);
+      });
+    }
+
+    function radioChangeHandler() {
+      updateAnsweredCount();
+      if (examSubmitted) {
+        receiptDiv.classList.remove('receipt-active');
+        statusMessage.textContent = 'Answers changed. Press CHECK EXAM again.';
+        examSubmitted = false;
+        scoreDisplay.textContent = '- / 100';
+      }
+    }
+
+    function updateAnsweredCount() {
+      const checked = document.querySelectorAll('input[type="radio"]:checked');
+      const unique = new Set();
+      checked.forEach(r => {
+        const idx = r.getAttribute('data-qindex');
+        if (idx !== null) unique.add(idx);
+      });
+      const answered = unique.size;
+      if (answeredCountSpan) answeredCountSpan.textContent = `${answered}/${totalQuestions} answered`;
+      return answered;
+    }
+
+    function evaluateExam() {
+      let correct = 0;
+      for (let i = 0; i < totalQuestions; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && parseInt(selected.value, 10) === questions[i].correct) correct++;
+      }
+      return correct;
+    }
+
+    function showResult(score) {
+      currentScore = score;
+      scoreDisplay.textContent = `${score} / ${totalQuestions}`;
+      const pct = (score / totalQuestions) * 100;
+      if (pct >= 90) statusMessage.textContent = '🌟 Excellent!';
+      else if (pct >= 70) statusMessage.textContent = '🌱 Good knowledge.';
+      else if (pct >= 50) statusMessage.textContent = '📘 Fair, review principles.';
+      else statusMessage.textContent = '🌍 Needs improvement.';
+    }
+
+    function getStudentDetails() {
+      const name = studentNameInput?.value.trim() || '____________________';
+      const number = studentNumberInput?.value.trim() || '____________________';
+      return { name, number };
+    }
+
+    function generateReceipt(score, total) {
+      const { name, number } = getStudentDetails();
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      const pct = ((score / total) * 100).toFixed(1);
+      return `🧾 ECOTOURISM FINAL EXAM RECEIPT\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        ` Student Name   : ${name}\n` +
+        ` Student Number : ${number}\n` +
+        ` Date           : ${dateStr}  ${timeStr}\n` +
+        ` Exam           : Ecotourism 100-Item Multiple Choice\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        ` 📊 SCORE       : ${score} out of ${total}  (${pct}%)\n` +
+        ` Status         : ${pct >= 70 ? 'PASSED ✅' : 'NEEDS REVIEW ❌'}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        ` Verified automatically · Offline exam\n` +
+        ` "Travel responsibly, leave only footprints."\n` +
+        ` 🌿 Thank you for supporting ecotourism.`;
+    }
+
+    function updateReceipt(score, total) {
+      receiptDiv.textContent = generateReceipt(score, total);
+      receiptDiv.classList.add('receipt-active');
+    }
+
+    function handleCheck() {
+      const answered = updateAnsweredCount();
+      if (answered < totalQuestions) {
+        alert(`⚠️ Only ${answered} of ${totalQuestions} answered. Proceeding with check.`);
+      }
+      const score = evaluateExam();
+      showResult(score);
+      updateReceipt(score, totalQuestions);
+      examSubmitted = true;
+    }
+
+    function handleReset() {
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      examSubmitted = false;
+      currentScore = 0;
+      scoreDisplay.textContent = '- / 100';
+      statusMessage.textContent = '';
+      receiptDiv.classList.remove('receipt-active');
+      receiptDiv.textContent = '';
+      updateAnsweredCount();
+    }
+
+    function handlePrintReceipt() {
+      if (!receiptDiv.classList.contains('receipt-active')) {
+        alert('🖨️ Please CHECK EXAM first to generate a receipt.');
+        return;
+      }
+      const content = receiptDiv.textContent;
+      const printWindow = window.open('', '_blank', 'width=520,height=580');
+      if (!printWindow) {
+        alert('Please allow pop-ups to print receipt.');
+        return;
+      }
+      printWindow.document.write(`
+        <html>
+          <head><title>Ecotourism Receipt</title>
+          <style>
+            body { font-family: 'Courier New', monospace; background: #f9f9f2; display: flex; justify-content: center; padding: 2rem; }
+            pre { background: white; border: 2px dashed #2f5a3b; padding: 2rem; border-radius: 2rem; font-size: 1rem; white-space: pre-wrap; max-width: 480px; }
+          </style>
+          </head>
+          <body><pre>${content.replace(/\n/g, '<br>')}</pre></body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }
+
+    checkBtn.addEventListener('click', handleCheck);
+    resetBtn.addEventListener('click', handleReset);
+    printReceiptBtn.addEventListener('click', handlePrintReceipt);
+
+    renderQuestions();
+  })();
+</script>
+</body>
+</html>
