@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENS 106 · Weeks 1–8 Summative Quiz</title>
+<style>
+  :root{
+    --ink:#1c2b22;
+    --paper:#f6f3ea;
+    --paper-line:#e2ddc9;
+    --forest:#20402f;
+    --forest-deep:#12251a;
+    --sage:#6b8a6f;
+    --clay:#9a5b3c;
+    --gold:#b58a2e;
+    --correct:#2e6b3e;
+    --incorrect:#a3372a;
+    --card:#fffdf7;
+    --mono: "IBM Plex Mono","SFMono-Regular","Consolas","Menlo",monospace;
+    --serif: "Iowan Old Style","Georgia","Palatino Linotype",serif;
+    --sans: "Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      linear-gradient(180deg, var(--paper) 0%, var(--paper) 100%);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    padding-bottom:120px;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(32,64,47,0.035) 28px);
+    z-index:0;
+  }
+  .wrap{
+    max-width:820px;
+    margin:0 auto;
+    padding:0 22px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* Header */
+  header{
+    background:var(--forest);
+    color:#f2efe2;
+    padding:34px 0 26px;
+    border-bottom:6px solid var(--gold);
+  }
+  header .wrap{display:flex;flex-direction:column;gap:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#c9d8c4;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(24px,4vw,32px);
+    margin:6px 0 2px;
+    letter-spacing:.01em;
+  }
+  .subtitle{
+    font-size:14.5px;
+    color:#dbe6d6;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 18px;
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:#b9cdb4;
+  }
+  .meta-row span::before{content:"◦ ";color:var(--gold);}
+
+  /* Student info card */
+  .info-card{
+    background:var(--card);
+    border:1px solid var(--paper-line);
+    border-left:5px solid var(--forest);
+    margin-top:-18px;
+    padding:20px 22px;
+    box-shadow:0 6px 18px rgba(18,37,26,0.08);
+    border-radius:2px;
+  }
+  .info-card h2{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--forest);
+    margin:0 0 14px;
+  }
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:560px){ .field-grid{grid-template-columns:1fr;} }
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{
+    font-size:11.5px;
+    font-family:var(--mono);
+    color:#5a6b5c;
+    letter-spacing:.02em;
+  }
+  .field input{
+    font-family:var(--sans);
+    font-size:15px;
+    padding:9px 10px;
+    border:1px solid #c9c2a8;
+    border-bottom:2px solid var(--forest);
+    background:#fffef9;
+    border-radius:1px;
+  }
+  .field input:focus{
+    outline:2px solid var(--gold);
+    outline-offset:1px;
+  }
+  .field.required label::after{content:" *";color:var(--clay);}
+
+  /* Progress bar */
+  .progress-shell{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(246,243,234,0.94);
+    backdrop-filter:blur(3px);
+    border-bottom:1px solid var(--paper-line);
+    padding:10px 0;
+  }
+  .progress-inner{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--forest-deep);
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    background:#e3ddc7;
+    border-radius:5px;
+    overflow:hidden;
+    border:1px solid #cfc6a6;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--sage), var(--forest));
+    transition:width .25s ease;
+  }
+
+  /* Weeks + questions */
+  .week-divider{
+    margin:34px 0 14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .week-divider .tag{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    background:var(--forest);
+    color:#f2efe2;
+    padding:4px 10px;
+    border-radius:2px;
+  }
+  .week-divider .line{
+    flex:1;
+    height:1px;
+    background:repeating-linear-gradient(90deg, var(--sage) 0 6px, transparent 6px 11px);
+  }
+  .week-divider h3{
+    font-family:var(--serif);
+    font-size:16px;
+    margin:0;
+    white-space:nowrap;
+    color:var(--forest-deep);
+  }
+
+  .qcard{
+    background:var(--card);
+    border:1px solid var(--paper-line);
+    border-radius:2px;
+    padding:18px 20px 16px;
+    margin-bottom:14px;
+    box-shadow:0 1px 0 rgba(18,37,26,0.03);
+    transition:border-color .15s ease;
+  }
+  .qcard.answered{border-left:4px solid var(--sage);}
+  .qnum{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--clay);
+    letter-spacing:.05em;
+    margin-bottom:6px;
+  }
+  .qtext{
+    font-size:15.5px;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 11px;
+    border:1px solid #ddd6bd;
+    border-radius:2px;
+    cursor:pointer;
+    background:#fffefb;
+    font-size:14.5px;
+  }
+  .opt:hover{border-color:var(--sage);}
+  .opt input{margin-top:3px;accent-color:var(--forest);}
+  .opt .letter{
+    font-family:var(--mono);
+    font-weight:600;
+    color:var(--forest);
+    min-width:16px;
+  }
+  .opt.selected{
+    background:#eef3e8;
+    border-color:var(--forest);
+  }
+
+  /* review styling (post-submit) */
+  .qcard.correct{border-left:4px solid var(--correct);}
+  .qcard.incorrect{border-left:4px solid var(--incorrect);}
+  .qcard.unanswered-flag{border-left:4px solid var(--gold);}
+  .opt.was-correct{background:#e6f2e6;border-color:var(--correct);}
+  .opt.was-wrong{background:#f7e9e6;border-color:var(--incorrect);}
+  .review-note{
+    font-family:var(--mono);
+    font-size:11.5px;
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed #ccc4a8;
+  }
+  .review-note.correct{color:var(--correct);}
+  .review-note.incorrect{color:var(--incorrect);}
+
+  /* Footer action bar */
+  .action-bar{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:var(--forest-deep);
+    border-top:3px solid var(--gold);
+    padding:14px 0;
+    z-index:30;
+  }
+  .action-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .action-inner .status{
+    color:#cfe0c9;
+    font-family:var(--mono);
+    font-size:12px;
+  }
+  button{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:14px;
+    padding:11px 20px;
+    border-radius:2px;
+    border:1px solid transparent;
+    cursor:pointer;
+    letter-spacing:.01em;
+  }
+  .btn-primary{
+    background:var(--gold);
+    color:#2a1f08;
+  }
+  .btn-primary:hover{background:#c79a3a;}
+  .btn-ghost{
+    background:transparent;
+    color:#e9e3cf;
+    border-color:#5a6b56;
+  }
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* Results / receipt */
+  #results{display:none;margin-top:30px;}
+  .receipt{
+    background:var(--card);
+    border:1px solid var(--paper-line);
+    padding:26px 26px 22px;
+    position:relative;
+  }
+  .receipt::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;height:6px;
+    background:repeating-linear-gradient(90deg, var(--forest) 0 10px, var(--gold) 10px 20px);
+  }
+  .receipt h2{
+    font-family:var(--serif);
+    font-size:22px;
+    margin:14px 0 2px;
+    color:var(--forest-deep);
+  }
+  .receipt .rsub{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:#6b6b52;
+    margin-bottom:18px;
+  }
+  .receipt-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:14px;
+    margin-bottom:18px;
+    border-top:1px dashed #cfc6a6;
+    border-bottom:1px dashed #cfc6a6;
+    padding:14px 0;
+  }
+  .receipt-grid div span.k{
+    display:block;
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:#8a8266;
+  }
+  .receipt-grid div span.v{
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .score-hero{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin:8px 0 18px;
+  }
+  .score-hero .big{
+    font-family:var(--serif);
+    font-size:52px;
+    color:var(--forest);
+    line-height:1;
+  }
+  .score-hero .pct{
+    font-family:var(--mono);
+    font-size:16px;
+    color:#5a6b5c;
+  }
+  .band{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.06em;
+    padding:4px 10px;
+    border-radius:2px;
+    margin-bottom:16px;
+  }
+  .band.excellent{background:#e2f0e0;color:var(--correct);}
+  .band.good{background:#eef3e3;color:#4f7a3a;}
+  .band.fair{background:#f7edd8;color:#8a6a17;}
+  .band.review{background:#f7e3de;color:var(--incorrect);}
+
+  .week-breakdown{margin:10px 0 4px;}
+  .week-breakdown table{width:100%;border-collapse:collapse;font-size:13px;}
+  .week-breakdown th,.week-breakdown td{
+    text-align:left;
+    padding:6px 8px;
+    border-bottom:1px solid #e6e0c9;
+  }
+  .week-breakdown th{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:#8a8266;
+  }
+
+  .receipt-actions{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .btn-outline{
+    background:transparent;
+    border:1.5px solid var(--forest);
+    color:var(--forest);
+  }
+  .btn-outline:hover{background:var(--forest);color:#fff;}
+
+  .signline{
+    margin-top:26px;
+    padding-top:14px;
+    border-top:1px dashed #cfc6a6;
+    font-family:var(--mono);
+    font-size:11px;
+    color:#8a8266;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  #reviewSection{margin-top:8px;}
+
+  .warn-banner{
+    display:none;
+    background:#f7e3de;
+    border:1px solid var(--incorrect);
+    color:#7a2818;
+    font-size:13px;
+    padding:10px 14px;
+    margin-top:14px;
+    border-radius:2px;
+    font-family:var(--mono);
+  }
+
+  footer.foot-note{
+    text-align:center;
+    font-family:var(--mono);
+    font-size:11px;
+    color:#8a8266;
+    margin:40px 0 10px;
+  }
+
+  /* Print styles */
+  @media print{
+    body{padding-bottom:0;background:#fff;}
+    body::before{display:none;}
+    header, .info-card, .progress-shell, .action-bar, .quiz-body, .warn-banner, footer.foot-note{display:none !important;}
+    #results{display:block !important;margin:0;}
+    .receipt{border:1px solid #000;box-shadow:none;}
+    .receipt-actions{display:none !important;}
+    #reviewSection{display:none !important;}
+    .band{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Republic of the Philippines · Palawan State University</div>
+    <h1>ENS 106 — Environmental Management</h1>
+    <div class="subtitle">Summative Quiz · Weeks 1–8 (Pre-Midterm Coverage)</div>
+    <div class="meta-row">
+      <span>50 items</span>
+      <span>Multiple choice</span>
+      <span>Offline, self-scoring</span>
+      <span>1 point per item</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="info-card">
+    <h2>Examinee Information</h2>
+    <div class="field-grid">
+      <div class="field required">
+        <label for="studentName">Student Name</label>
+        <input type="text" id="studentName" placeholder="Last name, First name" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="studentNo">Student Number (optional)</label>
+        <input type="text" id="studentNo" placeholder="e.g., 2023-00000" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="section">Section / Block (optional)</label>
+        <input type="text" id="section" placeholder="e.g., BS ES 2A" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="instructor">Instructor (optional)</label>
+        <input type="text" id="instructor" placeholder="e.g., Prof. Ronald Ona" autocomplete="off">
+      </div>
+    </div>
+    <div class="warn-banner" id="nameWarning">Please enter the student name before submitting the quiz.</div>
+  </div>
+</div>
+
+<div class="progress-shell">
+  <div class="wrap progress-inner">
+    <span id="progressLabel">0 / 50 answered</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<div class="wrap quiz-body" id="quizBody"></div>
+
+<div class="wrap" id="results">
+  <div class="receipt" id="receipt">
+    <div class="eyebrow" style="color:#8a8266;">Quiz Completion Receipt</div>
+    <h2>ENS 106 — Weeks 1–8 Summative Quiz</h2>
+    <div class="rsub">Palawan State University · Generated automatically upon submission</div>
+
+    <div class="receipt-grid">
+      <div><span class="k">Student Name</span><span class="v" id="rName">—</span></div>
+      <div><span class="k">Student Number</span><span class="v" id="rNo">—</span></div>
+      <div><span class="k">Section / Block</span><span class="v" id="rSection">—</span></div>
+      <div><span class="k">Instructor</span><span class="v" id="rInstructor">—</span></div>
+      <div><span class="k">Date Completed</span><span class="v" id="rDate">—</span></div>
+      <div><span class="k">Time Completed</span><span class="v" id="rTime">—</span></div>
+    </div>
+
+    <div class="score-hero">
+      <div class="big" id="rScore">0/50</div>
+      <div class="pct" id="rPct">0%</div>
+    </div>
+    <span class="band" id="rBand">—</span>
+
+    <div class="week-breakdown">
+      <table>
+        <thead><tr><th>Week</th><th>Topic</th><th>Score</th></tr></thead>
+        <tbody id="weekTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="signline">
+      <span>Examinee Signature: ________________________</span>
+      <span id="rTimestampFull"></span>
+    </div>
+
+    <div class="receipt-actions">
+      <button class="btn-primary" onclick="window.print()">Print Receipt</button>
+      <button class="btn-outline" id="reviewToggleBtn" onclick="toggleReview()">Show Answer Review</button>
+      <button class="btn-ghost" style="border-color:var(--incorrect);color:var(--incorrect);" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div id="reviewSection" style="display:none;"></div>
+</div>
+
+<div class="action-bar">
+  <div class="wrap action-inner">
+    <span class="status" id="actionStatus">0 of 50 answered · Name required to submit</span>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-ghost" onclick="scrollToFirstUnanswered()">Jump to Unanswered</button>
+      <button class="btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+    </div>
+  </div>
+</div>
+
+<footer class="foot-note">PSU Sustainability and Resilience Institute · This quiz runs entirely in your browser — no data leaves this device.</footer>
+
+<script>
+const WEEKS = {
+  1: "Introduction to Environmental Management",
+  2: "Environmental Problems: Global, PH, Palawan",
+  3: "History and Approaches to Env. Management",
+  4: "Sustainable Development and the SDGs",
+  5: "Ecological Principles, Carrying Capacity, Ethics",
+  6: "Forest & Terrestrial Mgmt; Palawan PAs and SEP",
+  7: "Coastal, Marine, and Freshwater Mgmt",
+  8: "Environmental Impact Assessment (EIS System)"
+};
+
+const QUESTIONS = [
+{week:1, q:"A hydrologist measures a river's pollution level. A government agency then decides how to reduce that pollution, enforces the rule, and checks whether it worked. Which best distinguishes the agency's work from the hydrologist's?",
+ options:["The agency is doing environmental science; the hydrologist is doing environmental management","The agency is doing environmental management; the hydrologist is doing environmental science","Both are performing environmental management","Both are performing environmental science"], answer:1},
+{week:1, q:"Which statement best reflects 'systems thinking' as introduced in Week 1?",
+ options:["Each environmental problem should be solved independently for efficiency","The atmosphere, hydrosphere, lithosphere, and biosphere should be studied as separate, unrelated categories","The environment is an interconnected whole, where an intervention in one place can create effects elsewhere, sometimes delayed","Environmental management should favor narrow, single-issue fixes"], answer:2},
+{week:1, q:"A downstream community's water supply, once naturally filtered by an upstream wetland, becomes contaminated after the wetland is drained for development. Which ecosystem service category has primarily been lost?",
+ options:["Provisioning services","Regulating services","Supporting services","Cultural services"], answer:1},
+{week:1, q:"Which of the following best fits within the scope of environmental management as described in Week 1?",
+ options:["Only pollution control activities","Only global-level treaties and agreements","Natural resource management, pollution control, planning/impact assessment, policy and governance, and education — at every scale from global to barangay","Only scientific research on ecosystem function"], answer:2},
+{week:1, q:"Why is Palawan described as an ideal 'living laboratory' for studying environmental management concepts?",
+ options:["It has no development pressures to complicate analysis","It combines forest, karst, and coastal-marine ecosystems alongside real development pressures","It is entirely urbanized, making pollution control the only relevant topic","It has no protected areas, so concepts can be tested freely"], answer:1},
+{week:1, q:"A forester managing a watershed, a city planner designing waste collection, and a legislator drafting a mining law have which of the following in common, per Week 1?",
+ options:["They are all, strictly speaking, environmental scientists","They are all, in different ways, practicing environmental management","None of them contribute to environmental management","They only count if they hold an environmental science degree"], answer:1},
+
+{week:2, q:"Which pairing correctly matches a proximate cause with its underlying (root) cause?",
+ options:["Proximate: poverty — Underlying: a fisherman using dynamite","Proximate: a farmer clearing forest for a new field — Underlying: lack of alternative livelihoods","Proximate: weak law enforcement — Underlying: illegal logging","Proximate: market demand — Underlying: population growth"], answer:1},
+{week:2, q:"According to Week 2, why might simply punishing an illegal logger fail to solve deforestation in the long run?",
+ options:["Because logging is not actually illegal in the Philippines","Because the underlying driver, such as a lack of alternative income, remains unaddressed","Because punishment always addresses root causes automatically","Because forest cover is unrelated to poverty"], answer:1},
+{week:2, q:"Which of the following is identified as a pressure specifically affecting Palawan, distinct from generic national-level problems?",
+ options:["Metro Manila traffic congestion","Nickel mining activity in southern Palawan","Urban air pollution from heavy industry","Desertification of agricultural plains"], answer:1},
+{week:2, q:"Which combination correctly represents a global environmental problem and its primary driver, as discussed in Week 2?",
+ options:["Biodiversity loss — driven mainly by habitat destruction, overexploitation, pollution, climate change, and invasive species","Climate change — driven mainly by ocean acidification","Plastic pollution — driven mainly by carrying capacity limits","Resource depletion — driven mainly by ecosystem services"], answer:0},
+{week:2, q:"Coastal and marine ecosystems in the Philippines have suffered mainly due to which combination of factors, per Week 2?",
+ options:["Overfishing (including destructive methods), coastal development, and pollution","Volcanic activity and glacial melt","Excessive marine protected area designation","Declining coastal tourism demand"], answer:0},
+{week:2, q:"A local government arrests a fisherman for dynamite fishing but does nothing to address the community's lack of alternative livelihood options. Using the proximate/underlying cause framework, what is the most likely long-term outcome?",
+ options:["The problem will be permanently solved because the proximate cause was punished","The practice is likely to persist or recur because the underlying cause remains","The underlying cause resolves itself once the proximate cause is punished","There will be no environmental impact either way"], answer:1},
+
+{week:3, q:"Which international milestone is widely regarded as the birth of global environmental governance and led to the creation of the United Nations Environment Programme?",
+ options:["The 1987 Brundtland Commission report","The 1972 Stockholm Conference on the Human Environment","The 1992 Rio Earth Summit","The 2015 Sustainable Development Goals"], answer:1},
+{week:3, q:"Arrange in correct chronological order: (1) Rio Earth Summit, (2) Stockholm Conference, (3) Brundtland Commission report, (4) SDGs adopted.",
+ options:["2, 3, 1, 4","1, 2, 3, 4","4, 3, 2, 1","2, 1, 3, 4"], answer:0},
+{week:3, q:"A national government sets a legally binding maximum pollutant discharge level and penalizes violators. This best exemplifies which approach to environmental management?",
+ options:["Market-based instrument","Voluntary / self-regulatory approach","Command-and-control approach","Adaptive management paradigm"], answer:2},
+{week:3, q:"A company voluntarily adopts an eco-labeling scheme even though no law requires it. What is the main structural weakness of this approach, per Week 3?",
+ options:["It is too expensive for any company to adopt","It has no binding force and can suffer from a 'free rider' problem","It always outperforms regulation in every case","It cannot be combined with other approaches"], answer:1},
+{week:3, q:"Which best describes the shift in environmental management paradigms over time, as outlined in Week 3?",
+ options:["From ecosystem-based management back to end-of-pipe pollution control","From end-of-pipe control, to pollution prevention/cleaner production, to sustainable development, to ecosystem-based/adaptive management","From market-based instruments directly to command-and-control, with no further evolution","Paradigms have remained unchanged since the 1970s"], answer:1},
+{week:3, q:"Palawan's Strategic Environmental Plan was enacted in which year, coinciding with a major global environmental milestone?",
+ options:["1972, the same year as the Stockholm Conference","1987, the same year as the Brundtland report","1992, the same year as the Rio Earth Summit","2015, the same year as the SDGs"], answer:2},
+
+{week:4, q:"Under the 'nested layers' way of visualizing the three pillars of sustainability, which statement is correct?",
+ options:["The economy operates within society, and society operates within the natural environment","The environment operates within the economy","All three pillars are entirely independent of one another","Society operates within the economy, which operates within the environment"], answer:0},
+{week:4, q:"Which SDG is most directly associated with 'life below water'?",
+ options:["SDG 11","SDG 13","SDG 14","SDG 15"], answer:2},
+{week:4, q:"A company markets its product as 'eco-friendly' and 'sustainable' without making any substantive change to its production practices. This is an example of:",
+ options:["Intergenerational equity","Greenwashing","Adaptive management","Ecosystem-based management"], answer:1},
+{week:4, q:"Which statement correctly describes the relationship between the Philippine Agenda 21 and the global SDGs?",
+ options:["The Philippines articulated its own sustainable-development framework (1996) before the SDGs existed (2015)","The Philippines adopted the SDGs first, then created the Philippine Agenda 21","The Philippine Agenda 21 replaced the SDGs entirely","The two frameworks have no chronological relationship"], answer:0},
+{week:4, q:"How many Sustainable Development Goals were adopted under the UN's 2030 Agenda?",
+ options:["8","15","17","21"], answer:2},
+{week:4, q:"Why is Palawan's 1992 Strategic Environmental Plan considered pioneering in the context of sustainable-development frameworks?",
+ options:["It was created decades after the SDGs to fill a gap in national policy","It balanced conservation and development decades before such balancing became a global policy mainstream","It focused exclusively on economic growth with no conservation component","It was modeled directly on the 2015 SDGs"], answer:1},
+
+{week:5, q:"A dive site regularly hosts more tourists than its reef can tolerate without lasting damage. Which concept most directly applies to setting a sustainable visitor limit?",
+ options:["Trophic level","Carrying capacity","Anthropocentrism","Cleaner production"], answer:1},
+{week:5, q:"In fisheries management, the largest catch that can be taken indefinitely from a fish stock without depleting it is called:",
+ options:["Carrying capacity","Maximum sustainable yield","Ecosystem service","Blue carbon"], answer:1},
+{week:5, q:"A policymaker justifies protecting a forest primarily because of the timber, water, and recreational value it provides to people. This reasoning best reflects which ethical position?",
+ options:["Ecocentrism","Biocentrism","Anthropocentrism","Stewardship"], answer:2},
+{week:5, q:"Which ethical position extends moral consideration to whole ecological systems — species, habitats, and processes — rather than only individual organisms?",
+ options:["Anthropocentrism","Biocentrism","Ecocentrism","Utilitarianism"], answer:2},
+{week:5, q:"Removing a keystone predator from an ecosystem can trigger cascading effects throughout the food web. This illustrates the importance of which concept from Week 5?",
+ options:["Systems thinking applied to trophic relationships","Greenwashing","Command-and-control regulation","The EIS System"], answer:0},
+{week:5, q:"How does environmental stewardship differ from simply following environmental laws, according to Week 5?",
+ options:["Stewardship requires no legal compliance at all","Stewardship involves internalizing a sense of responsibility toward the environment, beyond merely following rules","Stewardship is identical to command-and-control regulation","Stewardship applies only to government agencies"], answer:1},
+
+{week:6, q:"Which law established the Philippines' legal framework for protected areas, later amended and expanded by RA 11038?",
+ options:["RA 8749","RA 7586 (NIPAS Act)","RA 9275","RA 7611"], answer:1},
+{week:6, q:"Within a NIPAS-governed protected area, which zone typically allows regulated activity, distinct from the strict protection zone and the buffer zone?",
+ options:["Multiple-use zone","Core zone","Ancestral domain zone","ECAN zone"], answer:0},
+{week:6, q:"Who governs a specific protected area under NIPAS, bringing together government agencies, LGUs, indigenous peoples, and community representatives?",
+ options:["DENR-EMB alone","The Protected Area Management Board (PAMB)","The Palawan Council for Sustainable Development","The Multipartite Monitoring Team"], answer:1},
+{week:6, q:"Which law specifically established Palawan's own integrated conservation-and-development framework, separate from the national NIPAS system?",
+ options:["RA 7586","RA 11038","RA 7611 (SEP for Palawan Act)","RA 8550"], answer:2},
+{week:6, q:"Under Palawan's ECAN zoning, which zone is strictly protected, allowing minimal or no human activity?",
+ options:["Multiple-use zone","Buffer zone","Core zone","Tribal ancestral zone"], answer:2},
+{week:6, q:"A project is proposed within an ECAN-zoned area of Palawan. Beyond standard national permitting, which body has the authority to issue an additional required clearance?",
+ options:["DENR-EMB, through an ECC only","The Palawan Council for Sustainable Development (PCSD), through an SEP Clearance","The Protected Area Management Board only","No additional clearance is required in Palawan"], answer:1},
+{week:6, q:"CBFM (Community-Based Forest Management) grants local communities formal stewardship agreements over forest areas. According to Week 6, what does this exchange for that stewardship?",
+ options:["Unlimited logging rights with no responsibilities","Sustainable management responsibilities","Permanent land ownership with no oversight","Exemption from all environmental laws"], answer:1},
+
+{week:7, q:"What term describes carbon captured and stored by coastal and marine ecosystems, particularly mangroves, seagrasses, and salt marshes?",
+ options:["Carrying capacity","Blue carbon","Ecosystem service","Trophic transfer"], answer:1},
+{week:7, q:"Under the Philippine Fisheries Code framework, municipal waters under LGU jurisdiction extend how far from the shoreline?",
+ options:["5 kilometers","15 kilometers","30 kilometers","50 kilometers"], answer:1},
+{week:7, q:"Why does coastal management increasingly favor MPA networks over a single isolated MPA?",
+ options:["A single MPA is often too small to protect a wide-ranging or migratory species population","Networks are always cheaper to enforce than a single MPA","Single MPAs are illegal under the Fisheries Code","Networks eliminate the need for any enforcement"], answer:0},
+{week:7, q:"Deforestation in upland watersheds (Week 6) connects to coastal and freshwater problems (Week 7) primarily because it:",
+ options:["Increases groundwater recharge and prevents flooding","Reduces water infiltration, increases sediment loads, and can worsen both flooding and dry-season shortages","Has no measurable effect on downstream water systems","Only affects marine biodiversity, not freshwater systems"], answer:1},
+{week:7, q:"What made Tubbataha Reefs Natural Park a relatively favorable case for strict no-take enforcement, compared to a typical nearshore MPA?",
+ options:["Its dense coastal population made monitoring easier","Its remote, uninhabited location reduced typical enforcement conflicts","It has no legal protected status, allowing flexible management","It is located within Manila Bay, close to enforcement agencies"], answer:1},
+{week:7, q:"Integrated Water Resources Management (IWRM) is best described as:",
+ options:["A framework for managing only groundwater extraction rates","A coordinated approach treating water supply, water quality, and supporting ecosystems as one management problem","A voluntary, non-binding certification scheme for water utilities","A subset of the EIA process specific to dams"], answer:1},
+
+{week:8, q:"The Philippine EIS System was established under which legal instrument?",
+ options:["RA 7586","RA 8550","Presidential Decree No. 1586","RA 7611"], answer:2},
+{week:8, q:"Which government body implements the Philippine EIS System?",
+ options:["Palawan Council for Sustainable Development","DENR, through its Environmental Management Bureau (DENR-EMB)","National Economic and Development Authority","Protected Area Management Board"], answer:1},
+{week:8, q:"Arrange the following EIA steps in correct order: (1) Scoping, (2) Decision, (3) Screening, (4) Monitoring, (5) Review.",
+ options:["3, 1, 5, 2, 4","1, 3, 2, 5, 4","3, 5, 1, 2, 4","4, 3, 1, 5, 2"], answer:0},
+{week:8, q:"A proposed project is found not to require a full environmental impact assessment. Which document would DENR-EMB issue in this case?",
+ options:["Environmental Compliance Certificate (ECC)","Environmental Impact Statement (EIS)","Certificate of Non-Coverage (CNC)","SEP Clearance"], answer:2},
+{week:8, q:"What is the key difference between an Initial Environmental Examination (IEE) and a full Environmental Impact Statement (EIS)?",
+ options:["An IEE is prepared for less complex, non-critical projects; a full EIS is required for environmentally critical projects","An IEE is only used after a project is already operating; an EIS is used before","An IEE replaces the need for an ECC, while an EIS does not","There is no substantive difference; the terms are interchangeable"], answer:0},
+{week:8, q:"Which of the following is a recognized limitation of the Philippine EIA system, per Week 8?",
+ options:["It is better at capturing cumulative impacts from many projects than single-project impacts","It can become a compliance 'checklist' exercise, and struggles to capture cumulative impacts from multiple projects over time","It has no legal basis and is purely voluntary","It eliminates the need for any public consultation"], answer:1},
+{week:8, q:"According to Week 8, why is public participation considered central to the Philippine EIA process?",
+ options:["It has no real effect on the outcome","It ensures affected communities and LGUs have a genuine opportunity to raise concerns before a decision is made","It is required only for projects outside environmentally critical areas","It replaces the need for DENR-EMB review"], answer:1}
+];
+
+let userAnswers = new Array(QUESTIONS.length).fill(null);
+let submitted = false;
+
+function safeScroll(el, opts){
+  if(el && typeof el.scrollIntoView === 'function'){ el.scrollIntoView(opts); }
+}
+
+function renderQuiz(){
+  const body = document.getElementById('quizBody');
+  body.innerHTML = '';
+  let currentWeek = null;
+  QUESTIONS.forEach((item, idx) => {
+    if(item.week !== currentWeek){
+      currentWeek = item.week;
+      const div = document.createElement('div');
+      div.className = 'week-divider';
+      div.innerHTML = `<span class="tag">WEEK ${currentWeek}</span><div class="line"></div><h3>${WEEKS[currentWeek]}</h3>`;
+      body.appendChild(div);
+    }
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'qcard-' + idx;
+    const letters = ['A','B','C','D'];
+    let optsHtml = '';
+    item.options.forEach((opt, oi) => {
+      optsHtml += `
+        <label class="opt" id="opt-${idx}-${oi}">
+          <input type="radio" name="q${idx}" value="${oi}" onchange="selectAnswer(${idx}, ${oi})">
+          <span class="letter">${letters[oi]}</span>
+          <span>${opt}</span>
+        </label>`;
+    });
+    card.innerHTML = `
+      <div class="qnum">Item ${idx+1} of ${QUESTIONS.length}</div>
+      <p class="qtext">${item.q}</p>
+      <div class="options">${optsHtml}</div>
+      <div class="review-note" id="note-${idx}" style="display:none;"></div>
+    `;
+    body.appendChild(card);
+  });
+}
+
+function selectAnswer(idx, oi){
+  userAnswers[idx] = oi;
+  for(let i=0;i<4;i++){
+    document.getElementById(`opt-${idx}-${i}`).classList.remove('selected');
+  }
+  document.getElementById(`opt-${idx}-${oi}`).classList.add('selected');
+  document.getElementById('qcard-' + idx).classList.add('answered');
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = userAnswers.filter(a => a !== null).length;
+  const total = QUESTIONS.length;
+  document.getElementById('progressLabel').textContent = `${answered} / ${total} answered`;
+  document.getElementById('progressFill').style.width = (answered/total*100) + '%';
+  const nameFilled = document.getElementById('studentName').value.trim().length > 0;
+  document.getElementById('actionStatus').textContent =
+    `${answered} of ${total} answered` + (nameFilled ? '' : ' · Name required to submit');
+}
+
+document.getElementById('studentName').addEventListener('input', updateProgress);
+
+function scrollToFirstUnanswered(){
+  const i = userAnswers.findIndex(a => a === null);
+  if(i === -1){ alert('All items are answered.'); return; }
+  safeScroll(document.getElementById('qcard-' + i), {behavior:'smooth', block:'center'});
+}
+
+function bandFor(pct){
+  if(pct >= 90) return {label:'Excellent', cls:'excellent'};
+  if(pct >= 75) return {label:'Good', cls:'good'};
+  if(pct >= 60) return {label:'Fair — Review Recommended', cls:'fair'};
+  return {label:'Needs Review', cls:'review'};
+}
+
+function submitQuiz(){
+  const name = document.getElementById('studentName').value.trim();
+  const warning = document.getElementById('nameWarning');
+  if(!name){
+    warning.style.display = 'block';
+    safeScroll(document.getElementById('studentName'), {behavior:'smooth', block:'center'});
+    document.getElementById('studentName').focus();
+    return;
+  }
+  warning.style.display = 'none';
+
+  const unanswered = userAnswers.filter(a => a === null).length;
+  if(unanswered > 0){
+    const proceed = confirm(`You have ${unanswered} unanswered item(s). Submit anyway? Unanswered items are marked incorrect.`);
+    if(!proceed) return;
+  }
+
+  submitted = true;
+  let score = 0;
+  const weekStats = {};
+  Object.keys(WEEKS).forEach(w => weekStats[w] = {correct:0, total:0});
+
+  QUESTIONS.forEach((item, idx) => {
+    weekStats[item.week].total++;
+    const card = document.getElementById('qcard-' + idx);
+    const note = document.getElementById('note-' + idx);
+    const isCorrect = userAnswers[idx] === item.answer;
+    if(isCorrect){ score++; weekStats[item.week].correct++; }
+
+    // lock inputs
+    for(let i=0;i<4;i++){
+      document.querySelector(`input[name="q${idx}"][value="${i}"]`).disabled = true;
+    }
+
+    if(userAnswers[idx] === null){
+      card.classList.add('unanswered-flag');
+      note.style.display = 'block';
+      note.className = 'review-note incorrect';
+      note.textContent = `Not answered. Correct answer: ${String.fromCharCode(65+item.answer)}. ${item.options[item.answer]}`;
+      document.getElementById(`opt-${idx}-${item.answer}`).classList.add('was-correct');
+    } else if(isCorrect){
+      card.classList.add('correct');
+      note.style.display = 'block';
+      note.className = 'review-note correct';
+      note.textContent = `Correct.`;
+      document.getElementById(`opt-${idx}-${item.answer}`).classList.add('was-correct');
+    } else {
+      card.classList.add('incorrect');
+      note.style.display = 'block';
+      note.className = 'review-note incorrect';
+      note.textContent = `Incorrect. You selected ${String.fromCharCode(65+userAnswers[idx])}. Correct answer: ${String.fromCharCode(65+item.answer)}. ${item.options[item.answer]}`;
+      document.getElementById(`opt-${idx}-${userAnswers[idx]}`).classList.add('was-wrong');
+      document.getElementById(`opt-${idx}-${item.answer}`).classList.add('was-correct');
+    }
+  });
+
+  const pct = Math.round((score/QUESTIONS.length)*100);
+  const band = bandFor(pct);
+
+  document.getElementById('rName').textContent = name;
+  document.getElementById('rNo').textContent = document.getElementById('studentNo').value.trim() || '—';
+  document.getElementById('rSection').textContent = document.getElementById('section').value.trim() || '—';
+  document.getElementById('rInstructor').textContent = document.getElementById('instructor').value.trim() || '—';
+
+  const now = new Date();
+  document.getElementById('rDate').textContent = now.toLocaleDateString('en-PH', {year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('rTime').textContent = now.toLocaleTimeString('en-PH');
+  document.getElementById('rTimestampFull').textContent = 'Generated ' + now.toLocaleString('en-PH');
+
+  document.getElementById('rScore').textContent = `${score} / ${QUESTIONS.length}`;
+  document.getElementById('rPct').textContent = `${pct}%`;
+  const bandEl = document.getElementById('rBand');
+  bandEl.textContent = band.label;
+  bandEl.className = 'band ' + band.cls;
+
+  const tbody = document.getElementById('weekTableBody');
+  tbody.innerHTML = '';
+  Object.keys(WEEKS).forEach(w => {
+    const s = weekStats[w];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>Week ${w}</td><td>${WEEKS[w]}</td><td>${s.correct} / ${s.total}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('results').style.display = 'block';
+  document.querySelector('.action-bar').style.display = 'none';
+  safeScroll(document.getElementById('results'), {behavior:'smooth'});
+}
+
+function toggleReview(){
+  const rs = document.getElementById('quizBody');
+  const btn = document.getElementById('reviewToggleBtn');
+  if(rs.style.display === 'none'){
+    rs.style.display = 'block';
+    btn.textContent = 'Hide Answer Review';
+  } else {
+    rs.style.display = 'none';
+    btn.textContent = 'Show Answer Review';
+  }
+}
+
+function retakeQuiz(){
+  if(!confirm('Retake the quiz? This will clear all your current answers.')) return;
+  userAnswers = new Array(QUESTIONS.length).fill(null);
+  submitted = false;
+  document.getElementById('results').style.display = 'none';
+  document.querySelector('.action-bar').style.display = 'block';
+  document.getElementById('quizBody').style.display = 'block';
+  renderQuiz();
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderQuiz();
+updateProgress();
+</script>
+</body>
+</html>
