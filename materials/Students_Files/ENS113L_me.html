@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENS 113/L Midterm Examination — Interactive Answer Sheet</title>
+<style>
+  :root{
+    --navy:#123a5e;
+    --navy-dark:#0c2942;
+    --blue-accent:#1f6fb2;
+    --gold:#c9992c;
+    --bg:#f4f6f8;
+    --card:#ffffff;
+    --border:#dbe1e8;
+    --text:#212a33;
+    --muted:#5b6572;
+    --green:#1e7e34;
+    --green-bg:#e6f4ea;
+    --red:#b02a2a;
+    --red-bg:#fdeaea;
+    --orange:#a86a10;
+    --orange-bg:#fdf1de;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.5;
+  }
+  #appRoot{max-width:900px;margin:0 auto;padding-bottom:60px;}
+
+  /* Sticky control bar */
+  #stickyBar{
+    position:sticky; top:0; z-index:50;
+    background:var(--navy-dark);
+    color:#fff;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
+    flex-wrap:wrap; gap:8px;
+  }
+  #stickyBar .title{font-weight:700; font-size:0.95rem;}
+  #progressText{font-size:0.85rem; color:#cfe0ef;}
+  .sticky-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .timer-box{
+    background:#0e3350; border:1px solid #2c5a82; border-radius:6px;
+    padding:6px 12px; font-weight:700; font-size:1.05rem; letter-spacing:1px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .timer-box.active{background:#123a5e;}
+  .timer-box.warning{background:#5c2200; border-color:#c9992c; color:#ffd98a; animation:pulse 1s infinite;}
+  .timer-box.expired{background:#5c0000; border-color:#b02a2a; color:#ffb3b3;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:.55;}100%{opacity:1;}}
+
+  .btn{
+    border:none; border-radius:6px; padding:8px 14px; font-size:0.85rem; font-weight:600;
+    cursor:pointer; transition:filter .15s ease;
+  }
+  .btn:hover{filter:brightness(1.1);}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-primary{background:var(--gold); color:#3a2a00;}
+  .btn-secondary{background:#2b4f70; color:#fff;}
+  .btn-print{background:var(--blue-accent); color:#fff;}
+
+  /* Header / intro */
+  .header-card{background:var(--card); margin:16px; padding:22px 26px; border-radius:10px; border:1px solid var(--border);}
+  .header-card h1{margin:0 0 2px 0; font-size:1.35rem; color:var(--navy);}
+  .header-card .subtitle{color:var(--muted); margin:0 0 14px 0; font-size:0.95rem;}
+  .field-row{display:flex; gap:16px; flex-wrap:wrap; margin:14px 0;}
+  .field{flex:1; min-width:220px;}
+  .field label{display:block; font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:4px;}
+  .field input[type=text]{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;
+  }
+  .instructions{
+    background:#eef4fa; border:1px solid #cfe0ef; border-radius:8px; padding:12px 16px; font-size:0.88rem; color:#28425c;
+    margin-top:10px;
+  }
+  .instructions ul{margin:6px 0 0 18px; padding:0;}
+  .timer-note{font-size:0.82rem; color:var(--muted); margin-top:6px; font-style:italic;}
+
+  /* Results panel */
+  #resultsPanel{
+    display:none; margin:16px; padding:22px 26px; border-radius:10px;
+    background:var(--card); border:2px solid var(--gold);
+  }
+  #resultsPanel h2{margin-top:0; color:var(--navy);}
+  .score-big{font-size:2.4rem; font-weight:800; color:var(--navy);}
+  .score-sub{color:var(--muted); font-size:0.95rem; margin-bottom:14px;}
+  .section-scores{width:100%; border-collapse:collapse; margin-top:10px; font-size:0.88rem;}
+  .section-scores th, .section-scores td{border:1px solid var(--border); padding:6px 10px; text-align:left;}
+  .section-scores th{background:#f0f3f6;}
+  .results-actions{margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;}
+
+  /* Questions */
+  .section-title{
+    margin:26px 16px 8px 16px; color:var(--navy); font-size:1.1rem; font-weight:800;
+    border-bottom:2px solid var(--gold); padding-bottom:6px;
+  }
+  .question{background:var(--card); margin:10px 16px; padding:16px 18px; border-radius:8px; border:1px solid var(--border);}
+  .question.unanswered{border-color:var(--orange); background:var(--orange-bg);}
+  .stem{margin:0 0 10px 0; font-size:0.95rem;}
+  .qnum{font-weight:800; color:var(--navy); margin-right:4px;}
+  .flag{
+    display:inline-block; margin-left:8px; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700;
+  }
+  .flag.ok{background:var(--green-bg); color:var(--green);}
+  .flag.bad{background:var(--red-bg); color:var(--red);}
+  .flag.skip{background:var(--orange-bg); color:var(--orange);}
+  .options{display:flex; flex-direction:column; gap:6px;}
+  .option-label{
+    display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:6px;
+    border:1px solid transparent; cursor:pointer; font-size:0.92rem;
+  }
+  .option-label:hover{background:#f0f3f6;}
+  .option-label input{margin-top:3px;}
+  .option-label.correct{background:var(--green-bg); border-color:var(--green); font-weight:600;}
+  .option-label.incorrect{background:var(--red-bg); border-color:var(--red); text-decoration:line-through;}
+
+  /* Bottom action bar */
+  .bottom-actions{
+    margin:26px 16px; padding:18px; background:var(--card); border-radius:10px; border:1px solid var(--border);
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+  }
+
+  /* Print-only receipt */
+  #receiptPrintArea{display:none;}
+  .receipt-box{
+    max-width:640px; margin:40px auto; padding:30px 36px; border:2px solid #123a5e;
+  }
+  .receipt-box h2{text-align:center; margin:0 0 2px 0;}
+  .receipt-box .r-sub{text-align:center; color:#555; margin-bottom:18px; font-size:0.9rem;}
+  .receipt-box table{width:100%; border-collapse:collapse; margin-top:14px;}
+  .receipt-box td{padding:7px 4px; border-bottom:1px solid #ccc; font-size:0.95rem;}
+  .receipt-box td.label{font-weight:700; width:45%; color:#123a5e;}
+  .receipt-box .score-line{text-align:center; margin:22px 0; font-size:1.6rem; font-weight:800; color:#123a5e;}
+  .receipt-box .sign-row{display:flex; justify-content:space-between; margin-top:50px;}
+  .receipt-box .sign-block{width:45%; text-align:center; border-top:1px solid #333; padding-top:6px; font-size:0.85rem;}
+
+  @media print{
+    body.printing-receipt #appRoot{display:none !important;}
+    body.printing-receipt #receiptPrintArea{display:block !important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="appRoot">
+  <div id="stickyBar">
+    <div class="title">ENS 113/L Midterm — Weeks 1–7</div>
+    <div id="progressText">0 / 75 answered</div>
+    <div class="sticky-right">
+      <span class="timer-box" id="timerBox">⏱ <span id="timerDisplay">60:00</span></span>
+      <button class="btn btn-primary" id="submitBtnTop">Submit Exam</button>
+      <button class="btn btn-secondary reset-btn">Reset</button>
+    </div>
+  </div>
+
+  <div class="header-card">
+    <h1>PALAWAN STATE UNIVERSITY</h1>
+    <p class="subtitle">Midterm Examination — ENS 113/L (Environmental Monitoring) | Coverage: Weeks 1–7</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="studentName">Full Name</label>
+        <input type="text" id="studentName" placeholder="Juan Dela Cruz">
+      </div>
+      <div class="field">
+        <label for="studentSection">Section / Block</label>
+        <input type="text" id="studentSection" placeholder="BS Env. Science 2-A">
+      </div>
+    </div>
+
+    <div class="instructions">
+      <strong>Instructions</strong>
+      <ul>
+        <li>This exam has 75 multiple-choice items. Each item is worth 1 point.</li>
+        <li>Select the letter of the BEST answer for each item.</li>
+        <li>A <strong>one-hour timer</strong> starts automatically the moment you answer <strong>Item 1</strong>. Once time expires, the exam locks and can no longer be answered.</li>
+        <li>Click <strong>Submit Exam</strong> when finished to have your answers checked automatically.</li>
+        <li>After submission, you may print a receipt of your results for your records.</li>
+      </ul>
+      <p class="timer-note">Timer status: <span id="timerStatusNote">not started — begin with Item 1</span></p>
+    </div>
+  </div>
+
+  <div id="resultsPanel">
+    <h2>Results</h2>
+    <div class="score-big" id="scoreBig">0 / 75</div>
+    <div class="score-sub" id="scoreSub"></div>
+    <table class="section-scores" id="sectionScoresTable">
+      <thead><tr><th>Part</th><th>Score</th></tr></thead>
+      <tbody id="sectionScoresBody"></tbody>
+    </table>
+    <div class="results-actions">
+      <button class="btn btn-print" id="printReceiptBtn">🖨 Print Receipt</button>
+      <button class="btn btn-secondary reset-btn">Reset / Retake</button>
+    </div>
+  </div>
+
+  <div id="examContainer"></div>
+
+  <div class="bottom-actions">
+    <button class="btn btn-primary" id="submitBtnBottom">Submit Exam</button>
+    <button class="btn btn-secondary reset-btn">Reset Exam</button>
+  </div>
+</div>
+
+<div id="receiptPrintArea">
+  <div class="receipt-box">
+    <h2>Examination Receipt</h2>
+    <div class="r-sub">Palawan State University — ENS 113/L Midterm Examination (Weeks 1–7)</div>
+    <table>
+      <tr><td class="label">Name</td><td id="rcName"></td></tr>
+      <tr><td class="label">Section / Block</td><td id="rcSection"></td></tr>
+      <tr><td class="label">Date &amp; Time Submitted</td><td id="rcDate"></td></tr>
+      <tr><td class="label">Time Used</td><td id="rcTimeUsed"></td></tr>
+      <tr><td class="label">Items Answered</td><td id="rcAnswered"></td></tr>
+      <tr><td class="label">Receipt No.</td><td id="rcRef"></td></tr>
+    </table>
+    <div class="score-line" id="rcScore"></div>
+    <div class="sign-row">
+      <div class="sign-block">Student Signature</div>
+      <div class="sign-block">Proctor / Instructor Signature</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const examData = [{"title":"Part I — Foundations of Environmental Monitoring (Week 1)","questions":[{"stem":"Which of the following best describes the primary purpose of environmental monitoring?","options":["To document environmental conditions once for a historical record","To systematically and repeatedly measure environmental parameters to detect change and support informed decision-making","To penalize industries that violate environmental permits","To replace the need for environmental impact assessments before a project begins"],"correct":1},{"stem":"In the environmental monitoring cycle, which step must logically be completed before a sampling design can be developed?","options":["Selecting monitoring objectives and indicators","Submitting the final monitoring report","Interpreting the collected data","Calibrating field instruments"],"correct":0},{"stem":"A mining company measures baseline water quality in a river for six months before construction begins. This is best classified as which type of monitoring?","options":["Compliance monitoring","Impact monitoring","Trend monitoring","Baseline monitoring"],"correct":3},{"stem":"A factory's wastewater discharge is tested quarterly to verify that pollutant levels remain within the limits stated in its environmental permit. This is best classified as which type of monitoring?","options":["Baseline monitoring","Impact monitoring","Compliance monitoring","Trend monitoring"],"correct":2},{"stem":"Fish populations downstream of a new industrial facility are surveyed to determine whether the facility has actually altered the aquatic ecosystem. This is best classified as which type of monitoring?","options":["Impact monitoring","Baseline monitoring","Compliance monitoring","Trend monitoring"],"correct":0},{"stem":"A research team has collected water quality data from the same river station every year for fifteen years to detect gradual changes in water quality. This is best classified as which type of monitoring?","options":["Baseline monitoring","Trend (long-term) monitoring","Compliance monitoring","Impact monitoring"],"correct":1},{"stem":"A cement plant's stack emissions test within permit limits, yet nearby residents report increasing respiratory complaints over several years. Which type of monitoring would be most appropriate to determine whether the plant is actually degrading air quality over time?","options":["Compliance monitoring, since the plant already passed its permit test","Baseline monitoring, since a new reference condition is needed","Self-monitoring, since the plant is responsible for its own emissions","Impact monitoring, to directly assess whether measurable environmental or health-related change has occurred"],"correct":3},{"stem":"Which characteristic makes an environmental parameter most useful as a monitoring indicator?","options":["It is inexpensive to measure regardless of its relevance to the monitoring objective","It can only be measured by highly specialized laboratories","It responds measurably and consistently to the specific environmental change of concern","It remains constant regardless of environmental conditions"],"correct":2},{"stem":"In the Pressure-State-Response framework, an increase in the number of untreated sewage outfalls discharging into a bay is best classified as which component?","options":["Pressure","State","Response","Indicator"],"correct":0},{"stem":"Using the Pressure-State-Response framework, a measured decline in dissolved oxygen levels in the same bay is best classified as which component?","options":["Pressure","Response","Indicator","State"],"correct":3},{"stem":"A local government's construction of a new sewage treatment plant to address bay water pollution is best classified as which component of the Pressure-State-Response framework?","options":["Pressure","Response","State","Impact"],"correct":1},{"stem":"A university wants to know whether its campus sensor network shows a genuine multi-year warming trend, rather than normal year-to-year variation. Which monitoring approach best matches this objective?","options":["Trend (long-term) monitoring using repeated measurements at the same stations over time","Baseline monitoring, since only a single reference measurement is needed before installation","Compliance monitoring, since it only checks results against one fixed regulatory threshold","Impact monitoring, since it only assesses change following one specific disturbance event"],"correct":0}]},{"title":"Part II — Environmental Policies and Standards (Week 2)","questions":[{"stem":"Which Philippine law primarily governs the control and management of air pollution from stationary and mobile sources?","options":["RA 9003 (Ecological Solid Waste Management Act)","RA 8749 (Philippine Clean Air Act)","RA 9275 (Philippine Clean Water Act)","PD 1586 (Philippine EIS System)"],"correct":1},{"stem":"A community reports that a nearby facility is discharging wastewater into a creek without proper treatment. Which law most directly addresses this concern?","options":["RA 9275 (Philippine Clean Water Act)","RA 8749 (Philippine Clean Air Act)","RA 9003 (Ecological Solid Waste Management Act)","PD 1586 (Philippine EIS System)"],"correct":0},{"stem":"A barangay ordinance requiring households to segregate biodegradable, recyclable, and residual waste is most directly grounded in which national law?","options":["RA 8749 (Philippine Clean Air Act)","PD 1586 (Philippine EIS System)","RA 9003 (Ecological Solid Waste Management Act)","RA 9275 (Philippine Clean Water Act)"],"correct":2},{"stem":"Before a large infrastructure project can proceed, its proponent must secure clearance under which Philippine regulatory system?","options":["The Environmental Impact Statement (EIS) System under PD 1586","The Self-Monitoring Report system, which applies only once operations are already underway","The Multipartite Monitoring Team system, which is formed only after a project is approved","The Sustainable Development Goals framework, a global agenda rather than a national clearance system"],"correct":0},{"stem":"Which of the following best describes the primary role of the DENR Environmental Management Bureau (EMB) in environmental monitoring?","options":["Conducting all field sampling on behalf of private companies","Enforcing environmental laws and reviewing compliance monitoring data submitted by regulated entities","Owning and operating all environmental monitoring equipment used nationwide","Setting international environmental treaties independently of national law"],"correct":1},{"stem":"A Multipartite Monitoring Team (MMT) established around a mining project would typically include representatives from which combination of stakeholders?","options":["Only the company's internal environmental staff, without external representation","Only DENR personnel, to preserve strict regulatory independence from other stakeholders","Government agencies, the project proponent, and affected communities or civil society groups","Only third-party commercial laboratories contracted to perform chemical analysis"],"correct":2},{"stem":"A company operating under an Environmental Compliance Certificate is required to periodically submit documentation showing its own monitoring results to DENR-EMB. This document is best identified as a:","options":["Self-Monitoring Report","Environmental Impact Statement","Multipartite Monitoring Team charter","Program Outcome Assessment"],"correct":0},{"stem":"Which of the following best distinguishes an Environmental Impact Statement from a Self-Monitoring Report?","options":["Both documents are submitted only after a project has already begun full operations","The EIS is prepared before a project is approved, while the SMR is submitted periodically once the project is operating","The EIS is submitted by DENR, while the SMR is submitted by the affected community","There is no meaningful difference, since both serve the exact same regulatory purpose"],"correct":1},{"stem":"A coastal monitoring program tracking coral reef health in Palawan most directly supports progress toward which Sustainable Development Goal?","options":["SDG 6 (Clean Water and Sanitation)","SDG 13 (Climate Action)","SDG 15 (Life on Land)","SDG 14 (Life Below Water)"],"correct":3},{"stem":"A factory consistently meets the numeric pollutant limits stated in its DENR permit, but a Multipartite Monitoring Team later finds declining fish catch in the receiving river. What is the most appropriate next step consistent with the roles described in the monitoring framework?","options":["Dismiss the MMT's finding entirely, since the facility already passed compliance testing","Revoke the facility's Environmental Compliance Certificate immediately, without conducting further investigation","Investigate further through impact monitoring, since permit compliance alone does not confirm the absence of ecological harm","Wait for the facility's next Self-Monitoring Report before taking any further action"],"correct":2},{"stem":"Which government body is primarily responsible for reviewing and approving Environmental Impact Statements submitted by project proponents in the Philippines?","options":["The local barangay council","The Department of Labor and Employment","The Multipartite Monitoring Team","The DENR Environmental Management Bureau"],"correct":3},{"stem":"A proposed quarry near a protected watershed in Palawan would require which sequence of regulatory steps, in the correct order?","options":["Self-Monitoring Report first, then Environmental Impact Statement, then Multipartite Monitoring Team formation","Environmental Impact Statement and clearance under PD 1586, followed by ongoing compliance monitoring through Self-Monitoring Reports once operational","Multipartite Monitoring Team formation only, since quarries are exempt from the EIS System","Compliance monitoring first, followed only afterward by an Environmental Impact Statement"],"correct":1}]},{"title":"Part III — Designing a Monitoring Program (Weeks 3-4)","questions":[{"stem":"A monitoring team's objective is to \"detect early signs of eutrophication in a lake.\" Which indicator would best translate this objective into a measurable parameter?","options":["Ambient noise level at the lakeshore, which has no link to nutrient enrichment","Nitrogen and phosphorus concentrations, since nutrient enrichment is the direct driver of eutrophication","Soil bulk density in the surrounding watershed, unrelated to nutrient loading in the lake","Air temperature above the lake surface, which does not directly indicate nutrient levels"],"correct":1},{"stem":"A parameter that fluctuates significantly within a single day, such as dissolved oxygen in a shallow stream, generally requires which sampling frequency approach compared to a slow-changing parameter like soil heavy metal concentration?","options":["The same fixed annual frequency, since sampling frequency should not depend on how quickly a parameter changes","A lower frequency, since fast-changing parameters average out over time","No sampling at all, since fast-changing parameters cannot be reliably measured","A higher frequency, since infrequent sampling risks missing the periods when the parameter reaches critical levels"],"correct":3},{"stem":"Which spatial sampling design involves selecting sample locations purely by chance across a study area, without regard to any subdivision of that area?","options":["Random sampling","Stratified sampling","Systematic sampling","Transect sampling"],"correct":0},{"stem":"A watershed contains three distinct land-use zones: forested, agricultural, and residential. To ensure each zone is adequately represented in a water quality survey, which sampling design is most appropriate?","options":["Stratified sampling, dividing the watershed into these zones before sampling within each","Systematic sampling at a single fixed interval across the entire watershed, ignoring zone boundaries","Random sampling without regard to land-use zones","A single permanent plot located in the forested zone only"],"correct":0},{"stem":"A team collects water samples at fixed 200-meter intervals along the entire length of a river. This is best described as which sampling design?","options":["Stratified sampling","Random sampling","Permanent-plot sampling","Systematic sampling"],"correct":3},{"stem":"To study how species composition changes from a mangrove forest through a seagrass bed to open water, which sampling design is most appropriate?","options":["A single permanent plot placed only in the mangrove forest","Purely random points scattered across the entire bay","A transect running perpendicular to the shoreline through all three habitats","Systematic sampling limited to the open water zone only"],"correct":2},{"stem":"A forestry team wants to track changes in tree diameter and species composition at the exact same locations every year for a decade. Which sampling design best supports this objective?","options":["Random sampling, since a fresh set of locations each year avoids bias","Permanent plots, since revisiting fixed locations allows direct comparison of the same area over time","Systematic sampling at a new interval each year","Stratified sampling with new strata defined annually"],"correct":1},{"stem":"Which factor should most directly determine whether a monitoring program uses random, stratified, systematic, transect, or permanent-plot sampling?","options":["The personal preference of whichever technician is available that day","Whichever design requires the least paperwork","The monitoring objective and the spatial characteristics of the site being studied","The design used most recently in an unrelated study"],"correct":2},{"stem":"In water quality QA/QC, a field blank is a sample of contaminant-free water carried through the same handling and analysis steps as the actual samples. Its primary purpose is to:","options":["Increase the total number of samples reported to the client","Replace the need for laboratory instrument calibration before each sampling event","Measure the natural background concentration of the target parameter at the site","Detect contamination introduced during sample handling, containers, or analysis rather than from the environment itself"],"correct":3},{"stem":"Collecting two samples from the same location at the same time and analyzing them separately is a QA/QC practice known as a field duplicate. Its primary purpose is to:","options":["Assess the precision and repeatability of the sampling and analytical process","Determine the regulatory classification of the water body","Replace the need for a chain-of-custody form","Confirm that the sampling site was chosen using random sampling"],"correct":0},{"stem":"Written Standard Operating Procedures (SOPs) for field sampling primarily serve to:","options":["Reduce the total number of parameters that must be measured","Eliminate the need for any QA/QC checks","Ensure that different technicians collect and handle samples consistently, improving data comparability over time","Determine which spatial sampling design should be used at every site"],"correct":2},{"stem":"A chain-of-custody form documents everyone who has handled a sample from collection through laboratory analysis. This documentation is most important for:","options":["Reducing the overall cost of laboratory analysis for the monitoring program","Establishing the legal and scientific defensibility of the sample's integrity, especially if results are challenged","Determining the appropriate sampling frequency for future monitoring rounds","Selecting which spatial sampling design should be used at a given site"],"correct":1},{"stem":"A laboratory reports detectable contaminant levels in a field blank that should have contained only contaminant-free water. This result most strongly suggests:","options":["That the water body itself being monitored is definitely contaminated","That the sampling frequency chosen for the program was set too low","That a permanent-plot sampling design should have been used at this site instead","That contamination was introduced during handling, containers, or analysis, warranting investigation before trusting the results"],"correct":3},{"stem":"Two field duplicates from the same station show widely different results for the same parameter. This discrepancy most directly raises concerns about:","options":["The precision of the sampling and analytical procedure","The legal chain of custody for the samples","Whether the correct environmental law applies to the site","Whether the site should be reclassified under the Pressure-State-Response framework"],"correct":0},{"stem":"A water sample's results are being presented as evidence in a pollution case before a regulatory body. Which QA/QC document would be most critical to demonstrate that the sample was not tampered with or mishandled?","options":["The site's Self-Monitoring Report","The field duplicate results","The chain-of-custody form","The Program Outcomes matrix"],"correct":2},{"stem":"A monitoring team has a vague objective of \"assessing the impact of a new industrial estate on a nearby river.\" Which approach best translates this into an actionable monitoring program?","options":["Measure every possible environmental parameter without regard to the estate's likely pollutants","Rely solely on the estate's own Self-Monitoring Reports without independent verification","Skip indicator selection entirely and proceed directly to data analysis and reporting","Identify the estate's most likely pollutants and choose indicators and sampling methods suited to them"],"correct":3},{"stem":"A monitoring program needs to detect contamination that varies sharply across a small, irregularly shaped former industrial site. Which combination of design elements would best support this objective?","options":["A single random sample collected once, since irregular sites do not benefit from a structured design","A grid or stratified design with enough coverage to capture localized variation, supported by field duplicates and blanks","A single permanent plot placed only at the site's center, ignoring spatial variability","Systematic sampling along a single straight transect line, ignoring the site's irregular shape"],"correct":1}]},{"title":"Part IV — Water Quality Monitoring (Weeks 5-6)","questions":[{"stem":"Which of the following is best classified as a physical water quality parameter, as opposed to a chemical or biological parameter?","options":["Dissolved oxygen","Fecal coliform count","Total phosphorus","Turbidity"],"correct":3},{"stem":"Which of the following is best classified as a chemical water quality parameter?","options":["Water temperature","Total suspended solids","pH","Macroinvertebrate diversity"],"correct":2},{"stem":"Which of the following is best classified as a biological water quality parameter?","options":["Fecal coliform bacteria count","Conductivity","Total dissolved solids","Turbidity"],"correct":0},{"stem":"A single water sample collected at one location and one point in time is best described as a:","options":["Composite sample","Permanent-plot sample","Grab sample","Stratified sample"],"correct":2},{"stem":"A sample formed by combining several sub-samples collected over a period of time to represent an average condition is best described as a:","options":["Composite sample","Grab sample","Field blank","Field duplicate"],"correct":0},{"stem":"Inspectors suspect a factory is releasing an untreated pollutant discharge for a brief period during night shifts. Which sampling approach would most reliably capture this specific event?","options":["A composite sample collected continuously over a full 24-hour period","A single annual baseline sample collected long before the suspected event","A permanent-plot sample collected on a fixed, pre-scheduled monitoring date","A grab sample timed to coincide with the suspected discharge period"],"correct":3},{"stem":"A regulatory report requires the \"average\" pollutant concentration in a facility's effluent over a full operating shift. Which sampling approach best meets this requirement?","options":["A grab sample collected once at the start of the shift","A composite sample formed from sub-samples collected at intervals throughout the shift","A single grab sample collected at the end of the shift only","A field blank collected at the discharge point"],"correct":1},{"stem":"Dissolved oxygen (DO) is a critical water quality parameter primarily because it:","options":["Directly measures the concentration of heavy metals in the water","Determines the water's classification under the Solid Waste Management Act","Has no meaningful relationship to organic pollution or aquatic life at all","Is essential for fish and other aquatic organisms, and its depletion often signals organic pollution"],"correct":3},{"stem":"A river station shows unusually low dissolved oxygen immediately downstream of an untreated sewage outfall. This pattern is most consistent with:","options":["Elevated organic matter from the sewage being decomposed by oxygen-consuming bacteria","A natural increase in photosynthetic activity at that station","A decrease in water temperature at that station","An increase in dissolved oxygen from aeration at the outfall"],"correct":0},{"stem":"Electrical conductivity in water is primarily used as an indicator of:","options":["The amount of suspended sediment in the water","The presence of pathogenic bacteria","The concentration of dissolved ions or salts in the water","The water's temperature"],"correct":2},{"stem":"A monitoring station near agricultural land shows a conductivity spike following fertilizer application and rainfall runoff. This is most consistent with:","options":["Increased suspended sediment from erosion alone","Increased dissolved ions from fertilizer salts entering the water","A decrease in dissolved oxygen unrelated to the runoff","Contamination of the sampling equipment"],"correct":1},{"stem":"Turbidity is best described as a measure of:","options":["The concentration of dissolved salts in water","The number of bacteria present in a water sample","The acidity or alkalinity of water","The clarity of water as affected by suspended particles"],"correct":3},{"stem":"Rising water temperature in a river during a heat wave would most directly be expected to affect which other parameter?","options":["Dissolved oxygen, since warmer water generally holds less dissolved oxygen","Total dissolved solids, which would decrease sharply","pH, which would become strongly alkaline regardless of other factors","Turbidity, which would increase regardless of flow conditions"],"correct":0},{"stem":"Total Dissolved Solids (TDS) primarily measures:","options":["The number of living organisms present in a water sample","The clarity of the water as seen by eye","The combined concentration of dissolved organic and inorganic substances in water","The rate of water flow at the sampling point"],"correct":2},{"stem":"A measured pH value at a monitoring station is compared against the guideline range specified for that water body's classification under Philippine water quality regulations. This comparison is an example of:","options":["Baseline monitoring, since it only establishes a reference condition before any activity begins","Interpreting a result against a relevant standard, a core step in evaluating environmental quality","Field duplicate analysis, which checks measurement precision rather than compares results to a standard","Chain-of-custody documentation, which tracks sample handling rather than interprets the result itself"],"correct":1},{"stem":"Best field practice for collecting a representative river or stream water sample generally includes:","options":["Collecting the sample from stagnant water along the immediate bank to avoid the current","Collecting the sample only after stirring up bottom sediment to ensure a \"complete\" sample","Sampling only during the driest part of the year, regardless of monitoring objectives","Sampling from mid-stream where practical, facing upstream, and avoiding disturbance of bottom sediment"],"correct":3},{"stem":"Proper QA/QC practice for a water sampling event that will be defended in a compliance case includes which combination of actions?","options":["Labeling samples clearly, preserving them appropriately, and completing a chain-of-custody form for every sample collected","Collecting only a single grab sample and skipping documentation to save time","Relying on the facility's own records instead of independent field documentation","Discarding field blanks once laboratory results are received"],"correct":0},{"stem":"Elevated dissolved oxygen combined with normal temperature at a station is generally least consistent with which condition?","options":["Healthy aquatic conditions supporting fish and other organisms","Active photosynthesis by aquatic plants or algae during daylight","Severe organic pollution actively depleting oxygen at that station","Turbulent, well-aerated flow conditions"],"correct":2},{"stem":"A monitoring team suspects a residential area is discharging untreated sewage into a nearby creek. Which parameter would most directly confirm this suspicion?","options":["Electrical conductivity","Turbidity alone","Water temperature alone","Fecal coliform bacteria count"],"correct":3},{"stem":"Calibrating a multi-parameter water quality meter against known reference standards immediately before fieldwork is important primarily because it:","options":["Reduces the total number of parameters that must be measured","Ensures the meter's readings are accurate and comparable to established standards","Eliminates the need for chain-of-custody documentation","Replaces the need for a field blank"],"correct":1},{"stem":"A DENR-mandated effluent compliance report requires a representative measure of pollutant concentration discharged over an entire operating day, rather than a single moment. Which sampling method is most appropriate?","options":["Grab sampling at a single random time","Permanent-plot sampling","Composite sampling across the operating day","Systematic sampling at a fixed geographic interval"],"correct":2},{"stem":"Which pairing of a water quality parameter with its correct classification is accurate?","options":["pH — biological parameter","Fecal coliform — physical parameter","Dissolved oxygen — physical parameter","Turbidity — physical parameter"],"correct":3}]},{"title":"Part V — Air Quality Monitoring (Week 7)","questions":[{"stem":"Ambient air quality monitoring differs from indoor air quality monitoring primarily in that ambient monitoring:","options":["Measures air quality within enclosed occupied spaces such as classrooms or offices","Measures outdoor air quality across a general area rather than within an enclosed space","Is only conducted during industrial accidents","Does not require any calibrated instruments"],"correct":1},{"stem":"PM2.5 refers to particulate matter with a diameter of approximately:","options":["2.5 millimeters or less","25 micrometers or less","2.5 micrometers or less","250 micrometers or less"],"correct":2},{"stem":"Compared to PM10, PM2.5 particles are generally considered a greater health concern primarily because they:","options":["Are larger and settle out of the air more quickly","Are exclusively produced by natural dust sources","Cannot be measured by portable sensors","Are small enough to penetrate deep into the lungs"],"correct":3},{"stem":"A monitoring station near a busy road with heavy vehicle traffic would most likely show a comparatively higher concentration of which pollutant, primarily due to combustion sources?","options":["PM2.5, since vehicle exhaust is a major source of fine combustion particles","PM10 only, since combustion never produces fine particles","Neither PM2.5 nor PM10, since traffic does not affect particulate levels","Only coarse windblown dust unrelated to combustion"],"correct":0},{"stem":"Volatile Organic Compounds (VOCs) in indoor air quality monitoring are most commonly associated with which source?","options":["Outdoor rainfall patterns, which are unrelated to indoor chemical emissions","Natural background levels of dissolved oxygen, a water quality parameter","Sound level meter calibration errors, unrelated to indoor air chemistry","Emissions from products such as paints, solvents, adhesives, and certain building materials"],"correct":3},{"stem":"Elevated CO2 levels measured inside an occupied classroom are most commonly used as a practical indicator of:","options":["High outdoor PM2.5 concentrations, which are unrelated to indoor CO2 buildup","Poor ventilation, since CO2 accumulates when fresh air exchange is limited","High background radiation levels, which CO2 sensors are not designed to detect","Excessive noise pollution, which is measured with a sound level meter instead"],"correct":1},{"stem":"During a still, cool morning, a temperature inversion traps a layer of cooler air near the ground beneath a layer of warmer air above it. This condition most directly tends to:","options":["Rapidly disperse air pollutants away from the ground","Have no measurable effect on air pollutant concentrations","Trap pollutants near the surface, leading to elevated ground-level concentrations","Convert all particulate pollutants into gaseous VOCs"],"correct":2},{"stem":"Strong, sustained winds generally have which effect on ground-level air pollutant concentrations near a stationary source?","options":["They tend to disperse and dilute pollutants, generally lowering concentrations near the source","They have no effect on pollutant dispersion","They always increase pollutant concentrations near the source","They convert particulate matter into a different, undetectable chemical form"],"correct":0},{"stem":"Before conducting a portable air quality sensor survey, best practice most importantly requires that the technician:","options":["Skip calibration to save time, since portable sensors are pre-calibrated for life","Only use the sensor indoors, regardless of the monitoring objective","Disable data logging to reduce storage requirements","Calibrate or verify the sensor against a known reference before use, to ensure reliable readings"],"correct":3},{"stem":"A researcher wants to assess whether classroom ventilation is adequate during class hours. Which monitoring approach is most directly suited to this objective?","options":["Indoor CO2 monitoring within the occupied classroom during class sessions","Ambient PM2.5 monitoring at a rooftop station","Outdoor noise mapping around the school perimeter","Soil sampling in the school garden"],"correct":0},{"stem":"PM2.5 levels near a busy road are found to exceed the air quality guideline value during the dry season, coinciding with heavy vehicle traffic and little rainfall. The most likely combination of contributing factors is:","options":["A sudden decrease in traffic volume during the dry season","Increased rainfall washing pollutants out of the air","Vehicle exhaust emissions combined with reduced particle settling and wash-out during dry conditions","A malfunction in the sensor unrelated to any environmental factor"],"correct":2},{"stem":"A study assessing a factory worker's personal exposure to airborne solvent vapors during an eight-hour shift would most appropriately rely on which type of monitoring?","options":["Ambient monitoring at a location several kilometers from the factory","Indoor/occupational air quality monitoring within the worker's actual work environment","Satellite-based remote sensing of the factory rooftop","Biodiversity monitoring of the surrounding vegetation"],"correct":1}]}];
+const LETTERS = ["A","B","C","D"];
+const TIME_LIMIT_SECONDS = 3600;
+
+let TOTAL_ITEMS = 0;
+examData.forEach(s => TOTAL_ITEMS += s.questions.length);
+
+let timerInterval = null;
+let timeStarted = false;
+let startTimestamp = null;
+let remainingSeconds = TIME_LIMIT_SECONDS;
+let submitted = false;
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function renderExam(){
+  const container = document.getElementById('examContainer');
+  container.innerHTML = '';
+  let qNum = 0;
+  examData.forEach(section => {
+    const h = document.createElement('div');
+    h.className = 'section-title';
+    h.textContent = section.title;
+    container.appendChild(h);
+
+    section.questions.forEach(q => {
+      qNum++;
+      const qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.id = 'question-' + qNum;
+
+      const stemP = document.createElement('p');
+      stemP.className = 'stem';
+      stemP.innerHTML = '<span class="qnum">' + qNum + '.</span> ' + escapeHtml(q.stem) +
+                         '<span class="flag" id="flag-' + qNum + '" style="display:none;"></span>';
+      qDiv.appendChild(stemP);
+
+      const optsDiv = document.createElement('div');
+      optsDiv.className = 'options';
+
+      q.options.forEach((opt, idx) => {
+        const label = document.createElement('label');
+        label.className = 'option-label';
+        label.id = 'label-' + qNum + '-' + idx;
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'q' + qNum;
+        input.value = idx;
+        if (qNum === 1) {
+          input.addEventListener('change', startTimer);
+        }
+        input.addEventListener('change', updateProgress);
+
+        const span = document.createElement('span');
+        span.innerHTML = '<strong>' + LETTERS[idx] + '.</strong> ' + escapeHtml(opt);
+
+        label.appendChild(input);
+        label.appendChild(span);
+        optsDiv.appendChild(label);
+      });
+
+      qDiv.appendChild(optsDiv);
+      container.appendChild(qDiv);
+    });
+  });
+}
+
+function updateProgress(){
+  let answered = 0;
+  for (let i = 1; i <= TOTAL_ITEMS; i++) {
+    if (document.querySelector('input[name="q' + i + '"]:checked')) answered++;
+  }
+  document.getElementById('progressText').textContent = answered + ' / ' + TOTAL_ITEMS + ' answered';
+}
+
+function startTimer(){
+  if (timeStarted) return;
+  timeStarted = true;
+  startTimestamp = Date.now();
+  document.getElementById('timerBox').classList.add('active');
+  document.getElementById('timerStatusNote').textContent = 'running — good luck!';
+  timerInterval = setInterval(tick, 1000);
+  tick();
+}
+
+function tick(){
+  const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+  remainingSeconds = TIME_LIMIT_SECONDS - elapsed;
+  if (remainingSeconds <= 0) {
+    remainingSeconds = 0;
+    clearInterval(timerInterval);
+    renderTimerDisplay();
+    document.getElementById('timerBox').classList.add('expired');
+    document.getElementById('timerStatusNote').textContent = 'time is up — exam locked';
+    autoSubmit();
+    return;
+  }
+  renderTimerDisplay();
+  const box = document.getElementById('timerBox');
+  if (remainingSeconds <= 300) box.classList.add('warning');
+}
+
+function renderTimerDisplay(){
+  const m = Math.floor(remainingSeconds / 60);
+  const s = remainingSeconds % 60;
+  const mm = (m < 10 ? '0' : '') + m;
+  const ss = (s < 10 ? '0' : '') + s;
+  document.getElementById('timerDisplay').textContent = mm + ':' + ss;
+}
+
+function disableAllInputs(){
+  document.querySelectorAll('#examContainer input[type=radio]').forEach(el => el.disabled = true);
+}
+
+function enableAllInputs(){
+  document.querySelectorAll('#examContainer input[type=radio]').forEach(el => el.disabled = false);
+}
+
+function autoSubmit(){
+  if (submitted) return;
+  gradeExam(true);
+}
+
+function submitExamManual(){
+  if (submitted) return;
+  let answered = 0;
+  for (let i = 1; i <= TOTAL_ITEMS; i++) {
+    if (document.querySelector('input[name="q' + i + '"]:checked')) answered++;
+  }
+  const unanswered = TOTAL_ITEMS - answered;
+  if (unanswered > 0) {
+    const ok = confirm('You have ' + unanswered + ' unanswered item(s). Submit anyway?');
+    if (!ok) return;
+  } else {
+    const ok = confirm('Submit the exam now? You will not be able to change your answers afterward.');
+    if (!ok) return;
+  }
+  gradeExam(false);
+}
+
+function gradeExam(auto){
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+  disableAllInputs();
+
+  let correctCount = 0;
+  let answeredCount = 0;
+  let qNum = 0;
+  const sectionResults = [];
+
+  examData.forEach(section => {
+    let sCorrect = 0;
+    section.questions.forEach(q => {
+      qNum++;
+      const sel = document.querySelector('input[name="q' + qNum + '"]:checked');
+      const selIdx = sel ? parseInt(sel.value, 10) : null;
+      if (selIdx !== null) answeredCount++;
+      const isCorrect = (selIdx === q.correct);
+      if (isCorrect) { correctCount++; sCorrect++; }
+      markQuestionUI(qNum, selIdx, q.correct, isCorrect);
+    });
+    sectionResults.push({ title: section.title, correct: sCorrect, total: section.questions.length });
+  });
+
+  showResults(correctCount, TOTAL_ITEMS, answeredCount, sectionResults, auto);
+  buildReceipt(correctCount, TOTAL_ITEMS, answeredCount);
+}
+
+function markQuestionUI(qNum, selIdx, correctIdx, isCorrect){
+  for (let idx = 0; idx < 4; idx++) {
+    const label = document.getElementById('label-' + qNum + '-' + idx);
+    if (!label) continue;
+    if (idx === correctIdx) label.classList.add('correct');
+    if (selIdx !== null && idx === selIdx && idx !== correctIdx) label.classList.add('incorrect');
+  }
+  const flag = document.getElementById('flag-' + qNum);
+  const qDiv = document.getElementById('question-' + qNum);
+  if (selIdx === null) {
+    flag.textContent = 'NOT ANSWERED';
+    flag.className = 'flag skip';
+    qDiv.classList.add('unanswered');
+  } else if (isCorrect) {
+    flag.textContent = 'CORRECT';
+    flag.className = 'flag ok';
+  } else {
+    flag.textContent = 'INCORRECT';
+    flag.className = 'flag bad';
+  }
+  flag.style.display = 'inline-block';
+}
+
+function showResults(correct, total, answered, sectionResults, auto){
+  const pct = ((correct / total) * 100).toFixed(1);
+  document.getElementById('scoreBig').textContent = correct + ' / ' + total;
+  document.getElementById('scoreSub').textContent =
+    pct + '%' + (auto ? '  —  submitted automatically because the 1-hour time limit was reached.' : '  —  submitted successfully.') +
+    ' (' + answered + ' of ' + total + ' items answered)';
+
+  const tbody = document.getElementById('sectionScoresBody');
+  tbody.innerHTML = '';
+  sectionResults.forEach(sr => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.textContent = sr.title;
+    const td2 = document.createElement('td');
+    td2.textContent = sr.correct + ' / ' + sr.total;
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('resultsPanel').style.display = 'block';
+  document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function buildReceipt(correct, total, answered){
+  const name = document.getElementById('studentName').value.trim() || '(name not entered)';
+  const section = document.getElementById('studentSection').value.trim() || '(section not entered)';
+  const now = new Date();
+  const usedSeconds = timeStarted ? Math.min(TIME_LIMIT_SECONDS, TIME_LIMIT_SECONDS - remainingSeconds) : 0;
+  const um = Math.floor(usedSeconds / 60);
+  const us = usedSeconds % 60;
+  const pct = ((correct / total) * 100).toFixed(1);
+
+  document.getElementById('rcName').textContent = name;
+  document.getElementById('rcSection').textContent = section;
+  document.getElementById('rcDate').textContent = now.toLocaleString();
+  document.getElementById('rcTimeUsed').textContent = (timeStarted ? (um + 'm ' + us + 's of 60m') : 'timer not started');
+  document.getElementById('rcAnswered').textContent = answered + ' of ' + total;
+  document.getElementById('rcRef').textContent = 'ENS113L-' + now.getTime();
+  document.getElementById('rcScore').textContent = 'Score: ' + correct + ' / ' + total + '  (' + pct + '%)';
+}
+
+function printReceipt(){
+  document.body.classList.add('printing-receipt');
+  window.print();
+}
+
+window.addEventListener('afterprint', function(){
+  document.body.classList.remove('printing-receipt');
+});
+
+function resetExam(){
+  const ok = confirm('Reset the exam? This will clear all answers and restart the timer.');
+  if (!ok) return;
+
+  clearInterval(timerInterval);
+  timeStarted = false;
+  submitted = false;
+  remainingSeconds = TIME_LIMIT_SECONDS;
+  startTimestamp = null;
+
+  enableAllInputs();
+  document.querySelectorAll('#examContainer input[type=radio]').forEach(el => el.checked = false);
+  document.querySelectorAll('.option-label').forEach(el => el.classList.remove('correct', 'incorrect'));
+  document.querySelectorAll('.flag').forEach(el => { el.style.display = 'none'; el.textContent=''; el.className='flag'; });
+  document.querySelectorAll('.question').forEach(el => el.classList.remove('unanswered'));
+
+  const box = document.getElementById('timerBox');
+  box.classList.remove('active', 'warning', 'expired');
+  renderTimerDisplay();
+  document.getElementById('timerStatusNote').textContent = 'not started — begin with Item 1';
+
+  document.getElementById('resultsPanel').style.display = 'none';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderExam();
+  renderTimerDisplay();
+  updateProgress();
+  document.getElementById('submitBtnTop').addEventListener('click', submitExamManual);
+  document.getElementById('submitBtnBottom').addEventListener('click', submitExamManual);
+  document.getElementById('printReceiptBtn').addEventListener('click', printReceipt);
+  document.querySelectorAll('.reset-btn').forEach(btn => btn.addEventListener('click', resetExam));
+});
+</script>
+</body>
+</html>
