@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENS 106 Midterm Examination - Interactive</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px double var(--primary-color);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        header h2 {
+            margin: 5px 0;
+            font-size: 18px;
+            color: var(--secondary-color);
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #eef2f3;
+            border-radius: 8px;
+        }
+
+        .user-info div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .user-info input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #timer-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exam-section {
+            margin-bottom: 40px;
+        }
+
+        .week-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 30px 0 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .question-block:hover {
+            background: #fafafa;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background-color: #e3f2fd;
+            border-color: var(--accent-color);
+        }
+
+        .option-item input {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        #submit-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 40px;
+        }
+
+        #submit-btn:hover {
+            background: #219150;
+        }
+
+        #result-container {
+            display: none;
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            border: 4px solid var(--primary-color);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+        /* Receipt Styles */
+        #receipt {
+            display: none;
+            width: 300px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px dashed #333;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background: #fff;
+        }
+
+        .receipt-header {
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        .print-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receipt, #receipt * {
+                visibility: visible;
+            }
+            #receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                border: none;
+            }
+        }
+
+        .locked {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="timer-container">
+        <span>⏱️</span> <span id="timer">60:00</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Palawan State University</h1>
+            <h2>College of Sciences</h2>
+            <h3>ENS 106 – Environmental Management | Midterm Examination</h3>
+        </header>
+
+        <div class="user-info">
+            <div>
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" placeholder="Full Name">
+            </div>
+            <div>
+                <label for="student-details">Program / Year / Section:</label>
+                <input type="text" id="student-details" placeholder="e.g. BS Env Sci 2-A">
+            </div>
+        </div>
+
+        <form id="exam-form">
+            <div id="questions-container"></div>
+            <button type="button" id="submit-btn" onclick="submitExam()">Submit Examination</button>
+        </form>
+
+        <div id="result-container">
+            <h2>Exam Results</h2>
+            <div class="score-display" id="final-score">0 / 75</div>
+            <p id="score-message"></p>
+
+            <div id="receipt">
+                <div class="receipt-header">
+                    <strong>OFFICIAL EXAM RECEIPT</strong><br>
+                    Palawan State University
+                </div>
+                <div class="receipt-item"><span>Student:</span> <span id="r-name">-</span></div>
+                <div class="receipt-item"><span>Date:</span> <span id="r-date">-</span></div>
+                <div class="receipt-item"><span>Course:</span> <span>ENS 106</span></div>
+                <div class="receipt-item" style="font-weight: bold; font-size: 1.2em; margin-top: 10px;">
+                    <span>FINAL SCORE:</span> <span id="r-score">-</span>
+                </div>
+                <div style="margin-top: 20px; font-size: 0.8em;">*** Verified System Record ***</div>
+            </div>
+            <button class="print-btn" onclick="window.print()">Print Receipt</button>
+        </div>
+    </div>
+
+    <script>
+        const answerKey = {
+            1: 'B', 2: 'C', 3: 'C', 4: 'B', 5: 'C', 6: 'B', 7: 'C', 8: 'B', 9: 'B', 10: 'A',
+            11: 'A', 12: 'B', 13: 'B', 14: 'C', 15: 'C', 16: 'B', 17: 'B', 18: 'B', 19: 'B', 20: 'B',
+            21: 'B', 22: 'C', 23: 'B', 24: 'D', 25: 'C', 26: 'B', 27: 'B', 28: 'B', 29: 'B', 30: 'C',
+            31: 'C', 32: 'D', 33: 'A', 34: 'B', 35: 'C', 36: 'C', 37: 'B', 38: 'B', 39: 'A', 40: 'A',
+            41: 'B', 42: 'C', 43: 'B', 44: 'C', 45: 'B', 46: 'B', 47: 'A', 48: 'B', 49: 'C', 50: 'B',
+            51: 'B', 52: 'B', 53: 'B', 54: 'C', 55: 'C', 56: 'B', 57: 'B', 58: 'A', 59: 'A', 60: 'C',
+            61: 'B', 62: 'B', 63: 'A', 64: 'C', 65: 'C', 66: 'B', 67: 'C', 68: 'B', 69: 'C', 70: 'B',
+            71: 'B', 72: 'B', 73: 'B', 74: 'B', 75: 'A'
+        };
+
+        const questions = [
+            { week: "WEEK 1 • INTRODUCTION TO ENVIRONMENTAL MANAGEMENT", items: [
+                { id: 1, q: "Which statement BEST defines environmental management?", options: ["The study of organisms and their interactions with nature", "The deliberate planning, direction, and control of human interactions with the environment", "The measurement of physical and chemical properties of ecosystems", "The preservation of natural areas without human intervention"] },
+                { id: 2, q: "Which situation BEST illustrates the difference between environmental science and environmental management?", options: ["A student identifies species in a forest using a field guide.", "A researcher measures dissolved oxygen in a river.", "An environmental agency uses pollution data to establish and enforce a river protection program.", "A biologist studies the feeding behavior of a fish species."] },
+                { id: 3, q: "Why is environmental management inherently interdisciplinary?", options: ["Environmental problems are limited to biological processes.", "Environmental decisions require only scientific measurements.", "Environmental problems involve ecological, social, economic, legal, and institutional dimensions.", "Environmental management replaces the natural sciences with social sciences."] },
+                { id: 4, q: "A forest is cleared for agriculture. Several months later, increased sediment reaches a nearby river, affecting downstream fisheries. Which concept BEST explains this situation?", options: ["Single-resource management", "Systems thinking", "End-of-pipe control", "Voluntary management"] },
+                { id: 5, q: "Which of the following is an example of a provisioning ecosystem service?", options: ["Flood regulation", "Recreation", "Timber production", "Nutrient cycling"] },
+                { id: 6, q: "Which ecosystem service category includes climate regulation, flood control, and water purification?", options: ["Provisioning", "Regulating", "Supporting", "Cultural"] },
+                { id: 7, q: "Pollination, soil formation, and nutrient cycling are classified as:", options: ["Provisioning services", "Regulating services", "Supporting services", "Cultural services"] },
+                { id: 8, q: "Which activity falls MOST directly within the scope of environmental management?", options: ["Describing the anatomy of a newly discovered species", "Developing and enforcing a watershed protection program", "Classifying rocks according to mineral composition", "Determining the evolutionary history of a species"] },
+            ]},
+            { week: "WEEK 2 • ENVIRONMENTAL PROBLEMS: GLOBAL, PHILIPPINE, AND PALAWAN CONTEXTS", items: [
+                { id: 9, q: "Which of the following is identified in the course material as a major global environmental problem?", options: ["Declining demand for natural resources", "Biodiversity loss", "Decreasing greenhouse gas concentrations", "Increasing global forest cover"] },
+                { id: 10, q: "Biodiversity loss is primarily driven by a combination of:", options: ["Habitat destruction, overexploitation, pollution, climate change, and invasive species", "Natural selection, succession, and ecological recovery", "Soil formation and nutrient cycling", "Protected-area establishment and habitat restoration"] },
+                { id: 11, q: "Which environmental problem is particularly associated with the Philippines' high exposure to typhoons, floods, and landslides?", options: ["Environmental degradation can worsen the impacts of natural hazards.", "Natural hazards eliminate the need for environmental management.", "Natural hazards occur only because of biodiversity loss.", "Environmental degradation prevents flooding."] },
+                { id: 12, q: "Which is an environmental pressure specifically identified for Palawan?", options: ["Extensive industrialization throughout the province", "Rapid tourism growth in areas such as El Nido and Coron", "Complete loss of forest cover", "Absence of fishing pressure"] },
+                { id: 13, q: "A fisherman uses dynamite to catch fish, directly damaging coral reefs. The dynamite fishing is the:", options: ["Underlying cause", "Proximate cause", "Institutional cause", "Structural solution"] },
+                { id: 14, q: "Which of the following is an underlying cause of environmental degradation?", options: ["Forest clearing", "Dynamite fishing", "Weak law enforcement", "Coral reef destruction"] },
+                { id: 15, q: "An upland community continues illegal forest clearing because residents lack viable alternative sources of income. Which response BEST addresses the underlying cause?", options: ["Arrest every individual involved and end the program there.", "Remove all residents from the area immediately.", "Combine enforcement with livelihood and community development interventions.", "Ignore the forest clearing until economic conditions improve."] },
+                { id: 16, q: "Why is distinguishing proximate and underlying causes important in environmental management?", options: ["It allows managers to focus exclusively on visible environmental damage.", "It helps identify both immediate actions and deeper social, economic, and institutional drivers.", "It eliminates the need for environmental law enforcement.", "It ensures that environmental problems are treated only as scientific problems."] },
+                { id: 17, q: "Southern Palawan experiences watershed degradation associated with mining. Which statement BEST demonstrates systems thinking in addressing the problem?", options: ["Focus exclusively on the mining site's vegetation.", "Consider mining activity together with employment needs, mineral demand, watershed impacts, and environmental safeguards.", "Stop all economic activities in southern Palawan.", "Study only the mineral deposits being extracted."] },
+            ]},
+            { week: "WEEK 3 • HISTORY AND APPROACHES TO ENVIRONMENTAL MANAGEMENT", items: [
+                { id: 18, q: "Which event is widely regarded in the course material as the birth of modern global environmental governance?", options: ["Rio Earth Summit, 1992", "Stockholm Conference, 1972", "Paris Agreement, 2015", "Earth Day, 1970"] },
+                { id: 19, q: "What major international environmental institution emerged from the 1972 Stockholm Conference?", options: ["UNESCO", "UNEP", "IPCC", "NEDA"] },
+                { id: 20, q: "The 1987 Brundtland Commission report is particularly associated with the popularization of:", options: ["Environmental Impact Assessment", "Sustainable development", "Marine Protected Areas", "Community-Based Forest Management"] },
+                { id: 21, q: "Which international event produced Agenda 21 and major agreements concerning climate change and biodiversity?", options: ["Stockholm Conference", "Rio Earth Summit", "Earth Day", "Paris Climate Conference"] },
+                { id: 22, q: "Which approach uses legally binding standards, permits, and penalties?", options: ["Voluntary approach", "Market-based approach", "Command-and-control approach", "Adaptive approach"] },
+                { id: 23, q: "A government imposes a tax on pollution to encourage firms to reduce emissions. This is an example of:", options: ["Command-and-control regulation", "Market-based environmental management", "Voluntary self-regulation", "Community-based management"] },
+                { id: 24, q: "Which is an example of a voluntary environmental management approach?", options: ["Maximum legally permitted discharge standard", "Pollution tax", "Tradable emissions permit", "Corporate environmental management system"] },
+                { id: 25, q: "One weakness of purely voluntary environmental approaches is that:", options: ["they cannot encourage innovation", "they always exceed legal requirements", "they have no binding force and may experience free-rider problems", "they necessarily impose high government enforcement costs"] },
+                { id: 26, q: "A factory redesigns its production process so that less hazardous waste is generated instead of treating the waste after production. This represents:", options: ["End-of-pipe management", "Cleaner production", "Command-and-control regulation", "Environmental remediation"] },
+            ]},
+            { week: "WEEK 4 • SUSTAINABLE DEVELOPMENT AND THE SDGs", items: [
+                { id: 27, q: "Sustainable development is BEST described as development that:", options: ["maximizes present economic growth regardless of environmental consequences", "meets present needs without compromising the ability of future generations to meet their needs", "prevents all forms of economic development", "gives environmental protection priority over all social concerns"] },
+                { id: 28, q: "Which three dimensions constitute the traditional three pillars of sustainability?", options: ["Political, cultural, and technological", "Environmental, economic, and social", "Scientific, legal, and institutional", "Local, national, and global"] },
+                { id: 29, q: "The principle of fairness between present and future generations is called:", options: ["Ecological succession", "Intergenerational equity", "Environmental compliance", "Polluter pays"] },
+                { id: 30, q: "In the nested-layers model of sustainability presented in the course, the economy operates:", options: ["independently of society and nature", "outside the social system", "within society, which operates within and depends on the natural environment", "above the environmental system without dependence on it"] },
+                { id: 31, q: "How many Sustainable Development Goals were adopted under the UN 2030 Agenda?", options: ["8", "15", "17", "21"] },
+                { id: 32, q: "Which SDG focuses specifically on climate action?", options: ["SDG 6", "SDG 11", "SDG 12", "SDG 13"] },
+                { id: 33, q: "A university establishes a program to reduce waste generation and promote responsible consumption among students and staff. Which SDG is MOST directly associated with this initiative?", options: ["SDG 12", "SDG 14", "SDG 15", "SDG 16"] },
+                { id: 34, q: "Which Philippine institution is identified in the course as coordinating the integration of SDGs into national planning through the Philippine Development Plan?", options: ["DENR", "NEDA", "PCSD", "EMB"] },
+                { id: 35, q: "An organization advertises a project as “100% sustainable” while making no substantive changes to its environmentally damaging practices. This is an example of:", options: ["Adaptive management", "Environmental stewardship", "Greenwashing", "Intergenerational equity"] },
+            ]},
+            { week: "WEEK 5 • ECOLOGICAL PRINCIPLES, CARRYING CAPACITY, AND ENVIRONMENTAL ETHICS", items: [
+                { id: 36, q: "Which of the following is an abiotic component of an ecosystem?", options: ["Fish", "Trees", "Soil", "Bacteria"] },
+                { id: 37, q: "Why is systems thinking particularly important when managing ecosystems?", options: ["Ecosystem components operate independently.", "Changes in one component can produce effects throughout interconnected ecological relationships.", "Ecosystems respond only to human activities.", "Ecosystem processes can always be isolated for management."] },
+                { id: 38, q: "Carrying capacity refers to:", options: ["the total number of species found in an ecosystem", "the maximum population or level of resource use an environment can sustainably support", "the maximum amount of economic development permitted by law", "the total quantity of natural resources in a country"] },
+                { id: 39, q: "A tourist destination begins experiencing coral damage because visitor numbers exceed the ecosystem's ability to absorb tourism pressure. Which concept is MOST directly applicable?", options: ["Carrying capacity", "Biodiversity index", "Market failure", "Environmental compliance"] },
+                { id: 40, q: "Which factor can influence environmental carrying capacity?", options: ["Resource availability and patterns of consumption", "Political boundaries only", "Number of environmental laws alone", "Tourism advertisements alone"] },
+                { id: 41, q: "The largest catch or harvest that can be taken from a resource indefinitely without depleting it is called:", options: ["Carrying capacity", "Maximum sustainable yield", "Ecological footprint", "Resource threshold"] },
+                { id: 42, q: "Which ethical position considers nature valuable primarily because of its usefulness to humans?", options: ["Biocentrism", "Ecocentrism", "Anthropocentrism", "Ecosystem ethics"] },
+                { id: 43, q: "A decision-maker argues that an individual animal deserves moral consideration regardless of its usefulness to humans. This position is most consistent with:", options: ["Anthropocentrism", "Biocentrism", "Ecocentrism", "Utilitarian resource management"] },
+                { id: 44, q: "Which ethical position extends moral consideration to whole ecological systems, including species, habitats, and ecological processes?", options: ["Anthropocentrism", "Biocentrism", "Ecocentrism", "Economic instrumentalism"] },
+            ]},
+            { week: "WEEK 6 • FOREST AND TERRESTRIAL RESOURCE MANAGEMENT", items: [
+                { id: 45, q: "Which of the following is an important ecosystem function or service provided by forests?", options: ["Increasing soil erosion", "Watershed protection", "Increasing habitat fragmentation", "Reducing carbon storage"] },
+                { id: 46, q: "Sustainable forest management seeks to ensure that:", options: ["all forest resources are harvested as quickly as possible", "harvesting remains within the forest's regeneration limits", "communities are excluded from forest management", "forest conversion is maximized"] },
+                { id: 47, q: "Which approach formally gives local communities stewardship responsibilities over forest areas?", options: ["Community-Based Forest Management", "End-of-pipe management", "Command-and-control forestry", "Centralized industrial forestry"] },
+                { id: 48, q: "Which law established the National Integrated Protected Areas System?", options: ["RA 7611", "RA 7586", "RA 9003", "RA 8749"] },
+                { id: 49, q: "The NIPAS Act was amended and expanded by:", options: ["RA 10121", "RA 9275", "RA 11038", "RA 9729"] },
+                { id: 50, q: "Which body is responsible for shared governance of an individual protected area under the NIPAS framework?", options: ["Palawan Council for Sustainable Development", "Protected Area Management Board", "Environmental Management Bureau", "National Economic and Development Authority"] },
+                { id: 51, q: "A PAMB is described in the course as a:", options: ["single-agency technical committee", "multi-sectoral body involving government and community stakeholders", "private-sector tourism organization", "judicial body responsible for environmental cases"] },
+                { id: 52, q: "Which law establishes Palawan's Strategic Environmental Plan?", options: ["RA 7586", "RA 7611", "RA 8550", "PD 1586"] },
+                { id: 53, q: "The central zoning framework of the Strategic Environmental Plan is:", options: ["EIA", "ECAN", "NIPAS", "ICM"] },
+                { id: 54, q: "Under ECAN zoning, which zone is intended for the strictest protection?", options: ["Multiple-use zone", "Buffer zone", "Core zone", "Development zone"] },
+                { id: 55, q: "Which institution implements the Strategic Environmental Plan for Palawan and has authority to issue SEP Clearances?", options: ["DENR-EMB", "PAMB", "PCSD", "NEDA"] },
+            ]},
+            { week: "WEEK 7 • COASTAL, MARINE, AND FRESHWATER RESOURCE MANAGEMENT", items: [
+                { id: 56, q: "Which three ecosystems are described as closely connected and highly productive coastal ecosystems?", options: ["Grasslands, deserts, and forests", "Coral reefs, seagrass beds, and mangroves", "Rivers, mountains, and grasslands", "Wetlands, deserts, and tundra"] },
+                { id: 57, q: "Mangrove ecosystems are particularly important because they:", options: ["increase coastal erosion", "buffer coastlines against storms and erosion and store carbon", "eliminate the need for fisheries management", "prevent all forms of coastal development"] },
+                { id: 58, q: "Carbon captured and stored by coastal and marine ecosystems such as mangroves and seagrasses is commonly referred to as:", options: ["Green carbon", "Blue carbon", "Black carbon", "Geological carbon"] },
+                { id: 59, q: "Which activity directly damages coral reef structure?", options: ["Dynamite fishing", "Mangrove restoration", "Seagrass conservation", "Reef monitoring"] },
+                { id: 60, q: "Which is an example of land-based pollution affecting coastal ecosystems?", options: ["Sediment and nutrients entering coastal waters", "Coral spawning", "Fish migration", "Natural tidal movement"] },
+                { id: 61, q: "Under the Philippine coastal resource management framework discussed in the course, municipal governments have jurisdiction over municipal waters extending:", options: ["5 km from shore", "10 km from shore", "15 km from shore", "25 km from shore"] },
+                { id: 62, q: "The primary purpose of a no-take Marine Protected Area is to:", options: ["maximize fishing effort", "allow fish populations and habitats to recover", "increase coastal construction", "eliminate all community involvement"] },
+                { id: 63, q: "Why can a network of MPAs be more effective than a single isolated MPA?", options: ["Networks eliminate the need for enforcement.", "Networks can provide broader ecological connectivity for wide-ranging or migratory species.", "Networks prohibit all coastal activities.", "Networks are designed only for tourism."] },
+                { id: 64, q: "Integrated Coastal Management differs from single-sector management because ICM:", options: ["treats land and sea as interconnected components of one management system", "focuses exclusively on fishing", "excludes land-use planning", "considers only marine biodiversity"] },
+                { id: 65, q: "Upland deforestation can contribute to downstream flooding and water-quality problems primarily because it:", options: ["increases infiltration and decreases sediment loads", "reduces erosion and sediment transport", "reduces water infiltration and increases sediment loads", "eliminates surface runoff"] },
+            ]},
+            { week: "WEEK 8 • ENVIRONMENTAL IMPACT ASSESSMENT AND THE PHILIPPINE EIS SYSTEM", items: [
+                { id: 66, q: "Environmental Impact Assessment is primarily a tool for:", options: ["repairing environmental damage after a project is completed", "predicting, evaluating, and mitigating environmental effects before project implementation", "measuring only economic impacts", "replacing environmental legislation"] },
+                { id: 67, q: "The Philippine Environmental Impact Statement System was established under:", options: ["RA 7611", "RA 7586", "PD 1586", "RA 9003"] },
+                { id: 68, q: "Which agency implements the Philippine EIS System through the Environmental Management Bureau?", options: ["Department of Agriculture", "Department of Environment and Natural Resources", "Department of Tourism", "Department of the Interior and Local Government"] },
+                { id: 69, q: "The first major step in the EIA process is:", options: ["Review", "Monitoring", "Screening", "Decision"] },
+                { id: 70, q: "What is the primary purpose of EIA screening?", options: ["To determine which environmental impacts should be studied in depth", "To determine whether the project is environmentally critical or located in an environmentally critical area", "To issue an ECC immediately", "To conduct post-project monitoring"] },
+                { id: 71, q: "During EIA scoping, the major objective is to:", options: ["determine the project's profitability", "define which environmental impacts the assessment should investigate in depth", "issue a Certificate of Non-Coverage", "monitor the project after construction"] },
+                { id: 72, q: "Which assessment document is generally described in the course as a simpler assessment for less complex, non-critical projects?", options: ["Environmental Impact Statement", "Initial Environmental Examination", "Environmental Compliance Certificate", "Environmental Monitoring Plan"] },
+                { id: 73, q: "Which document represents the full assessment study required for environmentally critical projects?", options: ["IEE", "EIS", "CNC", "SEP"] },
+                { id: 74, q: "Which instrument is issued by DENR-EMB to approve a project to proceed subject to environmental conditions?", options: ["ECAN", "ECC", "PAMB", "CNC"] },
+                { id: 75, q: "Which statement BEST explains why public participation is important in the Philippine EIA process?", options: ["It allows affected communities and LGUs to raise concerns before an environmental decision is made.", "It transfers all regulatory authority from DENR to local communities.", "It guarantees that every proposed project will be approved.", "It eliminates the need for technical environmental assessment."] },
+            ]}
+        ];
+
+        function renderExam() {
+            const container = document.getElementById('questions-container');
+            let html = '';
+
+            questions.forEach(section => {
+                html += `<div class="week-header">${section.week}</div>`;
+                section.items.forEach(item => {
+                    html += `
+                        <div class="question-block" id="q-block-${item.id}">
+                            <span class="question-text">${item.id}. ${item.q}</span>
+                            <div class="options-grid">
+                                ${item.options.map((opt, idx) => {
+                                    const letter = String.fromCharCode(65 + idx);
+                                    return `
+                                        <label class="option-item">
+                                            <input type="radio" name="q${item.id}" value="${letter}">
+                                            ${letter}. ${opt}
+                                        </label>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+
+        function startTimer() {
+            let time = 60 * 60;
+            const timerEl = document.getElementById('timer');
+
+            const interval = setInterval(() => {
+                const mins = Math.floor(time / 60);
+                const secs = time % 60;
+                timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                if (time <= 0) {
+                    clearInterval(interval);
+                    submitExam(true);
+                }
+                time--;
+            }, 1000);
+        }
+
+        function submitExam(autoLock = false) {
+            const name = document.getElementById('student-name').value || "Anonymous Student";
+            const details = document.getElementById('student-details').value || "Not Provided";
+
+            let score = 0;
+            const total = 75;
+
+            for (let i = 1; i <= total; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === answerKey[i]) {
+                    score++;
+                }
+            }
+
+            // Lock Exam
+            document.getElementById('exam-form').classList.add('locked');
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('timer-container').style.display = 'none';
+
+            // Results
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('final-score').textContent = `${score} / ${total}`;
+
+            const percentage = (score / total) * 100;
+            let message = "";
+            if (percentage >= 75) message = "Excellent work! You have a strong grasp of Environmental Management.";
+            else if (percentage >= 50) message = "Good effort. You've passed the midterm.";
+            else message = "You may need to review the course materials for these weeks.";
+
+            document.getElementById('score-message').textContent = message;
+
+            // Receipt
+            document.getElementById('receipt').style.display = 'block';
+            document.getElementById('r-name').textContent = name;
+            document.getElementById('r-date').textContent = new Date().toLocaleDateString();
+            document.getElementById('r-score').textContent = `${score} / ${total}`;
+
+            window.scrollTo({ top: document.getElementById('result-container').offsetTop, behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            renderExam();
+            startTimer();
+        };
+    </script>
+</body>
+</html>

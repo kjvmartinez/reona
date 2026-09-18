@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earth Science 1/1L — Midterm Examination | Palawan State University</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  /* Palette drawn from topographic sheets: limestone paper, contour brown, survey blue */
+  --paper:#F1F3F1;
+  --card:#FBFCFB;
+  --ink:#16242B;
+  --ink-soft:#4A5C63;
+  --ink-faint:#84969C;
+  --contour:#8C6D46;
+  --survey:#2E6A7D;
+  --survey-tint:#E4EDF0;
+  --alarm:#9B3B26;
+  --rule:#D3DAD7;
+  --ok:#2F6B4F;
+
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1.25rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.01em;margin:0}
+a{color:var(--survey)}
+:focus-visible{outline:3px solid var(--survey);outline-offset:3px;border-radius:2px}
+.hidden{display:none !important}
+
+/* ---------- Start screen ---------- */
+.gate{padding:3rem 0 4rem}
+.seal{font-family:var(--serif);font-size:.95rem;color:var(--ink-soft);line-height:1.4;margin-bottom:1.75rem}
+.seal strong{display:block;font-size:1.1rem;color:var(--ink);letter-spacing:.06em;font-weight:600}
+.gate h1{font-size:2.15rem;line-height:1.15;margin-bottom:.4rem}
+.gate .sub{font-size:1.05rem;color:var(--ink-soft);margin-bottom:2rem}
+.gate .sub em{font-style:normal;color:var(--contour)}
+
+.field{margin-bottom:1.15rem}
+.field label{display:block;font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem}
+.field input{
+  width:100%;padding:.7rem .8rem;font:inherit;color:var(--ink);
+  background:var(--card);border:1px solid var(--rule);border-radius:3px;
+}
+.field input:focus{border-color:var(--survey)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.brief{border-top:1px solid var(--rule);margin-top:2rem;padding-top:1.25rem}
+.brief dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.25rem;margin:0;font-size:.95rem}
+.brief dt{color:var(--ink-soft)}
+.brief dd{margin:0}
+.rules{font-size:.95rem;color:var(--ink-soft);margin:1.25rem 0 0;padding-left:1.1rem}
+.rules li{margin-bottom:.35rem}
+
+.btn{
+  font:inherit;font-weight:600;cursor:pointer;
+  background:var(--survey);color:#fff;border:1px solid var(--survey);
+  padding:.7rem 1.4rem;border-radius:3px;
+}
+.btn:hover{background:#255A6B}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--survey)}
+.btn.ghost:hover{background:var(--survey-tint)}
+.btn.warn{background:var(--alarm);border-color:var(--alarm)}
+.btn.warn:hover{background:#82311F}
+.start-row{margin-top:1.75rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.note{font-size:.88rem;color:var(--ink-soft)}
+
+/* ---------- Timer bar (the one loud element) ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;background:var(--card);
+  border-bottom:1px solid var(--rule);
+}
+.core{height:6px;background:var(--rule);position:relative;overflow:hidden}
+.core span{
+  display:block;height:100%;width:100%;transform-origin:left center;
+  background:linear-gradient(90deg,var(--survey),#4E8FA1);
+}
+.core.low span{background:linear-gradient(90deg,var(--alarm),#C2603F)}
+.topbar .inner{
+  max-width:46rem;margin:0 auto;padding:.55rem 1.25rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.clock{font-family:var(--mono);font-size:1.5rem;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1}
+.clock.low{color:var(--alarm)}
+.clock-label{font-size:.78rem;color:var(--ink-soft);line-height:1.2}
+.tally{margin-left:auto;font-size:.88rem;color:var(--ink-soft);text-align:right}
+.tally b{color:var(--ink);font-weight:600}
+
+/* ---------- Exam body ---------- */
+.exam{padding:1.5rem 0 6rem}
+.partmark{margin:2.75rem 0 1.5rem;padding-top:1rem;border-top:2px solid var(--contour)}
+.partmark:first-child{margin-top:.5rem;border-top:0;padding-top:0}
+.partmark h2{font-size:1.4rem}
+.partmark p{margin:.3rem 0 0;font-size:.92rem;color:var(--ink-soft)}
+
+.q{
+  background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:1.1rem 1.15rem 1.15rem 1.15rem;margin-bottom:.85rem;
+  scroll-margin-top:5.5rem;
+}
+.q.answered{border-left:3px solid var(--survey);padding-left:calc(1.15rem - 2px)}
+.q.flagged{border-left:3px solid var(--contour);padding-left:calc(1.15rem - 2px)}
+.qhead{display:flex;gap:.7rem;align-items:baseline}
+.qnum{font-family:var(--mono);font-size:.95rem;color:var(--ink-soft);min-width:1.9rem}
+.qtext{margin:0;flex:1}
+.opts{list-style:none;margin:.85rem 0 0;padding:0}
+.opts li{margin:0 0 .3rem}
+.opt{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem .55rem;border-radius:3px;cursor:pointer}
+.opt:hover{background:var(--survey-tint)}
+.opt input{margin:.35rem 0 0;accent-color:var(--survey);flex:none}
+.opt .ltr{font-family:var(--mono);color:var(--ink-soft);flex:none}
+.opt input:checked ~ .ltr{color:var(--survey);font-weight:700}
+.qfoot{margin-top:.6rem;display:flex;gap:.9rem;align-items:center}
+.flagbtn{font:inherit;font-size:.85rem;background:none;border:0;color:var(--ink-soft);cursor:pointer;padding:.15rem .25rem;border-radius:3px}
+.flagbtn:hover{color:var(--contour)}
+.flagbtn.on{color:var(--contour);font-weight:600}
+
+.finish{margin-top:2.5rem;border-top:2px solid var(--contour);padding-top:1.5rem}
+.finish h2{font-size:1.25rem;margin-bottom:.4rem}
+.finish p{color:var(--ink-soft);font-size:.95rem;margin:.3rem 0 1.1rem}
+
+/* ---------- Toast / warnings ---------- */
+.toast{
+  position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.7rem 1.1rem;border-radius:4px;
+  font-size:.95rem;z-index:80;max-width:min(30rem,90vw);box-shadow:0 6px 24px rgba(22,36,43,.28)
+}
+.toast.alarm{background:var(--alarm)}
+
+/* ---------- Result + receipt ---------- */
+.result{padding:2.5rem 0 5rem}
+.receipt{
+  background:#fff;border:1px solid var(--rule);border-radius:3px;
+  padding:2rem 1.9rem;
+}
+.rhead{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:.9rem;margin-bottom:1.25rem}
+.rhead .rep{font-family:var(--serif);font-size:.88rem;color:var(--ink-soft)}
+.rhead .uni{font-family:var(--serif);font-size:1.35rem;letter-spacing:.07em;margin:.15rem 0}
+.rhead .col{font-size:.9rem;color:var(--ink-soft)}
+.rhead .doc{font-family:var(--serif);font-size:1.05rem;margin-top:.7rem}
+
+.scoreline{display:flex;align-items:flex-end;gap:1.1rem;margin:1.4rem 0 1.2rem;flex-wrap:wrap}
+.bigscore{font-family:var(--serif);font-size:3.4rem;line-height:.9;letter-spacing:-.02em}
+.bigscore small{font-size:1.4rem;color:var(--ink-soft)}
+.pct{font-family:var(--mono);font-size:1.05rem;color:var(--ink-soft);padding-bottom:.35rem}
+.verdict{margin-left:auto;padding:.3rem .7rem;border:1px solid var(--rule);border-radius:3px;font-size:.9rem;padding-bottom:.35rem}
+.verdict.pass{color:var(--ok);border-color:var(--ok)}
+.verdict.fail{color:var(--alarm);border-color:var(--alarm)}
+
+table.data{width:100%;border-collapse:collapse;font-size:.93rem;margin:.6rem 0 1.4rem}
+table.data th,table.data td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--rule)}
+table.data th{font-weight:600;color:var(--ink-soft);font-size:.85rem}
+table.data td.n,table.data th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.bar{display:block;height:5px;background:var(--rule);border-radius:2px;overflow:hidden;margin-top:.3rem}
+.bar i{display:block;height:100%;background:var(--survey)}
+
+.meta{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.25rem;font-size:.95rem;margin:0 0 1.3rem}
+.meta dt{color:var(--ink-soft)}
+.meta dd{margin:0}
+.sig{margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;font-size:.88rem;color:var(--ink-soft)}
+.sig div{border-top:1px solid var(--ink);padding-top:.35rem}
+.code{font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);margin-top:1.4rem;border-top:1px dashed var(--rule);padding-top:.7rem}
+
+.review{margin-top:2.5rem}
+.review h2{font-size:1.2rem;margin-bottom:.8rem}
+.item{border-left:3px solid var(--ok);background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--ok);padding:.8rem 1rem;margin-bottom:.6rem;border-radius:3px}
+.item.wrong{border-left-color:var(--alarm)}
+.item .qh{font-size:.95rem}
+.item .ans{font-size:.9rem;color:var(--ink-soft);margin-top:.45rem}
+.item .ans b{color:var(--ink);font-weight:600}
+.actions{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.6rem 0}
+
+/* ---------- Instructor reset ---------- */
+.resetbar{max-width:46rem;margin:0 auto;padding:1.5rem 1.25rem 3rem;border-top:1px solid var(--rule);margin-top:2rem}
+.resetbar .open{font:inherit;font-size:.85rem;background:none;border:0;padding:0;color:var(--ink-soft);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.resetbar .open:hover{color:var(--alarm)}
+.resetpanel{margin-top:.9rem;background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1rem}
+.resetpanel p{margin:0 0 .8rem;font-size:.9rem;color:var(--ink-soft)}
+.resetpanel .line{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.resetpanel input{padding:.55rem .7rem;font:inherit;border:1px solid var(--rule);border-radius:3px;background:#fff;color:var(--ink);min-width:12rem}
+.resetpanel input:focus{border-color:var(--survey)}
+
+@media (max-width:540px){
+  body{font-size:16px}
+  .row2{grid-template-columns:1fr}
+  .gate h1{font-size:1.8rem}
+  .bigscore{font-size:2.8rem}
+  .receipt{padding:1.3rem 1.1rem}
+  .sig{grid-template-columns:1fr;gap:1.6rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+
+/* ---------- Print: receipt only ---------- */
+@media print{
+  body{background:#fff;font-size:11.5pt}
+  .topbar,.gate,.exam,.review,.actions,.toast,.noprint{display:none !important}
+  .result{padding:0}
+  .wrap{max-width:none;padding:0}
+  .receipt{border:0;padding:0}
+  .bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.data{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== START SCREEN ========== -->
+<main id="gate" class="wrap gate">
+  <div class="seal">
+    Republic of the Philippines<br>
+    <strong>PALAWAN STATE UNIVERSITY</strong>
+    College of Sciences — BS Environmental Science Program
+  </div>
+
+  <h1>Earth Science 1 / 1L<br>Midterm Examination</h1>
+  <p class="sub">Geology and Geography · 1st Semester, A.Y. 2026&ndash;2027</p>
+
+  <div class="field">
+    <label for="f-name">Full name</label>
+    <input id="f-name" type="text" autocomplete="off" spellcheck="false" placeholder="Surname, First Name M.I.">
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label for="f-sec">Year &amp; section</label>
+      <input id="f-sec" type="text" autocomplete="off" placeholder="e.g. BS ES 1-A">
+    </div>
+    <div class="field">
+      <label for="f-id">Student number <span class="note">(optional)</span></label>
+      <input id="f-id" type="text" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="brief">
+    <dl>
+      <dt>Items</dt><dd id="g-items">75 multiple choice, 1 point each</dd>
+      <dt>Time</dt><dd id="g-time">60 minutes</dd>
+      <dt>Coverage</dt><dd>Minerals and rocks · Earthquakes and seismology · Volcanism · Topographic maps</dd>
+    </dl>
+    <ol class="rules">
+      <li>Read each item carefully and choose the best answer among the four options.</li>
+      <li>The clock starts the moment you open the exam and does not pause. When it reaches zero the exam submits itself and locks.</li>
+      <li>Your answers are saved in this browser as you go, so a refresh or a lost connection will not erase them &mdash; but it will not give back time either.</li>
+      <li>Electronic devices and reference materials are not allowed unless your proctor says otherwise.</li>
+      <li id="rule-attempt">You may take this exam once on this device.</li>
+    </ol>
+  </div>
+
+  <div class="start-row">
+    <button id="btn-start" class="btn">Start the exam</button>
+    <span class="note">Enter your name and section to begin.</span>
+  </div>
+</main>
+
+<!-- ========== EXAM ========== -->
+<div id="topbar" class="topbar hidden">
+  <div class="core" id="core"><span id="core-fill"></span></div>
+  <div class="inner">
+    <div>
+      <div class="clock" id="clock">60:00</div>
+      <div class="clock-label" id="clock-label">time remaining</div>
+    </div>
+    <div class="tally">
+      <b id="tally-num">0</b> of <span id="tally-den">75</span> answered<br>
+      <span id="tally-flag"></span>
+    </div>
+  </div>
+</div>
+
+<main id="exam" class="wrap exam hidden">
+  <div id="questions"></div>
+  <section class="finish">
+    <h2>Finished early?</h2>
+    <p id="finish-note">Check your unanswered items before you submit. Submitting ends the exam and cannot be undone.</p>
+    <button id="btn-blank" class="btn ghost hidden">Go to first blank item</button>
+    <button id="btn-submit" class="btn">Submit my answers</button>
+  </section>
+</main>
+
+<!-- ========== RESULT / RECEIPT ========== -->
+<main id="result" class="wrap result hidden">
+  <div class="receipt" id="receipt">
+    <div class="rhead">
+      <div class="rep">Republic of the Philippines</div>
+      <div class="uni">PALAWAN STATE UNIVERSITY</div>
+      <div class="col">College of Sciences — BS Environmental Science Program</div>
+      <div class="doc">Earth Science 1 / 1L — Midterm Examination<br>Record of Examination Result</div>
+    </div>
+
+    <dl class="meta" id="r-meta"></dl>
+
+    <div class="scoreline">
+      <div class="bigscore" id="r-score">0<small>/75</small></div>
+      <div class="pct" id="r-pct">0%</div>
+      <div class="verdict" id="r-verdict">—</div>
+    </div>
+
+    <table class="data" id="r-co">
+      <thead><tr><th>Course outcome</th><th class="n">Score</th><th class="n">%</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <table class="data" id="r-bloom">
+      <thead><tr><th>Cognitive level</th><th class="n">Score</th><th class="n">%</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="sig">
+      <div>Student's signature over printed name</div>
+      <div>PROF. RONALD EDILBERTO A. ONA, PhD<br>Course Instructor</div>
+    </div>
+
+    <div class="code" id="r-code"></div>
+  </div>
+
+  <div class="actions noprint">
+    <button id="btn-print" class="btn">Print this receipt</button>
+    <button id="btn-review" class="btn ghost">Show item review</button>
+  </div>
+
+  <section class="review hidden" id="review">
+    <h2>Item review</h2>
+    <div id="review-list"></div>
+  </section>
+</main>
+
+<footer id="resetbar" class="resetbar noprint hidden">
+  <button type="button" id="btn-reset" class="open">Instructor: reset this device</button>
+  <div id="resetpanel" class="resetpanel hidden">
+    <p>Clears the saved attempt on this browser only &mdash; answers, clock and result &mdash; so the exam can be taken again here. Other devices are unaffected.</p>
+    <div class="line">
+      <label class="note" for="f-reset">Instructor passcode</label>
+      <input id="f-reset" type="password" autocomplete="off">
+      <button type="button" id="btn-reset-go" class="btn warn">Clear this attempt</button>
+      <button type="button" id="btn-reset-cancel" class="btn ghost">Cancel</button>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   Earth Science 1/1L — Midterm Examination (online version)
+   Palawan State University · College of Sciences · BS Environmental Science
+   Prepared for: Prof. Ronald Edilberto A. Ona, PhD
+
+   ------------------- SETTINGS YOU CAN EDIT -------------------------- */
+const CONFIG = {
+  TIME_LIMIT_MIN : 60,      // exam duration in minutes
+  ONE_ATTEMPT    : true,    // true = this browser may not retake the exam
+  REVEAL_ANSWERS : false,   // true = students see correct answers in the review
+  SHOW_REVIEW    : true,    // false = hide the item review entirely
+  SHUFFLE_ITEMS  : false,   // true = shuffle items within each part
+  SHUFFLE_OPTIONS: false,   // true = shuffle the four options of each item
+  PASSING_PCT    : 60,      // passing mark shown on the receipt
+  WARN_AT_MIN    : [10, 5, 1], // on-screen warnings, in minutes remaining
+  STORAGE_KEY    : "psu-es1-midterm-2026-1s", // change this to reset every device at once
+  RESET_CODE     : "palawan2026", // passcode for the reset button. "" = no passcode (not recommended)
+  SHOW_RESET     : true     // false = hide the reset button entirely
+};
+/* =================================================================== */
+
+/* Blueprint: matches the Table of Specifications exactly.
+   Item ranges are inclusive. */
+const PARTS = [
+  {n:"Part I",  title:"Minerals and Rocks",       co:"CO1", from:1,  to:19,
+   outcome:"Identify and classify common minerals and rocks based on their physical/diagnostic properties and formation processes within the rock cycle."},
+  {n:"Part II", title:"Earthquakes and Seismology", co:"CO2", from:20, to:38,
+   outcome:"Explain the mechanisms of earthquake generation, locate epicenters using seismic data, and evaluate structural and community resilience measures under Philippine seismic hazard standards."},
+  {n:"Part III",title:"Volcanism",                 co:"CO3", from:39, to:57,
+   outcome:"Describe volcanic processes, classify volcano types and eruption styles, and assess associated hazards and disaster risk reduction measures."},
+  {n:"Part IV", title:"Topographic Maps",          co:"CO4", from:58, to:75,
+   outcome:"Construct, read, and interpret topographic maps to analyze landform characteristics and terrain features."}
+];
+
+const BLOOM_RANGES = [
+  ["Remembering",1,3],["Understanding",4,8],["Applying",9,14],["Analyzing",15,17],["Evaluating",18,19],
+  ["Remembering",20,22],["Understanding",23,27],["Applying",28,33],["Analyzing",34,36],["Evaluating",37,38],
+  ["Remembering",39,41],["Understanding",42,46],["Applying",47,52],["Analyzing",53,55],["Evaluating",56,57],
+  ["Remembering",58,60],["Understanding",61,64],["Applying",65,70],["Analyzing",71,73],["Evaluating",74,75]
+];
+
+/* Answer key, items 1-75, lightly encoded so it is not readable at a glance.
+   It is still client-side: a determined student with developer tools can find it.
+   For a fully secure administration, use a proctored lab session. */
+const KEY_ENC = "QURCQ0RDQkFDQkFEREJDQURDQkFBQkRDQkFDQ0RCREFCRENBQ0JEQURCQ0FCQ0REQUJDQURDQkFDREJBQ0RBQkJDREFDREJBQUJE";
+
+const Q = [
+[1,"Which mineral property refers to the color of a mineral's powdered form?",
+ ["Streak","Luster","Cleavage","Hardness"]],
+[2,"On the Mohs Hardness Scale, which mineral serves as the reference standard for hardness 10, the hardest common mineral?",
+ ["Quartz","Corundum","Topaz","Diamond"]],
+[3,"Which of the three main rock groups forms primarily through the cooling and solidification of molten material?",
+ ["Sedimentary","Igneous","Metamorphic","Chemical"]],
+[4,"Why do minerals with cleavage break along smooth, flat surfaces rather than irregular ones?",
+ ["They contain layers of different chemical compositions.","They were formed at unusually high pressure.","Their internal atomic structure has planes of weaker bonding.","They lack any crystalline structure."]],
+[5,"A rock sample shows visible, interlocking crystals large enough to see without magnification. What does this indicate about its cooling history?",
+ ["It cooled rapidly at or near the surface.","It formed from compacted sediment layers.","It was subjected to heat without ever melting.","It cooled slowly beneath the surface, allowing crystals time to grow."]],
+[6,"Sedimentary rocks are often described as forming in layers called strata. What process is primarily responsible for this layered appearance?",
+ ["Sudden cooling of magma in distinct pulses","Recrystallization under directed pressure","Successive deposition of sediment over time","Chemical bonding of minerals at random intervals"]],
+[7,"Why is foliation considered a diagnostic feature of many metamorphic rocks?",
+ ["It shows the rock was once part of a sedimentary basin.","It reflects the alignment of minerals under directed pressure.","It indicates the rock cooled from a molten state very quickly.","It shows the rock contains only one mineral type."]],
+[8,"In the rock cycle, why can any rock type eventually become a sedimentary rock?",
+ ["Weathering and erosion can break down exposed rock into sediment.","Rocks must melt into magma before becoming sediment.","Metamorphism must precede sedimentation.","Only igneous rocks are exposed to surface weathering."]],
+[9,"A student tests an unknown mineral: it scratches glass but is scratched by a steel file, and shows no reaction to dilute hydrochloric acid. Based on the Mohs scale, which hardness range does this mineral most likely fall in?",
+ ["1&ndash;2","3&ndash;4","5&ndash;6","8&ndash;9"]],
+[10,"A rock specimen collected from a riverbed is composed of rounded pebbles cemented together in a finer matrix. Which rock type does this specimen most likely represent?",
+ ["Basalt","Conglomerate","Gneiss","Obsidian"]],
+[11,"A geology student finds a rock containing visible fossils that fizzes vigorously when a drop of dilute acid is applied. Which rock is this most likely to be?",
+ ["Limestone","Granite","Slate","Rhyolite"]],
+[12,"A hand specimen shows a fine-grained texture, is very dark in color, and lacks visible crystals. Where did this rock most likely form?",
+ ["Deep underground, cooling over thousands of years","Within a sedimentary basin under compaction","Along a metamorphic fold under extreme pressure","At or near the Earth's surface, cooling rapidly"]],
+[13,"A marble countertop scratches easily with a knife and reacts with vinegar. Given these properties, marble most likely metamorphosed from which parent rock?",
+ ["Sandstone","Granite","Shale","Limestone"]],
+[14,"A field team collects a sample banded with alternating light and dark mineral layers, formed under intense heat and pressure without melting. Which term best classifies this rock?",
+ ["Basalt","Gneiss","Shale","Breccia"]],
+[15,"A rock outcrop shows sedimentary layers that have been folded and partially recrystallized, with new mineral bands forming parallel to the fold axis. What does this sequence best illustrate about the rock cycle?",
+ ["Sedimentary rocks cannot undergo further transformation once deposited.","Folding produces igneous rock rather than metamorphic rock.","A single rock can pass through more than one stage of the rock cycle over time.","Recrystallization occurs only in rocks exposed at the surface."]],
+[16,"Two rock samples share the same mineral composition, but Sample X has large, well-formed crystals while Sample Y is glassy with no visible crystals. What can be concluded about their formation conditions?",
+ ["Sample X cooled more slowly than Sample Y.","Sample Y cooled more slowly than Sample X.","Both samples cooled at the same rate.","Crystal size is unrelated to cooling rate."]],
+[17,"A student argues that a rock with visible bedding and fossil shells must be metamorphic because it is very hard. Which observation best challenges this reasoning?",
+ ["Metamorphic rocks are generally softer than sedimentary rocks.","Fossils can only be preserved in igneous rocks.","Hard rocks cannot contain sedimentary features.","Hardness alone does not indicate rock type, and bedding/fossils are characteristic of sedimentary rocks."]],
+[18,"A construction firm plans to source aggregate for road-base material in a karst area of Palawan underlain mostly by limestone. Which concern should most influence their site evaluation?",
+ ["Limestone's high resistance to any form of chemical weathering","Limestone's general unsuitability for any construction use","Limestone's tendency to dissolve, forming sinkholes and cavities that can undermine foundations","Limestone's magnetic properties affecting nearby structures"]],
+[19,"An instructor is choosing rock and mineral samples to teach diagnostic hardness tests to first-year students. Which set of materials would best demonstrate the range of the Mohs Hardness Scale while remaining safe and inexpensive for classroom use?",
+ ["Diamond, corundum, and topaz only","Talc, calcite, and quartz, together with a steel file and glass plate for comparison","A single quartz sample tested repeatedly","Samples with no documented hardness values"]],
+[20,"What is the point on Earth's surface directly above an earthquake's point of origin called?",
+ ["Epicenter","Hypocenter","Fault line","Seismic gap"]],
+[21,"Which seismic wave typically arrives first at a recording station?",
+ ["P-wave","S-wave","Surface wave","Love wave"]],
+[22,"Which Philippine government agency is primarily responsible for monitoring earthquakes and issuing related advisories?",
+ ["PAGASA","PHIVOLCS","DENR","MGB"]],
+[23,"Why is the difference in arrival time between P-waves and S-waves (the S-P interval) useful for locating an earthquake's epicenter?",
+ ["It indicates the earthquake's exact magnitude.","It is measurable only during major earthquakes.","It directly shows the depth of the fault.","It increases proportionally with a station's distance from the epicenter."]],
+[24,"Why does the elastic rebound theory explain the sudden release of energy during an earthquake?",
+ ["Rocks melt completely before an earthquake occurs.","Energy is released only when rocks are compressed, never when sheared.","Rocks store strain energy as they deform, then snap back to their original shape when they fracture along a fault.","Faults release energy continuously, with no sudden events."]],
+[25,"Why can two locations at the same distance from an earthquake's epicenter experience different intensities on the PEIS scale?",
+ ["Intensity depends only on magnitude, not on local conditions.","Local soil type, ground conditions, and building construction affect how shaking is felt.","PEIS values are assigned without reference to actual shaking.","Only the hypocenter depth matters, not distance."]],
+[26,"Why is triangulation using at least three seismic stations needed to determine an earthquake's epicenter?",
+ ["A single station's S-P interval only defines a circle of possible distances; multiple circles are needed to narrow the location to one point.","Additional stations are needed only to measure magnitude, not location.","One station alone can pinpoint the epicenter because P-waves travel directly toward it.","Triangulation is used for volcanic, not seismic, events."]],
+[27,"Why might liquefaction occur in certain areas during a strong earthquake?",
+ ["Solid bedrock loses cohesion under any vibration.","Liquefaction occurs only in areas with no groundwater.","Water-saturated, loose soil temporarily behaves like a liquid when shaken.","Buildings sink because concrete melts under seismic waves."]],
+[28,"A seismograph station records an S-P interval of 24 seconds. Using a standard travel-time relationship where about 8 seconds of S-P interval corresponds to roughly 100 km of epicentral distance, approximately how far is this station from the epicenter?",
+ ["100 km","200 km","300 km","400 km"]],
+[29,"Three stations &mdash; Puerto Princesa, Roxas (Palawan), and San Jose (Occidental Mindoro) &mdash; each draw a circle of possible epicentral distance based on their S-P intervals. Where should the actual epicenter be located on the map?",
+ ["At the station with the shortest S-P interval only","Exactly halfway between any two of the stations","Outside all three circles","At the point where all three circles intersect or nearly overlap"]],
+[30,"A structure built on reclaimed land near a coastline experiences severe ground failure during an earthquake, even though shaking intensity was moderate. Which site condition most likely explains this?",
+ ["The area sits on bedrock with high shear strength.","The area consists of loose, saturated fill material prone to liquefaction.","The area is far from any fault line.","The building used base-isolation technology."]],
+[31,"In a shake-table demonstration, a scale model with a rigid, unbraced frame collapses at a lower shaking intensity than a similar model with cross-bracing. What does this best demonstrate?",
+ ["Structural bracing has little effect on seismic performance.","Rigid, unbraced frames are generally more resistant to seismic forces than braced frames.","Building height is the main factor affecting collapse.","Lateral bracing improves a structure's ability to resist seismic forces."]],
+[32,"An engineer is designing a building in a Palawan municipality identified as near an active offshore fault following a 2024 seismic hazard reassessment. Which design consideration is most appropriate given this context?",
+ ["Incorporating updated NSCP seismic zoning and ductile detailing appropriate to the reassessed hazard","Disregarding seismic loading, since Palawan was previously considered low-risk","Using only wind-load design provisions","Assuming the offshore fault poses no risk to onshore structures"]],
+[33,"During a fault-type modeling activity, a block model shows one side moving horizontally past the other with little vertical displacement. Which fault type does this best represent?",
+ ["Normal fault","Strike-slip fault","Reverse fault","Blind fault"]],
+[34,"A community on a floodplain near a river experiences greater structural damage from a moderate earthquake than a nearby community on solid bedrock, despite both being roughly the same distance from the epicenter. What does this comparison best illustrate?",
+ ["Magnitude alone determines damage regardless of location.","Bedrock experiences more shaking than floodplains in every case.","Distance from the epicenter is irrelevant to damage patterns.","Local ground conditions can amplify or reduce shaking intensity independent of distance from the epicenter."]],
+[35,"After a moderate earthquake, engineers observe that buildings following updated NSCP 2015 seismic provisions suffered far less damage than older structures built before the code update. What does this comparison most strongly support?",
+ ["Building codes have no measurable effect on earthquake resilience.","Older buildings are structurally superior to newer ones.","Updated seismic design standards contribute meaningfully to reducing earthquake damage.","Earthquake damage depends solely on building age, not design."]],
+[36,"A student claims that any location on Palawan is automatically safe from major earthquakes because Palawan lies outside the Pacific Ring of Fire's main volcanic belt. Which evidence would best challenge this claim?",
+ ["Palawan's proximity to the Manila Trench and the documented 2024 offshore earthquakes affecting the province","The fact that Palawan has recorded very little seismic activity historically","The absence of any mapped fault lines near Palawan","Palawan's classification as a purely volcanic island"]],
+[37,"A local government unit in Palawan is drafting its Disaster Risk Reduction and Management plan under RA 10121 for a coastal barangay near a recently identified offshore fault. Which action should be prioritized first for evaluating community earthquake risk?",
+ ["Waiting for a major earthquake to occur before planning any response","Focusing exclusively on typhoon preparedness and setting aside seismic hazards","Conducting a hazard and vulnerability assessment incorporating updated seismic and ground-condition data","Relying only on anecdotal reports from residents"]],
+[38,"A school administrator must choose between retrofitting an older school building or constructing a new one, given a limited budget and a recently reassessed seismic hazard in the area. Which factor should weigh most heavily in this decision?",
+ ["The building's original construction cost, regardless of its current structural condition","An engineering assessment of the existing structure's seismic vulnerability relative to updated hazard data","The building's architectural style","The number of years the building has been in use, without assessing its condition"]],
+[39,"What term refers to molten rock while it is still beneath the Earth's surface?",
+ ["Lava","Tephra","Ash","Magma"]],
+[40,"Which type of volcano is characterized by broad, gently sloping sides built from low-viscosity basaltic lava?",
+ ["Shield volcano","Composite/stratovolcano","Cinder cone","Caldera"]],
+[41,"Which scale is used to classify the explosivity of volcanic eruptions?",
+ ["Richter Scale","PEIS","Saffir-Simpson Scale","Volcanic Explosivity Index (VEI)"]],
+[42,"Why do composite (strato) volcanoes typically produce more explosive eruptions than shield volcanoes?",
+ ["They erupt only ash, never lava.","Their magma tends to be more viscous and gas-rich, trapping pressure until it releases violently.","They form exclusively underwater.","Their magma contains no dissolved gases."]],
+[43,"Why are pyroclastic flows considered one of the most dangerous primary volcanic hazards?",
+ ["They move slowly, giving ample time for evacuation.","They occur only after an eruption has completely ended.","They consist of fast-moving, extremely hot mixtures of gas, ash, and rock fragments.","They are limited to underwater volcanic activity."]],
+[44,"Why is lahar classified as a secondary rather than a primary volcanic hazard?",
+ ["It results from the remobilization of volcanic material by water, during or after an eruption rather than as a direct product of it.","It occurs only in areas with no volcanic activity.","It shares the same composition and mechanism as a pyroclastic flow.","It cannot be triggered by rainfall."]],
+[45,"Why does Mayon Volcano's classic symmetrical cone shape indicate a specific eruption style?",
+ ["It shows the volcano has never erupted.","It reflects repeated, relatively uniform lava and pyroclastic material accumulating evenly around a central vent.","It proves the volcano is shield-type rather than composite.","Symmetry indicates the absence of any hazard."]],
+[46,"Why is Palawan generally classified as having a non-volcanic geologic setting compared to much of the rest of the Philippines?",
+ ["Palawan hosts more active volcanoes than any other Philippine province.","Palawan lies directly above an active subduction zone.","Palawan sits on the Palawan Microcontinental Block, associated with an extinct volcanic arc rather than active subduction-related volcanism.","Palawan has no documented geologic history."]],
+[47,"A volcano erupts fluid, fast-moving basaltic lava with minimal explosive activity, gradually building a wide, gently sloped structure over repeated eruptions. Which volcano type is this?",
+ ["Cinder cone","Composite volcano","Caldera","Shield volcano"]],
+[48,"An eruption produces an ash column reaching over 25 km into the atmosphere, along with widespread pyroclastic density currents. Based on these characteristics, this eruption most likely has a VEI rating in which range?",
+ ["VEI 0&ndash;1","VEI 2&ndash;3","VEI 4&ndash;5","VEI 6 or higher"]],
+[49,"PHIVOLCS raises a volcano's alert level after detecting increased seismicity, ground deformation, and gas emissions, but no eruption has yet occurred. Based on standard PHIVOLCS practice, what does this alert level increase most likely signal to nearby communities?",
+ ["That unrest is increasing and precautionary measures should be prepared","That the volcano is now permanently dormant","That an eruption has already ended","That no monitoring is currently needed"]],
+[50,"A community lives along a river valley draining the slopes of an active stratovolcano. Heavy rainfall occurs several months after a major eruption deposited loose ash and debris on the upper slopes. What hazard should this community be most prepared for?",
+ ["Pyroclastic flow directly from the summit","Lahar generated by remobilized volcanic debris","Volcanic tsunami","Lava fountaining"]],
+[51,"A volcanic hazard map for Pinatubo-type stratovolcanoes typically designates a Permanent Danger Zone around the summit. Which hazard is this zone primarily designed to address?",
+ ["Long-term regional climate change","Distant ashfall only","Direct exposure to pyroclastic flows, ballistic projectiles, and other proximal hazards","Marine navigation hazards"]],
+[52,"Given that Palawan's geologic setting includes the extinct Cagayan Ridge/Cuyo Arc rather than an active volcanic arc, how should this inform a Palawan-based disaster risk assessment compared to a province near Mayon or Pinatubo?",
+ ["Palawan's DRRM planning should weigh volcanic hazard relatively low compared to hazards like seismic and typhoon risk.","Palawan should prioritize active-volcano hazard planning above all else.","Palawan requires the same volcanic evacuation protocols as Albay.","Volcanic hazard planning is irrelevant everywhere in the Philippines."]],
+[53,"Two volcanoes have similar heights, but Volcano X has erupted explosively multiple times with pyroclastic flows, while Volcano Y consistently produces effusive lava flows with minimal explosivity. What can be inferred about their magma properties?",
+ ["Volcano Y's magma is likely more viscous than Volcano X's.","Both volcanoes must have identical magma composition.","Magma viscosity has no relationship to eruption style.","Volcano X's magma is likely more viscous and gas-rich than Volcano Y's."]],
+[54,"A student claims that because Palawan has no historically active volcano, the province faces no geologic hazards at all. Which observation best challenges this claim?",
+ ["All geologic hazards require an active volcano to occur.","Palawan is free of any natural hazards.","Palawan still faces other geologic hazards, such as seismic activity from nearby faults and karst-related ground hazards.","Geologic hazards exist only in regions with stratovolcanoes."]],
+[55,"Following an eruption, PHIVOLCS downgrades a volcano's alert level after weeks of declining seismicity and gas emission. A nearby resident argues this means it is now completely safe to return permanently to the Permanent Danger Zone. What is the flaw in this reasoning?",
+ ["Alert levels are unrelated to any monitoring data.","Alert level downgrades reflect reduced short-term unrest, not a declaration that the Permanent Danger Zone is safe for permanent habitation.","A downgraded alert level guarantees no future eruptions will occur.","PHIVOLCS alert levels apply only to typhoons."]],
+[56,"A local tourism office wants to develop a viewing area near an active volcano's lower slopes to attract visitors during periods of low alert level. Which consideration should most heavily influence whether this development proceeds?",
+ ["Whether the proposed site falls within a Permanent Danger Zone or other hazard zone identified by PHIVOLCS","Current tourist demand alone, regardless of hazard zoning","The site's aesthetic appeal from that vantage point","The site's distance from the nearest highway only"]],
+[57,"A provincial DRRM office must allocate a limited hazard-mitigation budget across seismic, volcanic, and flood risks for a province with no active volcano but known active faults and flood-prone lowlands. How should volcanic hazard mitigation be prioritized relative to the others?",
+ ["Equally with seismic and flood hazards, regardless of local risk profile","As the top priority, since volcanic hazards are the most severe everywhere","Lower than seismic and flood hazard mitigation, given the absence of local volcanic hazard exposure","The volcanic hazard budget should take precedence over the other two combined"]],
+[58,"What do contour lines on a topographic map represent?",
+ ["Lines of equal temperature","Political boundaries","Roads and highways","Lines of equal elevation above a reference datum"]],
+[59,"What term describes the constant vertical distance between adjacent contour lines on a given map?",
+ ["Map scale","Contour interval","Datum","Bearing"]],
+[60,"On a topographic map, what does a closed contour loop with hachure marks pointing inward typically indicate?",
+ ["A depression or closed basin","A hilltop","A river","A road intersection"]],
+[61,"Why do closely spaced contour lines on a topographic map indicate steep terrain?",
+ ["The map scale is automatically larger in that section.","Closely spaced lines indicate flat terrain.","Elevation changes rapidly over a short horizontal distance in that area.","Contour lines appear close together only near water bodies."]],
+[62,"Why is linear interpolation useful when estimating the elevation of a point that falls between two known elevation values on a survey grid?",
+ ["It assumes elevation changes unpredictably between points.","It applies only to horizontal distances, never vertical ones.","It removes the need for any elevation data.","It estimates a proportional value between two known points, assuming a roughly uniform slope between them."]],
+[63,"Why do contour lines never cross each other on a properly constructed topographic map?",
+ ["Each contour line represents a single elevation value, and crossing would imply one point has two different elevations.","Contour lines may cross wherever slopes change direction.","Crossing contour lines indicate the presence of a river.","Contour lines exist only on maps with a single contour interval."]],
+[64,"In the Palawan karst and sinkhole context discussed in the topographic mapping exercise, why might a cluster of tightly closed, concentric contour circles with inward hachures be significant for hazard assessment?",
+ ["It indicates a generally safe and stable building site.","It could indicate a sinkhole or doline requiring further ground investigation before construction.","It shows the presence of a river channel.","It has no relevance to construction planning."]],
+[65,"A 7x7 elevation survey grid shows two adjacent points with elevations of 120 m and 135 m, spaced 50 m apart horizontally. Using linear interpolation, what is the estimated elevation of a point exactly halfway between them?",
+ ["120 m","127.5 m","130 m","135 m"]],
+[66,"A gradient calculation shows a 30 m elevation change over a 300 m horizontal distance between two points. What is the slope gradient, expressed as a percentage?",
+ ["1%","5%","10%","30%"]],
+[67,"On a topographic map with a contour interval of 10 m, a hiker crosses six contour lines while walking directly up a slope. Approximately how much elevation did the hiker gain?",
+ ["6 m","10 m","16 m","60 m"]],
+[68,"A spreadsheet-based contour/surface chart of an elevation grid shows tightly packed contour bands on the western edge of the study area and widely spaced bands on the eastern edge. Which terrain description best matches this pattern?",
+ ["A steep slope in the west, transitioning to gentler terrain in the east","Flat terrain throughout the entire study area","A steep slope in the east only","No elevation change anywhere in the grid"]],
+[69,"While hand-contouring a survey grid, a student needs to draw the 100 m contour line between a point at 95 m and an adjacent point at 110 m. Where should the 100 m line be drawn relative to these two points?",
+ ["Exactly at the midpoint regardless of the actual values","Closer to the 110 m point","Closer to the 95 m point","It cannot be estimated without additional data"]],
+[70,"Given a set of elevation values arranged in a 7x7 grid, a student visualizes the terrain using a spreadsheet's conditional formatting alongside a Surface or Contour chart. What is the primary purpose of applying conditional formatting to the raw elevation values in this exercise?",
+ ["To convert the elevation values into text labels only","To calculate the contour interval automatically","To remove the need for elevation data altogether","To visually distinguish higher and lower elevation cells, aiding pattern recognition before contouring"]],
+[71,"A survey area shows evenly spaced contour lines throughout, except for one section where the lines form tight concentric circles. What can be inferred about that section relative to the rest of the terrain?",
+ ["It must be a flat plain.","It represents a localized feature, such as a hill or depression, with steeper local relief than the surrounding uniform slope.","It indicates a mapping error that should be disregarded.","It has no elevation difference from the surrounding grid."]],
+[72,"Comparing manual hand-contouring with a spreadsheet-generated Surface/Contour chart of the same elevation grid, a student notices minor differences in exact contour line placement between the two methods. What most likely explains this?",
+ ["Manual contouring relies on visual interpolation between grid points, while spreadsheet tools apply a fixed mathematical interpolation algorithm, producing slightly different smoothing.","One of the two methods must be entirely incorrect.","An elevation grid can be represented by only one valid method.","Contour lines are identical regardless of interpolation method."]],
+[73,"A student concludes that a Palawan area with numerous closed depressions on a topographic map must be prone to flooding rather than karst-related sinkhole hazards. Which additional evidence would best help evaluate this conclusion?",
+ ["Local subsurface geology and rock-type data, since limestone karst terrain produces closed depressions distinct from flood-related ones","The map's paper size","The map's north arrow direction","The number of roads shown on the map"]],
+[74,"A local planning office is deciding where to site a new rural health station within a hilly barangay, using only a topographic map with a 10 m contour interval. Which siting consideration should be weighted most heavily based on contour information alone?",
+ ["Choosing the location with the most tightly packed contour lines for scenic value","Selecting a relatively flat area with wide contour spacing and good accessibility, avoiding steep or depression-prone zones","Disregarding contour spacing entirely in favor of proximity to a river","Selecting a closed-depression area for natural drainage"]],
+[75,"An instructor is evaluating two student-made contour maps of the same elevation grid: one drawn by hand and one generated using a spreadsheet's Surface chart. Which criterion would best judge which output more accurately represents the terrain?",
+ ["Whichever map looks more visually appealing","Whichever map was completed faster","Whichever map uses more colors","Agreement with the actual recorded elevation values at each grid point, and consistency with standard contour rules such as no crossing lines"]]
+];
+
+/* =========================== APPLICATION =========================== */
+const KEY = atob(KEY_ENC);                 // "ADBC..." indexed 0..74
+const LETTERS = ["A","B","C","D"];
+const $ = id => document.getElementById(id);
+
+/* ---- storage that degrades quietly if the browser blocks it ---- */
+const store = (() => {
+  let ok = true;
+  try { const k="__t"; localStorage.setItem(k,"1"); localStorage.removeItem(k); }
+  catch(e){ ok = false; }
+  const mem = {};
+  return {
+    available: ok,
+    get(k){ try { return ok ? localStorage.getItem(k) : (mem[k] ?? null); } catch(e){ return mem[k] ?? null; } },
+    set(k,v){ try { ok ? localStorage.setItem(k,v) : (mem[k]=v); } catch(e){ mem[k]=v; } },
+    del(k){ try { ok ? localStorage.removeItem(k) : delete mem[k]; } catch(e){ delete mem[k]; } }
+  };
+})();
+const SK = CONFIG.STORAGE_KEY;
+
+/* ---- build the item bank with Bloom + CO tags ---- */
+function bloomOf(n){
+  for (const [name,a,b] of BLOOM_RANGES) if (n>=a && n<=b) return name;
+  return "";
+}
+function coOf(n){
+  const p = PARTS.find(p => n>=p.from && n<=p.to);
+  return p ? p.co : "";
+}
+const ITEMS = Q.map(([n,text,opts]) => ({
+  n, text, opts,
+  ans: LETTERS.indexOf(KEY[n-1]),
+  bloom: bloomOf(n),
+  co: coOf(n)
+}));
+
+/* ---- state ---- */
+let S = null;
+let ticker = null;
+let warned = {};
+let bypassGuard = false;   // set when the instructor resets, so the leave-page warning stays quiet
+
+function freshState(name, sec, sid){
+  const order = {};   // part index -> item numbers in display order
+  const optOrder = {}; // item number -> option indices in display order
+  PARTS.forEach((p,i) => {
+    let list = [];
+    for (let n=p.from; n<=p.to; n++) list.push(n);
+    if (CONFIG.SHUFFLE_ITEMS) list = shuffle(list);
+    order[i] = list;
+  });
+  ITEMS.forEach(it => {
+    optOrder[it.n] = CONFIG.SHUFFLE_OPTIONS ? shuffle([0,1,2,3]) : [0,1,2,3];
+  });
+  return {
+    name, sec, sid,
+    startedAt: Date.now(),
+    deadline: Date.now() + CONFIG.TIME_LIMIT_MIN*60*1000,
+    answers: {}, flags: {},
+    order, optOrder,
+    submitted: false, submittedAt: null, autoSubmitted: false
+  };
+}
+function shuffle(a){
+  a = a.slice();
+  for (let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function save(){ store.set(SK, JSON.stringify(S)); }
+function load(){
+  const raw = store.get(SK);
+  if (!raw) return null;
+  try { const s = JSON.parse(raw); return (s && s.name) ? s : null; } catch(e){ return null; }
+}
+
+/* ---- small helpers ---- */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function mmss(ms){
+  if (ms < 0) ms = 0;
+  const t = Math.floor(ms/1000);
+  return String(Math.floor(t/60)).padStart(2,"0") + ":" + String(t%60).padStart(2,"0");
+}
+function fmtDateTime(ms){
+  const d = new Date(ms);
+  return d.toLocaleString("en-PH", {year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+let toastTimer = null;
+function toast(msg, alarm){
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast" + (alarm ? " alarm" : "");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add("hidden"), 6000);
+}
+
+/* ---- render the paper ---- */
+function renderExam(){
+  const box = $("questions");
+  let html = "";
+  PARTS.forEach((p,pi) => {
+    html += '<div class="partmark"><h2>' + p.n + ' &mdash; ' + p.title + '</h2>'
+          + '<p>' + p.co + ': ' + p.outcome + '</p></div>';
+    S.order[pi].forEach(n => {
+      const it = ITEMS.find(x => x.n === n);
+      const chosen = S.answers[n];
+      html += '<article class="q" id="q' + n + '" data-n="' + n + '">'
+            + '<div class="qhead"><div class="qnum">' + n + '.</div>'
+            + '<p class="qtext">' + it.text + '</p></div><ul class="opts">';
+      S.optOrder[n].forEach((oi, pos) => {
+        const id = "i" + n + "o" + oi;
+        html += '<li><label class="opt" for="' + id + '">'
+              + '<input type="radio" name="item' + n + '" id="' + id + '" value="' + oi + '"'
+              + (chosen === oi ? " checked" : "") + '>'
+              + '<span class="ltr">' + LETTERS[pos] + '.</span>'
+              + '<span>' + it.opts[oi] + '</span></label></li>';
+      });
+      html += '</ul><div class="qfoot">'
+            + '<button type="button" class="flagbtn" data-flag="' + n + '">Flag for review</button>'
+            + '</div></article>';
+    });
+  });
+  box.innerHTML = html;
+
+  box.addEventListener("change", e => {
+    if (e.target.matches('input[type=radio]')){
+      const n = +e.target.name.replace("item","");
+      S.answers[n] = +e.target.value;
+      save(); paintItem(n); updateTally();
+    }
+  });
+  box.addEventListener("click", e => {
+    const b = e.target.closest("[data-flag]");
+    if (!b) return;
+    const n = +b.dataset.flag;
+    S.flags[n] = !S.flags[n];
+    save(); paintItem(n); updateTally();
+  });
+
+  ITEMS.forEach(it => paintItem(it.n));
+  updateTally();
+}
+function paintItem(n){
+  const el = $("q" + n);
+  if (!el) return;
+  el.classList.toggle("answered", S.answers[n] !== undefined);
+  el.classList.toggle("flagged", !!S.flags[n]);
+  const b = el.querySelector("[data-flag]");
+  if (b){
+    b.classList.toggle("on", !!S.flags[n]);
+    b.textContent = S.flags[n] ? "Flagged — tap to clear" : "Flag for review";
+  }
+}
+function updateTally(){
+  const done = Object.keys(S.answers).length;
+  const flags = Object.keys(S.flags).filter(k => S.flags[k]).length;
+  $("tally-num").textContent = done;
+  $("tally-den").textContent = ITEMS.length;
+  $("tally-flag").textContent = flags ? flags + " flagged" : "";
+  const left = ITEMS.length - done;
+  $("btn-blank").classList.toggle("hidden", left === 0);
+  $("finish-note").textContent = left
+    ? left + (left === 1 ? " item is" : " items are") + " still blank. Submitting ends the exam and cannot be undone."
+    : "All items answered. Submitting ends the exam and cannot be undone.";
+}
+
+/* ---- clock ---- */
+function tick(){
+  const left = S.deadline - Date.now();
+  $("clock").textContent = mmss(left);
+  const frac = Math.max(0, Math.min(1, left / (CONFIG.TIME_LIMIT_MIN*60*1000)));
+  $("core-fill").style.transform = "scaleX(" + frac + ")";
+  const low = left <= 5*60*1000;
+  $("clock").classList.toggle("low", low);
+  $("core").classList.toggle("low", low);
+
+  CONFIG.WARN_AT_MIN.forEach(m => {
+    const at = m*60*1000;
+    if (left <= at && left > at - 1200 && !warned[m]){
+      warned[m] = true;
+      toast(m === 1 ? "One minute left. The exam submits itself at zero."
+                    : m + " minutes left.", m <= 5);
+    }
+  });
+
+  if (left <= 0){
+    clearInterval(ticker);
+    submitExam(true);
+  }
+}
+
+/* ---- grading ---- */
+function grade(){
+  let correct = 0;
+  const byCO = {}, byBloom = {};
+  PARTS.forEach(p => byCO[p.co] = {label:p.co + " — " + p.title, right:0, total:0});
+  ["Remembering","Understanding","Applying","Analyzing","Evaluating"].forEach(b => byBloom[b] = {label:b, right:0, total:0});
+
+  const detail = ITEMS.map(it => {
+    const given = S.answers[it.n];
+    const right = given === it.ans;
+    if (right) correct++;
+    byCO[it.co].total++;      if (right) byCO[it.co].right++;
+    byBloom[it.bloom].total++; if (right) byBloom[it.bloom].right++;
+    return {n:it.n, given, right, ans:it.ans, text:it.text, opts:it.opts, co:it.co, bloom:it.bloom};
+  });
+  return {correct, total:ITEMS.length, byCO, byBloom, detail};
+}
+
+function verifyCode(r){
+  const seed = S.name + "|" + S.sec + "|" + r.correct + "|" + S.submittedAt;
+  let h1 = 0x811c9dc5, h2 = 0x01000193;
+  for (let i=0;i<seed.length;i++){
+    h1 = ((h1 ^ seed.charCodeAt(i)) * 16777619) >>> 0;
+    h2 = ((h2 + seed.charCodeAt(i)*(i+7)) * 2654435761) >>> 0;
+  }
+  const a = h1.toString(36).toUpperCase().padStart(7,"0").slice(-7);
+  const b = h2.toString(36).toUpperCase().padStart(7,"0").slice(-7);
+  return "ES1-" + a.slice(0,4) + "-" + a.slice(4) + b.slice(0,1) + "-" + b.slice(1,5);
+}
+
+/* ---- submit ---- */
+function submitExam(auto){
+  if (S.submitted) return;
+  if (!auto){
+    const blank = ITEMS.length - Object.keys(S.answers).length;
+    const msg = blank
+      ? "Submit now? " + blank + (blank === 1 ? " item is" : " items are") + " still blank and will be marked wrong."
+      : "Submit your answers? This ends the exam.";
+    if (!confirm(msg)) return;
+  }
+  S.submitted = true;
+  S.submittedAt = Date.now();
+  S.autoSubmitted = !!auto;
+  clearInterval(ticker);
+  save();
+  showResult();
+  if (auto) toast("Time is up. Your answers were submitted automatically.", true);
+}
+
+function showResult(){
+  $("exam").classList.add("hidden");
+  $("gate").classList.add("hidden");
+  $("topbar").classList.add("hidden");
+  $("result").classList.remove("hidden");
+  window.scrollTo(0,0);
+
+  const r = grade();
+  const pct = r.correct / r.total * 100;
+  const usedMs = Math.min(S.submittedAt - S.startedAt, CONFIG.TIME_LIMIT_MIN*60*1000);
+
+  $("r-score").innerHTML = r.correct + "<small>/" + r.total + "</small>";
+  $("r-pct").textContent = pct.toFixed(1) + "%";
+  const v = $("r-verdict");
+  const passed = pct >= CONFIG.PASSING_PCT;
+  v.textContent = passed ? "Passed" : "Below passing";
+  v.className = "verdict " + (passed ? "pass" : "fail");
+
+  $("r-meta").innerHTML =
+      "<dt>Name</dt><dd>" + esc(S.name) + "</dd>"
+    + (S.sid ? "<dt>Student no.</dt><dd>" + esc(S.sid) + "</dd>" : "")
+    + "<dt>Year &amp; section</dt><dd>" + esc(S.sec) + "</dd>"
+    + "<dt>Examination</dt><dd>Midterm, 1st Semester, A.Y. 2026&ndash;2027</dd>"
+    + "<dt>Started</dt><dd>" + fmtDateTime(S.startedAt) + "</dd>"
+    + "<dt>Submitted</dt><dd>" + fmtDateTime(S.submittedAt)
+      + (S.autoSubmitted ? " (automatic, time elapsed)" : "") + "</dd>"
+    + "<dt>Time used</dt><dd>" + mmss(usedMs) + " of " + CONFIG.TIME_LIMIT_MIN + ":00</dd>"
+    + "<dt>Passing mark</dt><dd>" + CONFIG.PASSING_PCT + "% ("
+      + Math.ceil(CONFIG.PASSING_PCT/100*r.total) + " of " + r.total + " items)</dd>";
+
+  fillTable($("r-co"), r.byCO);
+  fillTable($("r-bloom"), r.byBloom);
+
+  $("r-code").innerHTML = "Verification code " + verifyCode(r)
+    + "<br>Generated by the online examination page. Present this printout to your instructor for recording.";
+
+  if (CONFIG.SHOW_REVIEW) buildReview(r); else $("btn-review").classList.add("hidden");
+}
+function fillTable(table, group){
+  const tb = table.querySelector("tbody");
+  tb.innerHTML = Object.values(group).map(g => {
+    const p = g.total ? g.right/g.total*100 : 0;
+    return "<tr><td>" + g.label + '<span class="bar"><i style="width:' + p.toFixed(0) + '%"></i></span></td>'
+         + '<td class="n">' + g.right + " / " + g.total + "</td>"
+         + '<td class="n">' + p.toFixed(0) + "%</td></tr>";
+  }).join("");
+}
+function buildReview(r){
+  $("review-list").innerHTML = r.detail.map(d => {
+    const given = d.given === undefined ? "No answer" : LETTERS[d.given] + ". " + d.opts[d.given];
+    let line = "<div class='ans'>Your answer: <b>" + given + "</b>";
+    if (!d.right && CONFIG.REVEAL_ANSWERS)
+      line += "<br>Correct answer: <b>" + LETTERS[d.ans] + ". " + d.opts[d.ans] + "</b>";
+    line += "<br>" + d.co + " · " + d.bloom + " · " + (d.right ? "correct" : "incorrect") + "</div>";
+    return "<div class='item" + (d.right ? "" : " wrong") + "'>"
+         + "<div class='qh'><b>" + d.n + ".</b> " + d.text + "</div>" + line + "</div>";
+  }).join("");
+}
+
+/* ---- boot ---- */
+function beginExam(){
+  $("gate").classList.add("hidden");
+  $("exam").classList.remove("hidden");
+  $("topbar").classList.remove("hidden");
+  renderExam();
+  tick();
+  ticker = setInterval(tick, 500);
+  window.addEventListener("beforeunload", e => {
+    if (!S.submitted && !bypassGuard){ e.preventDefault(); e.returnValue = ""; }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  $("g-items").textContent = ITEMS.length + " multiple choice, 1 point each";
+  $("g-time").textContent = CONFIG.TIME_LIMIT_MIN + " minutes";
+  $("clock").textContent = mmss(CONFIG.TIME_LIMIT_MIN*60*1000);
+  if (!CONFIG.ONE_ATTEMPT) $("rule-attempt").textContent =
+    "Answers are saved as you go, so you may close and reopen this page while the clock runs.";
+  if (!store.available){
+    const li = document.createElement("li");
+    li.textContent = "This browser is blocking local storage, so answers will not survive a refresh. Do not reload the page once you begin.";
+    $("rule-attempt").parentNode.appendChild(li);
+  }
+
+  /* --- every control is wired before any screen is decided, so the buttons
+         work whether the page opens fresh, resumes, or reopens on a receipt --- */
+  $("btn-start").addEventListener("click", () => {
+    const name = $("f-name").value.trim();
+    const sec  = $("f-sec").value.trim();
+    if (!name || !sec){
+      toast("Enter your full name and your year and section before starting.", true);
+      (!name ? $("f-name") : $("f-sec")).focus();
+      return;
+    }
+    S = freshState(name, sec, $("f-id").value.trim());
+    save();
+    beginExam();
+  });
+  [$("f-name"),$("f-sec"),$("f-id")].forEach(el =>
+    el.addEventListener("keydown", e => { if (e.key === "Enter") $("btn-start").click(); }));
+
+  $("btn-submit").addEventListener("click", () => submitExam(false));
+  $("btn-blank").addEventListener("click", () => {
+    const first = ITEMS.map(i => i.n).find(n => S.answers[n] === undefined);
+    if (first !== undefined) $("q" + first).scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-review").addEventListener("click", () => {
+    const r = $("review");
+    const nowHidden = r.classList.toggle("hidden");
+    $("btn-review").textContent = nowHidden ? "Show item review" : "Hide item review";
+  });
+
+  /* --- instructor reset --- */
+  if (CONFIG.SHOW_RESET){
+    $("resetbar").classList.remove("hidden");
+    if (!CONFIG.RESET_CODE){
+      $("resetpanel").querySelector("label").classList.add("hidden");
+      $("f-reset").classList.add("hidden");
+    }
+  }
+  const closeReset = () => {
+    $("resetpanel").classList.add("hidden");
+    $("f-reset").value = "";
+    $("btn-reset").textContent = "Instructor: reset this device";
+  };
+  $("btn-reset").addEventListener("click", () => {
+    const panel = $("resetpanel");
+    if (panel.classList.contains("hidden")){
+      panel.classList.remove("hidden");
+      $("btn-reset").textContent = "Close";
+      if (CONFIG.RESET_CODE) $("f-reset").focus();
+    } else closeReset();
+  });
+  $("btn-reset-cancel").addEventListener("click", closeReset);
+  $("f-reset").addEventListener("keydown", e => { if (e.key === "Enter") $("btn-reset-go").click(); });
+  $("btn-reset-go").addEventListener("click", () => {
+    if (CONFIG.RESET_CODE && $("f-reset").value !== CONFIG.RESET_CODE){
+      toast("That passcode does not match. Nothing was cleared.", true);
+      $("f-reset").select();
+      return;
+    }
+    if (S && !S.submitted &&
+        !confirm("An exam is still in progress on this device. Clear it anyway? The answers and the remaining time will be lost."))
+      return;
+    bypassGuard = true;
+    clearInterval(ticker);
+    store.del(SK);
+    S = null;
+    location.reload();
+  });
+
+  /* --- now decide which screen to show --- */
+  const prev = load();
+  if (!prev) return;
+  S = prev;
+  if (S.submitted){
+    if (CONFIG.ONE_ATTEMPT){ showResult(); return; }
+    store.del(SK); S = null; return;
+  }
+  if (Date.now() >= S.deadline){ submitExam(true); return; }  // came back after the clock ran out
+  beginExam();
+  toast("Welcome back. Your answers were restored and the clock kept running.");
+});
+</script>
+</body>
+</html>
