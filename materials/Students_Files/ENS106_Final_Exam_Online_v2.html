@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENS 106 Final Examination (Weeks 9–18)</title>
+<style>
+  :root { --ink:#1f2a24; --muted:#5b6b62; --line:#d9e0dc; --accent:#1f6b4f; --accent-2:#e8f3ee; --warn:#b5541b; --bg:#f6f8f7; --card:#ffffff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:var(--bg); line-height:1.45; }
+  header.top { position:sticky; top:0; z-index:10; background:var(--accent); color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  header.top h1 { font-size:16px; margin:0; font-weight:700; }
+  #timer { font-size:18px; font-weight:700; font-variant-numeric: tabular-nums; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:6px; }
+  #timer.warn { background:var(--warn); }
+  main { max-width:900px; margin:0 auto; padding:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:16px; }
+  h2 { font-size:18px; margin:0 0 10px; color:var(--accent); }
+  label.field { display:block; font-weight:700; margin:10px 0 4px; }
+  input[type=text] { width:100%; padding:9px 10px; border:1px solid #b9c5be; border-radius:6px; font-size:15px; font-family:inherit; }
+  button { font-family:inherit; font-size:15px; padding:10px 18px; border-radius:6px; border:0; background:var(--accent); color:#fff; cursor:pointer; font-weight:700; }
+  button:hover { filter:brightness(1.08); }
+  button.secondary { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  .muted { color:var(--muted); font-size:14px; }
+  .error { color:var(--warn); font-weight:700; margin-top:8px; min-height:1em; }
+  ul.rules { padding-left:20px; margin:8px 0; }
+  ul.rules li { margin:4px 0; }
+  .item { border-top:1px solid var(--line); padding:14px 0 6px; scroll-margin-top:70px; }
+  .item:first-child { border-top:0; padding-top:4px; }
+  .qhead { font-weight:700; margin-bottom:8px; }
+  .qhead .num { color:var(--accent); margin-right:6px; }
+  .tag { display:inline-block; font-size:12px; color:var(--muted); background:var(--accent-2); padding:1px 8px; border-radius:10px; margin-left:6px; font-weight:normal; }
+  .opt { display:flex; gap:8px; align-items:flex-start; padding:6px 8px; border-radius:6px; cursor:pointer; }
+  .opt:hover { background:#f1f6f3; }
+  .opt input { margin-top:4px; }
+  .opt.sel { background:var(--accent-2); }
+  .palette { display:grid; grid-template-columns:repeat(auto-fill, minmax(42px,1fr)); gap:6px; margin-top:8px; }
+  .palette button { padding:6px 0; font-size:13px; background:#fff; color:var(--ink); border:1px solid #b9c5be; }
+  .palette button.done { background:var(--accent-2); border-color:var(--accent); }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:12px; }
+  .progress { font-size:14px; color:var(--muted); }
+  /* receipt */
+  #receipt { font-size:14px; }
+  #receipt .big { font-size:28px; font-weight:700; color:var(--accent); }
+  #receipt table { width:100%; border-collapse:collapse; margin:8px 0; }
+  #receipt th, #receipt td { border-bottom:1px solid var(--line); padding:6px 4px; text-align:left; vertical-align:top; }
+  #receipt th { color:var(--muted); font-weight:700; }
+  #receipt td.num { text-align:right; white-space:nowrap; }
+  .code { font-family: "Courier New", monospace; font-size:16px; letter-spacing:1px; font-weight:700; }
+  .pass { color:var(--accent); font-weight:700; }
+  .fail { color:var(--warn); font-weight:700; }
+  .hidden { display:none !important; }
+  @media print {
+    header.top, #startScreen, #examScreen, .noprint { display:none !important; }
+    body { background:#fff; }
+    main { max-width:none; padding:0; }
+    .card { border:0; padding:0; }
+    #receiptScreen { display:block !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>ENS 106 – Environmental Management | Final Examination (Weeks 9–18)</h1>
+  <div id="timer" class="hidden">60:00</div>
+</header>
+
+<main>
+
+  <!-- START SCREEN -->
+  <section id="startScreen" class="card">
+    <h2>Before you begin</h2>
+    <ul class="rules">
+      <li>This examination has <strong>75 items</strong> (multiple choice and identification).</li>
+      <li>You have <strong>60 minutes</strong>. The timer starts when you press Start and cannot be paused.</li>
+      <li>The exam submits automatically when time runs out.</li>
+      <li>Multiple-choice items: select one best answer. Identification items: type a short answer.</li>
+      <li>When you submit, a receipt with your score and verification code appears. Print or save it as PDF.</li>
+      <li>Answers are saved on this device as you go. If the page reloads or closes, reopen the same link and your exam resumes with the time remaining.</li>
+    </ul>
+    <label class="field" for="stuName">Full name</label>
+    <input type="text" id="stuName" autocomplete="off" maxlength="80">
+    <label class="field" for="stuSection">Section</label>
+    <input type="text" id="stuSection" autocomplete="off" maxlength="40">
+    <div class="error" id="startError"></div>
+    <div class="actions">
+      <span class="muted">Ready? Press Start when you are set.</span>
+      <button id="startBtn">Start examination</button>
+    </div>
+  </section>
+
+  <!-- EXAM SCREEN -->
+  <section id="examScreen" class="hidden">
+    <div class="card">
+      <div class="actions">
+        <div class="progress" id="progress">0 of 75 answered</div>
+        <button class="secondary" id="submitBtn">Submit examination</button>
+      </div>
+      <div class="palette" id="palette"></div>
+    </div>
+    <div class="card hidden" id="noticeBar" style="color:var(--warn);font-weight:700"></div>
+    <div class="card" id="itemsWrap"></div>
+    <div class="card actions">
+      <span class="muted">Review your answers before submitting. Submission is final.</span>
+      <button id="submitBtn2">Submit examination</button>
+    </div>
+  </section>
+
+  <!-- RECEIPT SCREEN -->
+  <section id="receiptScreen" class="card hidden">
+    <div id="receipt"></div>
+    <div class="actions noprint" style="margin-top:16px">
+      <button class="secondary" id="printBtn">Print or save as PDF</button>
+      <span class="muted">Keep this receipt. Your instructor may ask for the verification code.</span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const DATA = {"items": [{"n": 1, "type": "mc", "q": "A College of Sciences unit wants to show an external auditor that its environmental management system (EMS) is working in practice, not just documented. Which evidence is most convincing?", "opts": [{"l": "A", "t": "Internal audit findings, corrective actions, and management review records"}, {"l": "B", "t": "A framed environmental policy displayed prominently in the main lobby"}, {"l": "C", "t": "A purchase list of recycling bins, signage, and waste containers for the campus"}, {"l": "D", "t": "A current business permit issued by the municipal government for the unit"}], "key": "A", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 2, "type": "mc", "q": "Which sequence correctly represents the ISO 14001 environmental management system cycle?", "opts": [{"l": "A", "t": "Do–Plan–Act–Check"}, {"l": "B", "t": "Plan–Do–Check–Act"}, {"l": "C", "t": "Plan–Check–Do–Act"}, {"l": "D", "t": "Check–Act–Plan–Do"}], "key": "B", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 3, "type": "mc", "q": "Which EMS stage establishes environmental policy, identifies aspects and impacts, and sets objectives and targets?", "opts": [{"l": "A", "t": "Do"}, {"l": "B", "t": "Check"}, {"l": "C", "t": "Plan"}, {"l": "D", "t": "Act"}], "key": "C", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 4, "type": "mc", "q": "Which EMS stage includes training and operational controls?", "opts": [{"l": "A", "t": "Do"}, {"l": "B", "t": "Plan"}, {"l": "C", "t": "Check"}, {"l": "D", "t": "Act"}], "key": "A", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 5, "type": "mc", "q": "A resort in Palawan proposes a 20-room development in an area covered by the Strategic Environmental Plan and ECAN. Which sequence of approvals is most consistent with the course framework?", "opts": [{"l": "A", "t": "Screen for EIA needs, obtain PCSD review where SEP/ECAN applies, then secure an ECC before construction"}, {"l": "B", "t": "Begin site clearing and construction immediately, then apply for an ECC only if community complaints are filed later"}, {"l": "C", "t": "Secure a business permit from the municipality, then conduct an environmental impact assessment during the operating phase"}, {"l": "D", "t": "Submit a self-monitoring report to DENR-EMB before construction begins, since monitoring data are needed to approve the site"}], "key": "A", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 6, "type": "mc", "q": "A health center generates sharps, expired medicines, and infectious waste alongside ordinary waste. Which management approach is most consistent with RA 6969 and RA 9003?", "opts": [{"l": "A", "t": "Mix all waste types at source so the materials recovery facility can sort and separate them later"}, {"l": "B", "t": "Segregate hazardous waste at source and transfer it through licensed carriers to a registered TSD facility"}, {"l": "C", "t": "Burn all waste on site in a simple incinerator to reduce the total volume of waste generated"}, {"l": "D", "t": "Bury hazardous waste in a designated barangay compost pit, covering it daily with soil and organic matter"}], "key": "B", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 7, "type": "mc", "q": "Which type of environmental audit primarily determines whether legal and regulatory requirements are being met?", "opts": [{"l": "A", "t": "Financial audit"}, {"l": "B", "t": "Marketing audit"}, {"l": "C", "t": "Energy audit"}, {"l": "D", "t": "Compliance audit"}], "key": "D", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 8, "type": "mc", "q": "Which document is identified in the lecture notes as a periodic submission to DENR-EMB?", "opts": [{"l": "A", "t": "Self-Monitoring Report"}, {"l": "B", "t": "Environmental Impact Statement"}, {"l": "C", "t": "Social Development Plan"}, {"l": "D", "t": "Comprehensive Land Use Plan"}], "key": "A", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 9, "type": "mc", "q": "Which Philippine environmental requirement may provide conditions that can be integrated into an organization's EMS?", "opts": [{"l": "A", "t": "Environmental Compliance Certificate (ECC) with its conditions"}, {"l": "B", "t": "Barangay Development Plan and its land-use zoning provisions"}, {"l": "C", "t": "Business permit from the local government unit"}, {"l": "D", "t": "Building occupancy permit issued after final inspection"}], "key": "A", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 10, "type": "id", "q": "The international standard discussed in Week 10 for environmental management systems.", "accept": ["ISO 14001", "ISO 14001:2015"], "key_display": "ISO 14001:2015", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 11, "type": "id", "q": "The systematic, documented, periodic process used to evaluate environmental performance or an environmental management system.", "accept": ["Environmental audit"], "key_display": "Environmental audit", "sect": "Week 10: EMS, ISO 14001 and Auditing"}, {"n": 12, "type": "mc", "q": "Which pollutant consists of suspended particles small enough to penetrate deeply into the respiratory system and is specifically identified in the notes?", "opts": [{"l": "A", "t": "Ozone"}, {"l": "B", "t": "PM2.5"}, {"l": "C", "t": "Lead"}, {"l": "D", "t": "Carbon monoxide"}], "key": "B", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 13, "type": "mc", "q": "Which of the following is classified as a mobile source of air pollution?", "opts": [{"l": "A", "t": "Motor vehicle"}, {"l": "B", "t": "Factory stack"}, {"l": "C", "t": "Open landfill"}, {"l": "D", "t": "Industrial boiler"}], "key": "A", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 14, "type": "mc", "q": "Which of the following is a stationary source of air pollution?", "opts": [{"l": "A", "t": "Motorcycle traveling along the national highway"}, {"l": "B", "t": "Factory emission stack at a fixed industrial plant"}, {"l": "C", "t": "Public utility bus operating on a fixed city route"}, {"l": "D", "t": "Private automobile parked on a residential street"}], "key": "B", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 15, "type": "mc", "q": "Which pollutant is a secondary pollutant formed near the ground through atmospheric reactions and is associated with photochemical pollution?", "opts": [{"l": "A", "t": "Carbon monoxide released from incomplete combustion"}, {"l": "B", "t": "Lead deposited from older leaded petrol and paints"}, {"l": "C", "t": "Sulfur dioxide released from burning sulfur-rich fuels"}, {"l": "D", "t": "Ground-level ozone formed from photochemical reactions"}], "key": "D", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 16, "type": "mc", "q": "Which Philippine law is known as the Clean Air Act of 1999?", "opts": [{"l": "A", "t": "RA 8749"}, {"l": "B", "t": "RA 9003"}, {"l": "C", "t": "RA 9275"}, {"l": "D", "t": "RA 6969"}], "key": "A", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 17, "type": "mc", "q": "What is an airshed?", "opts": [{"l": "A", "t": "An area sharing weather and topography that affect how air moves"}, {"l": "B", "t": "A political boundary used for air-quality permit administration"}, {"l": "C", "t": "A protected forest area used mainly for carbon storage and conservation"}, {"l": "D", "t": "A city-wide zone designated for vehicle emissions testing and inspection"}], "key": "A", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 18, "type": "mc", "q": "Which body is associated with governance and management of an airshed?", "opts": [{"l": "A", "t": "National Solid Waste Management Commission"}, {"l": "B", "t": "Protected Area Management Board"}, {"l": "C", "t": "Airshed Governing Board"}, {"l": "D", "t": "Local School Board"}], "key": "C", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 19, "type": "mc", "q": "A coastal city experiences both worsening smoke from motorcycles and jeepneys and more frequent typhoon flooding. Which integrated response best reflects the course framework?", "opts": [{"l": "A", "t": "Address only the flooding problem through seawall construction, treating the smoke concern as a separate matter"}, {"l": "B", "t": "Ban all motor vehicles from the city and suspend climate planning until emissions drop to zero"}, {"l": "C", "t": "Address air quality (RA 8749) and climate adaptation and DRRM (RA 10121) together in integrated local plans"}, {"l": "D", "t": "Transfer all responsibility for both problems to the national government without any local action or planning"}], "key": "C", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 20, "type": "id", "q": "The air pollutant category referring to particles with aerodynamic diameter of 10 micrometers or less.", "accept": ["PM10"], "key_display": "PM10", "sect": "Week 11: Air Pollution / RA 8749"}, {"n": 21, "type": "mc", "q": "Which is a typical point source of water pollution?", "opts": [{"l": "A", "t": "Agricultural runoff from many scattered fields across the watershed"}, {"l": "B", "t": "Atmospheric deposition of pollutants carried in rainfall and dust"}, {"l": "C", "t": "Outfall discharge pipe from a municipal wastewater treatment facility"}, {"l": "D", "t": "Stormwater runoff collected from an entire urban watershed area"}], "key": "C", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 22, "type": "mc", "q": "Which water-quality parameter represents the amount of dissolved oxygen consumed by microorganisms while decomposing organic matter?", "opts": [{"l": "A", "t": "pH, the measure of acidity or alkalinity"}, {"l": "B", "t": "Biochemical oxygen demand (BOD)"}, {"l": "C", "t": "Total dissolved solids (TDS)"}, {"l": "D", "t": "Salinity, the measure of dissolved salt content"}], "key": "B", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 23, "type": "mc", "q": "Excess nitrogen and phosphorus entering a water body can cause which process?", "opts": [{"l": "A", "t": "Desertification"}, {"l": "B", "t": "Eutrophication"}, {"l": "C", "t": "Acidification of soils only"}, {"l": "D", "t": "Thermal inversion"}], "key": "B", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 24, "type": "mc", "q": "Which Philippine law is known as the Clean Water Act of 2004?", "opts": [{"l": "A", "t": "RA 8749"}, {"l": "B", "t": "RA 9003"}, {"l": "C", "t": "RA 9275"}, {"l": "D", "t": "RA 10121"}], "key": "C", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 25, "type": "mc", "q": "What is the main purpose of a Water Quality Management Area (WQMA)?", "opts": [{"l": "A", "t": "To establish national forest reserves and protected watershed boundaries"}, {"l": "B", "t": "To regulate solid waste collection and disposal across all barangays"}, {"l": "C", "t": "To issue driver's licenses and vehicle registration for local residents"}, {"l": "D", "t": "To coordinate management of water quality within a defined area"}], "key": "D", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 26, "type": "mc", "q": "Which principle is reflected in the Clean Water Act through mechanisms such as discharge fees?", "opts": [{"l": "A", "t": "First-come-first-served principle"}, {"l": "B", "t": "Polluter-pays principle"}, {"l": "C", "t": "User-only principle"}, {"l": "D", "t": "No-discharge principle"}], "key": "B", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 27, "type": "mc", "q": "Why is septage management important in areas relying heavily on septic tanks?", "opts": [{"l": "A", "t": "Septic tanks remove most environmental risks, so septage needs little further attention"}, {"l": "B", "t": "Septage is generally classified as hazardous waste under RA 6969"}, {"l": "C", "t": "Poorly managed septage can contaminate water and create sanitation problems"}, {"l": "D", "t": "Septage management replaces the need for wastewater treatment plants in towns"}], "key": "C", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 28, "type": "id", "q": "The Philippine law governing water pollution control and water quality management discussed in Week 12.", "accept": ["Clean Water Act", "RA 9275", "RA 9275 / Clean Water Act"], "key_display": "RA 9275 / Clean Water Act", "sect": "Week 12: Water Pollution / RA 9275"}, {"n": 29, "type": "mc", "q": "A protected-area zoning revision in Palawan affects several Indigenous communities. Which approach best reflects participatory and IKSP-based planning?", "opts": [{"l": "A", "t": "Consult communities only after the zoning map has been finalized and approved by the board"}, {"l": "B", "t": "Rely mainly on satellite imagery to identify resource use patterns without engaging local residents"}, {"l": "C", "t": "Invite communities to sign attendance sheets at the public hearing held after the draft plan is prepared"}, {"l": "D", "t": "Use Participatory Rural Appraisal to map resources and local knowledge with communities, then add spatial analysis"}], "key": "D", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 30, "type": "mc", "q": "Which sequence correctly represents the preferred waste-management hierarchy emphasized in Week 13?", "opts": [{"l": "A", "t": "Dispose–recycle–reuse–reduce"}, {"l": "B", "t": "Recycle–dispose–reduce–reuse"}, {"l": "C", "t": "Dispose–reduce–reuse–recycle"}, {"l": "D", "t": "Reduce–reuse–recycle–disposal"}], "key": "D", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 31, "type": "mc", "q": "Which law requires source segregation and supports barangay-level Materials Recovery Facilities?", "opts": [{"l": "A", "t": "RA 9003"}, {"l": "B", "t": "RA 9275"}, {"l": "C", "t": "RA 8749"}, {"l": "D", "t": "RA 9729"}], "key": "A", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 32, "type": "mc", "q": "What is the principal role of a Materials Recovery Facility (MRF) in the solid-waste system described in the notes?", "opts": [{"l": "A", "t": "To burn all municipal waste in a controlled incinerator facility"}, {"l": "B", "t": "To store radioactive materials until they are safely transported"}, {"l": "C", "t": "To issue environmental permits and compliance certificates for businesses"}, {"l": "D", "t": "To segregate and recover recyclable or reusable materials"}], "key": "D", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 33, "type": "mc", "q": "Which law regulates hazardous substances and hazardous and toxic wastes using a cradle-to-grave approach?", "opts": [{"l": "A", "t": "RA 7611"}, {"l": "B", "t": "RA 7586"}, {"l": "C", "t": "RA 10121"}, {"l": "D", "t": "RA 6969"}], "key": "D", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 34, "type": "mc", "q": "Which facility is identified as a destination for properly managed hazardous waste under RA 6969?", "opts": [{"l": "A", "t": "Registered TSD facility for treatment, storage, and disposal of hazardous waste"}, {"l": "B", "t": "Open dump site located near a residential area without any lining or monitoring"}, {"l": "C", "t": "Barangay compost pit used for mixed household waste and yard trimmings"}, {"l": "D", "t": "Unlined roadside storage area used for all types of waste until collection"}], "key": "A", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 35, "type": "mc", "q": "Which practice is most consistent with RA 9003?", "opts": [{"l": "A", "t": "Mixing biodegradable and recyclable waste at source"}, {"l": "B", "t": "Source segregation before collection"}, {"l": "C", "t": "Open dumping as the preferred disposal method"}, {"l": "D", "t": "Burning all municipal solid waste"}], "key": "B", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 36, "type": "id", "q": "The Philippine law known as the Ecological Solid Waste Management Act of 2000.", "accept": ["RA 9003"], "key_display": "RA 9003", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 37, "type": "id", "q": "The facility acronym for a treatment, storage, and disposal facility for hazardous wastes.", "accept": ["TSD", "TSD facility"], "key_display": "TSD facility", "sect": "Week 13: Solid and Hazardous Waste"}, {"n": 38, "type": "mc", "q": "Which statement correctly distinguishes climate-change mitigation from adaptation?", "opts": [{"l": "A", "t": "Mitigation reduces vulnerability to climate impacts; adaptation cuts greenhouse-gas emissions and sinks"}, {"l": "B", "t": "Both terms mean the same thing and are used interchangeably in climate policy documents"}, {"l": "C", "t": "Adaptation applies mainly to agriculture, while mitigation applies to coastal and urban systems"}, {"l": "D", "t": "Mitigation addresses greenhouse-gas emissions; adaptation adjusts systems to reduce vulnerability"}], "key": "D", "sect": "Week 14: Climate Change and DRRM"}, {"n": 39, "type": "mc", "q": "Which law established the Climate Change Commission and national climate-change policy framework?", "opts": [{"l": "A", "t": "RA 10121"}, {"l": "B", "t": "RA 9003"}, {"l": "C", "t": "RA 9729"}, {"l": "D", "t": "RA 9275"}], "key": "C", "sect": "Week 14: Climate Change and DRRM"}, {"n": 40, "type": "mc", "q": "Which law amended RA 9729 and established the People's Survival Fund?", "opts": [{"l": "A", "t": "RA 11038"}, {"l": "B", "t": "RA 7160"}, {"l": "C", "t": "RA 10174"}, {"l": "D", "t": "RA 8371"}], "key": "C", "sect": "Week 14: Climate Change and DRRM"}, {"n": 41, "type": "mc", "q": "Which law provides the Philippine framework for disaster risk reduction and management?", "opts": [{"l": "A", "t": "RA 6969"}, {"l": "B", "t": "RA 8749"}, {"l": "C", "t": "RA 7611"}, {"l": "D", "t": "RA 10121"}], "key": "D", "sect": "Week 14: Climate Change and DRRM"}, {"n": 42, "type": "mc", "q": "Which is NOT one of the four DRRM thematic areas identified in the notes?", "opts": [{"l": "A", "t": "Prevention and mitigation"}, {"l": "B", "t": "Environmental valuation"}, {"l": "C", "t": "Preparedness"}, {"l": "D", "t": "Response"}], "key": "B", "sect": "Week 14: Climate Change and DRRM"}, {"n": 43, "type": "mc", "q": "Which institution provides forecasts, warnings, seasonal outlooks, and climate projections referenced in the notes?", "opts": [{"l": "A", "t": "PCSD"}, {"l": "B", "t": "NSWMC"}, {"l": "C", "t": "NDRRMC"}, {"l": "D", "t": "PAGASA"}], "key": "D", "sect": "Week 14: Climate Change and DRRM"}, {"n": 44, "type": "mc", "q": "Which local climate-planning instrument is specifically identified in the notes?", "opts": [{"l": "A", "t": "CLUP"}, {"l": "B", "t": "LCCAP"}, {"l": "C", "t": "CBNRM"}, {"l": "D", "t": "IKSP"}], "key": "B", "sect": "Week 14: Climate Change and DRRM"}, {"n": 45, "type": "id", "q": "The Philippine law that established the four thematic areas of disaster risk reduction and management through a national framework.", "accept": ["RA 10121"], "key_display": "RA 10121", "sect": "Week 14: Climate Change and DRRM"}, {"n": 46, "type": "id", "q": "The local government climate-planning instrument referred to in the Week 14 notes.", "accept": ["LCCAP", "Local Climate Change Action Plan", "Local Climate Change Action Plan / LCCAP"], "key_display": "Local Climate Change Action Plan / LCCAP", "sect": "Week 14: Climate Change and DRRM"}, {"n": 47, "type": "mc", "q": "Which national agency is identified as the primary environmental agency in the Philippines?", "opts": [{"l": "A", "t": "DOLE"}, {"l": "B", "t": "DENR"}, {"l": "C", "t": "DTI"}, {"l": "D", "t": "DOT"}], "key": "B", "sect": "Week 15: Environmental Governance"}, {"n": 48, "type": "mc", "q": "Which DENR bureau is primarily associated with environmental management and pollution-control regulation?", "opts": [{"l": "A", "t": "FMB"}, {"l": "B", "t": "LMB"}, {"l": "C", "t": "EMB"}, {"l": "D", "t": "MGB"}], "key": "C", "sect": "Week 15: Environmental Governance"}, {"n": 49, "type": "mc", "q": "Which DENR bureau is associated with forest management?", "opts": [{"l": "A", "t": "EMB"}, {"l": "B", "t": "BMB"}, {"l": "C", "t": "LMB"}, {"l": "D", "t": "FMB"}], "key": "D", "sect": "Week 15: Environmental Governance"}, {"n": 50, "type": "mc", "q": "Which institution implements the Strategic Environmental Plan for Palawan under RA 7611?", "opts": [{"l": "A", "t": "PAGASA"}, {"l": "B", "t": "PCSD"}, {"l": "C", "t": "NSWMC"}, {"l": "D", "t": "NDRRMC"}], "key": "B", "sect": "Week 15: Environmental Governance"}, {"n": 51, "type": "mc", "q": "Which governance arrangement is most consistent with environmental management in Palawan as described in the notes?", "opts": [{"l": "A", "t": "DENR/LGU functions only, excluding PCSD"}, {"l": "B", "t": "Exclusive control by private firms"}, {"l": "C", "t": "Exclusive control by national agencies outside Palawan"}, {"l": "D", "t": "Coordination among DENR, LGUs, and PCSD"}], "key": "D", "sect": "Week 15: Environmental Governance"}, {"n": 52, "type": "mc", "q": "Under RA 7160, which level of government has important devolved environmental functions such as solid waste management and aspects of coastal management?", "opts": [{"l": "A", "t": "Foreign governments"}, {"l": "B", "t": "Universities only"}, {"l": "C", "t": "National courts only"}, {"l": "D", "t": "Local government units"}], "key": "D", "sect": "Week 15: Environmental Governance"}, {"n": 53, "type": "id", "q": "The Palawan institution responsible for implementing the Strategic Environmental Plan under RA 7611.", "accept": ["PCSD", "Palawan Council for Sustainable Development", "Palawan Council for Sustainable Development / PCSD"], "key_display": "Palawan Council for Sustainable Development / PCSD", "sect": "Week 15: Environmental Governance"}, {"n": 54, "type": "id", "q": "The DENR bureau responsible for environmental management, including pollution-control functions discussed in the course.", "accept": ["EMB", "Environmental Management Bureau", "Environmental Management Bureau / EMB"], "key_display": "Environmental Management Bureau / EMB", "sect": "Week 15: Environmental Governance"}, {"n": 55, "type": "mc", "q": "Which economic concept occurs when an environmental cost or benefit affects parties who are not directly involved in a transaction?", "opts": [{"l": "A", "t": "Opportunity set"}, {"l": "B", "t": "Externality"}, {"l": "C", "t": "Comparative advantage"}, {"l": "D", "t": "Inflation"}], "key": "B", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 56, "type": "mc", "q": "Which valuation method estimates recreational value by examining travel expenses incurred by visitors?", "opts": [{"l": "A", "t": "Hedonic pricing"}, {"l": "B", "t": "Contingent valuation"}, {"l": "C", "t": "Travel cost method"}, {"l": "D", "t": "Benefit transfer"}], "key": "C", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 57, "type": "mc", "q": "Which stated-preference method commonly asks people their willingness to pay for an environmental improvement?", "opts": [{"l": "A", "t": "Travel cost method based on visitor expenses"}, {"l": "B", "t": "Hedonic pricing based on property value differences"}, {"l": "C", "t": "Market pricing using observed prices for goods"}, {"l": "D", "t": "Contingent valuation through surveyed willingness to pay"}], "key": "D", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 58, "type": "mc", "q": "A DENR planner must estimate the recreational value of a marine park but has no budget for a new primary survey. Which combination is most appropriate?", "opts": [{"l": "A", "t": "Benefit transfer from an existing study, supported by GIS mapping of habitats and visitors"}, {"l": "B", "t": "Hedonic pricing of beachfront land values, supported by property-sales records and local surveys"}, {"l": "C", "t": "Replacement costing of the reef, estimating what it would cost to rebuild every ecosystem function"}, {"l": "D", "t": "A cost-benefit analysis built only on ecological indicators from field monitoring data"}], "key": "A", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 59, "type": "mc", "q": "What does a cost-benefit analysis primarily compare?", "opts": [{"l": "A", "t": "Environmental laws and the political parties that enacted them"}, {"l": "B", "t": "Only monetary income, taxes, and public revenue collected"}, {"l": "C", "t": "Expected costs and benefits of a proposed intervention"}, {"l": "D", "t": "Only ecological indicators such as species counts and water quality"}], "key": "C", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 60, "type": "mc", "q": "What is the basic idea of Payment for Ecosystem Services (PES)?", "opts": [{"l": "A", "t": "Beneficiaries pay providers of ecosystem services to sustain them"}, {"l": "B", "t": "Polluters automatically receive subsidies for every unit of waste they reduce"}, {"l": "C", "t": "All ecosystem services must be privatized and sold to the highest private bidder"}, {"l": "D", "t": "Communities must pay directly for all public services, including forest and water protection"}], "key": "A", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 61, "type": "mc", "q": "A local government wants to know how much residents would pay for a hypothetical improvement in river water quality, and wants a map showing which households would benefit. Which approach best fits?", "opts": [{"l": "A", "t": "Travel cost method combined with market pricing of nearby properties and goods sold"}, {"l": "B", "t": "Contingent valuation of willingness to pay, with GIS mapping of affected households"}, {"l": "C", "t": "Hedonic pricing of houses near the river, comparing property values near and far from it"}, {"l": "D", "t": "Benefit transfer from an unrelated study, with no spatial analysis of who is affected"}], "key": "B", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 62, "type": "id", "q": "The planning instrument that guides land use and zoning at the local government level.", "accept": ["CLUP", "Comprehensive Land Use Plan", "Comprehensive Land Use Plan / CLUP"], "key_display": "Comprehensive Land Use Plan / CLUP", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 63, "type": "mc", "q": "What is the primary function of GIS in environmental management?", "opts": [{"l": "A", "t": "To replace all field measurements with satellite estimates only"}, {"l": "B", "t": "To eliminate environmental laws and regulatory enforcement processes"}, {"l": "C", "t": "To store, analyze, map, and visualize spatial data"}, {"l": "D", "t": "To conduct laboratory chemistry analyses automatically without staff"}], "key": "C", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 64, "type": "mc", "q": "Which is a typical environmental application of GIS identified in the notes?", "opts": [{"l": "A", "t": "Payroll processing for municipal government employees"}, {"l": "B", "t": "Hazard and vulnerability mapping of communities"}, {"l": "C", "t": "Employee attendance tracking across departments"}, {"l": "D", "t": "Textbook proofreading and grammar checking for students"}], "key": "B", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 65, "type": "mc", "q": "Which Palawan-specific planning framework is highlighted as a GIS-related application?", "opts": [{"l": "A", "t": "ECAN"}, {"l": "B", "t": "PDCA"}, {"l": "C", "t": "MRF"}, {"l": "D", "t": "WQMA"}], "key": "A", "sect": "Week 16: Economics, Planning and GIS"}, {"n": 66, "type": "mc", "q": "Which statement best describes community-based natural resource management (CBNRM)?", "opts": [{"l": "A", "t": "Management decisions are transferred entirely to international organizations based outside the country"}, {"l": "B", "t": "Only private companies make decisions about how natural resources are used and protected locally"}, {"l": "C", "t": "Communities participate in managing resources, drawing on local knowledge and stakeholder interests"}, {"l": "D", "t": "Natural resources are managed by government agencies without any community participation or consultation"}], "key": "C", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 67, "type": "mc", "q": "What does IKSP refer to?", "opts": [{"l": "A", "t": "Indigenous Knowledge Systems and Practices"}, {"l": "B", "t": "International Knowledge Standards Protocol"}, {"l": "C", "t": "Integrated Key Sustainability Program"}, {"l": "D", "t": "Institutional Knowledge Security Policy"}], "key": "A", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 68, "type": "mc", "q": "Which Philippine law recognizes and protects Indigenous Peoples' rights and is referenced in relation to IKSP?", "opts": [{"l": "A", "t": "RA 9003"}, {"l": "B", "t": "RA 8371"}, {"l": "C", "t": "RA 9729"}, {"l": "D", "t": "RA 8749"}], "key": "B", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 69, "type": "mc", "q": "Which participation approach involves local people in identifying issues, resources, and possible interventions through structured participatory methods?", "opts": [{"l": "A", "t": "Financial auditing"}, {"l": "B", "t": "Airshed modeling only"}, {"l": "C", "t": "Hazardous-waste manifesting"}, {"l": "D", "t": "Participatory Rural Appraisal"}], "key": "D", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 70, "type": "mc", "q": "Which statement best describes genuine participation in environmental management?", "opts": [{"l": "A", "t": "Communities are informed only after decisions are finalized, leaving little room for input"}, {"l": "B", "t": "Community views are gathered through consultations, then recorded without any formal response"}, {"l": "C", "t": "Communities have meaningful opportunities to contribute to planning and decision-making"}, {"l": "D", "t": "Participation is limited to signing attendance sheets and receiving copies of final reports"}], "key": "C", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 71, "type": "id", "q": "The participatory approach abbreviated as PRA and used to engage communities in identifying issues, resources, and interventions.", "accept": ["Participatory Rural Appraisal"], "key_display": "Participatory Rural Appraisal", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 72, "type": "id", "q": "The Palawan zoning/planning concept that forms part of the Strategic Environmental Plan and is supported by spatial analysis.", "accept": ["ECAN", "ECAN / Environmentally Critical Areas Network", "Environmentally Critical Areas Network"], "key_display": "ECAN / Environmentally Critical Areas Network", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 73, "type": "mc", "q": "Which combination best represents an integrated Environmental Management Plan (EMP) based on the Week 17 synthesis?", "opts": [{"l": "A", "t": "Ecological, legal/institutional, management, economic, and participatory elements"}, {"l": "B", "t": "Ecological basis and habitat data, with other planning elements left for later review"}, {"l": "C", "t": "Legal compliance and permit requirements, handled separately from ecological planning"}, {"l": "D", "t": "Financial budgeting and cost tracking, with monitoring and participation left to others"}], "key": "A", "sect": "Week 17: CBNRM, IKSP and Participation"}, {"n": 74, "type": "mc", "q": "A resort in Palawan identifies wastewater discharge as a significant environmental aspect, sets an objective to reduce its impact, monitors effluent, and reviews corrective actions. Which concept does this illustrate most directly?", "opts": [{"l": "A", "t": "EMS continual improvement"}, {"l": "B", "t": "Waste disposal hierarchy only"}, {"l": "C", "t": "Contingent valuation"}, {"l": "D", "t": "IKSP"}], "key": "A", "sect": "Weeks 9 and 18: Synthesis"}, {"n": 75, "type": "mc", "q": "A municipality has rapidly increasing tourist arrivals, limited septage capacity, and deteriorating coastal water quality. Which management approach best reflects the course framework?", "opts": [{"l": "A", "t": "Focus on tourism promotion and marketing campaigns to attract more visitors to the coastal area"}, {"l": "B", "t": "Pause all monitoring programs, since data collection is costly and delays tourism permits"}, {"l": "C", "t": "Address water quality, sanitation and septage, institutional roles, monitoring, and participation together"}, {"l": "D", "t": "Treat the issue as a solid-waste problem only, with tourist arrivals and water quality left aside"}], "key": "C", "sect": "Weeks 9 and 18: Synthesis"}], "sections": ["Weeks 9 and 18: Synthesis", "Week 10: EMS, ISO 14001 and Auditing", "Week 11: Air Pollution / RA 8749", "Week 12: Water Pollution / RA 9275", "Week 13: Solid and Hazardous Waste", "Week 14: Climate Change and DRRM", "Week 15: Environmental Governance", "Week 16: Economics, Planning and GIS", "Week 17: CBNRM, IKSP and Participation"]};
+
+// ===== CONFIG (edit here if needed) =====
+const CONFIG = {
+  timeLimitMinutes: 60,
+  warnAtMinutes: 5,
+  passingPercent: 75,      // change if the institutional passing mark differs
+  revealAnswers: false     // true shows correct answers on the receipt
+};
+
+// ===== STATE =====
+const state = { reason:null, submittedAt:null, started:false, submitted:false, name:'', section:'', startedAt:null, endAt:null, answers:{}, timerId:null, result:null };
+const $ = id => document.getElementById(id);
+
+// ===== PERSISTENCE (saved on this device) =====
+const STORAGE_KEY = 'ens106-final-v2';
+function notice(msg){ const n = $('noticeBar'); if (!n) return; n.textContent = msg; n.classList.remove('hidden'); }
+function saveSession(){
+  if (!state.started) return;
+  const snap = {
+    v: 2, name: state.name, section: state.section,
+    startedAt: state.startedAt.toISOString(), endAt: state.endAt,
+    answers: state.answers, submitted: state.submitted,
+    submittedAt: state.submittedAt ? state.submittedAt.toISOString() : null,
+    reason: state.reason || null
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(snap)); }
+  catch (e) { notice('Answers cannot be saved in this browser. Do not close or reload this page.'); }
+}
+function loadSession(){
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; }
+  catch (e) { return null; }
+}
+
+// ===== HELPERS =====
+function norm(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+function squash(s){ return norm(s).replace(/ /g,''); }
+function isCorrect(item, ans){
+  if (ans === undefined || ans === null || String(ans).trim() === '') return false;
+  if (item.type === 'mc') return ans === item.key;
+  const a = squash(ans);
+  return item.accept.some(x => squash(x) === a);
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+function fmtTime(ms){
+  const s = Math.max(0, Math.floor(ms/1000));
+  return pad(Math.floor(s/60)) + ':' + pad(s%60);
+}
+function fmtDate(d){
+  return d.toLocaleString('en-PH', { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+function verificationCode(str){
+  // simple, non-cryptographic checksum for quick visual checks
+  let h1 = 5381, h2 = 52711;
+  for (let i=0;i<str.length;i++){ const c = str.charCodeAt(i); h1 = ((h1*33) ^ c) >>> 0; h2 = ((h2*31) + c) >>> 0; }
+  const b36 = (h1.toString(36) + h2.toString(36)).toUpperCase().replace(/[^A-Z0-9]/g,'');
+  return (b36 + 'XXXXXXXX').slice(0,8).replace(/(.{4})(.{4})/, '$1-$2');
+}
+function el(tag, attrs={}, text){
+  const e = document.createElement(tag);
+  for (const k in attrs){
+    if (k === 'class') e.className = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+// ===== BUILD EXAM =====
+function buildExam(){
+  const wrap = $('itemsWrap'); const pal = $('palette');
+  DATA.items.forEach(item => {
+    const box = el('div', { class:'item', id:'q'+item.n });
+    const head = el('div', { class:'qhead' });
+    head.appendChild(el('span', { class:'num' }, item.n + '.'));
+    head.appendChild(document.createTextNode(item.q));
+    head.appendChild(el('span', { class:'tag' }, item.sect.split(':')[0]));
+    box.appendChild(head);
+
+    if (item.type === 'mc'){
+      item.opts.forEach(o => {
+        const lab = el('label', { class:'opt', id:`o${item.n}${o.l}` });
+        const inp = el('input', { type:'radio', name:'q'+item.n, value:o.l });
+        inp.addEventListener('change', () => setAnswer(item.n, o.l));
+        lab.appendChild(inp);
+        lab.appendChild(document.createTextNode(o.l + '. ' + o.t));
+        box.appendChild(lab);
+      });
+    } else {
+      const inp = el('input', { type:'text', id:'a'+item.n, placeholder:'Type your answer', autocomplete:'off', maxlength:'120', 'aria-label': 'Answer to item ' + item.n });
+      inp.addEventListener('input', () => setAnswer(item.n, inp.value));
+      box.appendChild(inp);
+    }
+    wrap.appendChild(box);
+
+    const b = el('button', { id:'p'+item.n, type:'button' }, String(item.n));
+    b.addEventListener('click', () => $('q'+item.n).scrollIntoView({behavior:'smooth', block:'start'}));
+    pal.appendChild(b);
+  });
+}
+
+function setAnswer(n, value){
+  if (state.submitted) return;
+  const item = DATA.items.find(i => i.n === n);
+  if (item.type === 'id'){
+    if (String(value).trim() === '') delete state.answers[n]; else state.answers[n] = value;
+  } else {
+    state.answers[n] = value;
+    document.querySelectorAll(`#q${n} .opt`).forEach(l => l.classList.toggle('sel', l.querySelector('input').value === value));
+  }
+  saveSession();
+  updateProgress();
+}
+
+function answeredCount(){
+  return Object.keys(state.answers).filter(k => String(state.answers[k]).trim() !== '').length;
+}
+function updateProgress(){
+  $('progress').textContent = answeredCount() + ' of ' + DATA.items.length + ' answered';
+  DATA.items.forEach(i => {
+    const done = state.answers[i.n] !== undefined && String(state.answers[i.n]).trim() !== '';
+    $('p'+i.n).classList.toggle('done', done);
+  });
+}
+
+// ===== START =====
+$('startBtn').addEventListener('click', () => {
+  const name = $('stuName').value.trim();
+  const section = $('stuSection').value.trim();
+  if (name.length < 3){ $('startError').textContent = 'Please enter your full name.'; return; }
+  if (section.length < 1){ $('startError').textContent = 'Please enter your section.'; return; }
+  $('startError').textContent = '';
+  state.name = name; state.section = section;
+  state.started = true;
+  state.startedAt = new Date();
+  state.endAt = Date.now() + CONFIG.timeLimitMinutes * 60 * 1000;
+  saveSession();
+  $('startScreen').classList.add('hidden');
+  $('examScreen').classList.remove('hidden');
+  $('timer').classList.remove('hidden');
+  buildExam();
+  updateProgress();
+  tick();
+  state.timerId = setInterval(tick, 1000);
+});
+
+function tick(){
+  if (state.submitted) return;
+  const left = state.endAt - Date.now();
+  $('timer').textContent = fmtTime(left);
+  $('timer').classList.toggle('warn', left <= CONFIG.warnAtMinutes * 60 * 1000);
+  if (left <= 0) finalize('time', new Date(state.endAt));
+}
+
+// ===== SUBMIT =====
+function confirmSubmit(){
+  if (state.submitted) return;
+  const unanswered = DATA.items.length - answeredCount();
+  const msg = unanswered > 0
+    ? `You have ${unanswered} unanswered item(s). Submit anyway? This cannot be undone.`
+    : 'Submit your examination now? This cannot be undone.';
+  if (window.confirm(msg)) finish('manual');
+}
+$('submitBtn').addEventListener('click', confirmSubmit);
+$('submitBtn2').addEventListener('click', confirmSubmit);
+
+function score(){
+  const rows = []; let total = 0;
+  const bySect = {};
+  DATA.sections.forEach(s => bySect[s] = { correct:0, total:0 });
+  DATA.items.forEach(item => {
+    const ans = state.answers[item.n];
+    const ok = isCorrect(item, ans);
+    if (ok) total++;
+    bySect[item.sect].total++;
+    if (ok) bySect[item.sect].correct++;
+    rows.push({ n:item.n, type:item.type, given: ans === undefined ? '' : String(ans), correct: ok, key: item.type === 'mc' ? item.key : item.key_display, q:item.q });
+  });
+  return { total, count: DATA.items.length, bySect, rows };
+}
+
+function finalize(reason, submittedAt, noticeText){
+  if (state.submitted) return;
+  state.submitted = true;
+  state.reason = reason;
+  state.submittedAt = submittedAt || new Date();
+  clearInterval(state.timerId);
+  const res = score();
+  const pct = Math.round((res.total / res.count) * 1000) / 10;
+  const passed = pct >= CONFIG.passingPercent;
+  const usedMs = state.submittedAt - state.startedAt;
+  const code = verificationCode(state.name + '|' + state.section + '|' + res.total + '|' + state.submittedAt.toISOString());
+  state.result = { res, pct, passed, code, submittedAt: state.submittedAt, usedMs, reason, notice: noticeText || null };
+  saveSession();
+  renderReceipt();
+  $('startScreen').classList.add('hidden');
+  $('examScreen').classList.add('hidden');
+  $('timer').classList.add('hidden');
+  $('receiptScreen').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+function finish(reason){ finalize(reason, new Date()); }
+
+// ===== RECEIPT =====
+function renderReceipt(){
+  const r = state.result; const box = $('receipt'); box.textContent = '';
+  box.appendChild(el('h2', {}, 'Examination Receipt'));
+  if (r.notice) box.appendChild(el('p', { style:'color:var(--warn);font-weight:700' }, r.notice));
+  box.appendChild(el('div', { class:'muted' }, 'ENS 106 – Environmental Management | Final Examination (Weeks 9–18)'));
+  const top = el('div', { style:'margin:14px 0' });
+  top.appendChild(el('div', { class:'big' }, `${r.res.total} / ${r.res.count}  (${r.pct}%)`));
+  top.appendChild(el('div', { class: r.passed ? 'pass' : 'fail' }, r.passed ? `PASSED (passing mark ${CONFIG.passingPercent}%)` : `Did not meet passing mark of ${CONFIG.passingPercent}%`));
+  box.appendChild(top);
+
+  const info = el('table');
+  const addRow = (k,v) => { const tr = el('tr'); tr.appendChild(el('th', { style:'width:200px' }, k)); tr.appendChild(el('td', {}, v)); info.appendChild(tr); };
+  addRow('Name', state.name);
+  addRow('Section', state.section);
+  addRow('Started', fmtDate(state.startedAt));
+  addRow('Submitted', fmtDate(r.submittedAt) + (r.reason === 'time' ? ' (time expired, auto-submitted)' : ''));
+  addRow('Time used', fmtTime(r.usedMs).replace(/^00:/,'') + ' (mm:ss)');
+  addRow('Items answered', `${answeredCount()} of ${r.res.count}`);
+  addRow('Verification code', el('span', { class:'code' }, r.code));
+  box.appendChild(info);
+
+  box.appendChild(el('h2', { style:'margin-top:18px; font-size:16px' }, 'Score by content area'));
+  const t = el('table');
+  const hr = el('tr'); ['Content area','Correct','Score'].forEach((h,i)=> hr.appendChild(el('th', i? {style:'text-align:right'} : {}, h)));
+  t.appendChild(hr);
+  DATA.sections.forEach(s => {
+    const v = r.res.bySect[s]; const tr = el('tr');
+    tr.appendChild(el('td', {}, s));
+    tr.appendChild(el('td', { class:'num' }, `${v.correct} / ${v.total}`));
+    tr.appendChild(el('td', { class:'num' }, Math.round(v.correct / v.total * 100) + '%'));
+    t.appendChild(tr);
+  });
+  box.appendChild(t);
+
+  const idRows = r.res.rows.filter(x => x.type === 'id');
+  if (idRows.length){
+    box.appendChild(el('h2', { style:'margin-top:18px; font-size:16px' }, 'Identification answers'));
+    const it = el('table');
+    const h = el('tr'); ['Item','Your answer','Result'].forEach(x => h.appendChild(el('th', {}, x)));
+    it.appendChild(h);
+    idRows.forEach(x => {
+      const tr = el('tr');
+      tr.appendChild(el('td', {}, x.n + '.'));
+      tr.appendChild(el('td', {}, x.given || '(blank)'));
+      tr.appendChild(el('td', {}, x.correct ? 'Correct' : (CONFIG.revealAnswers ? 'Incorrect. Accepted: ' + x.key : 'Incorrect')));
+      it.appendChild(tr);
+    });
+    box.appendChild(it);
+  }
+
+  if (CONFIG.revealAnswers){
+    box.appendChild(el('h2', { style:'margin-top:18px; font-size:16px' }, 'Multiple-choice answer key'));
+    const mt = el('table');
+    r.res.rows.filter(x => x.type === 'mc').forEach(x => {
+      const tr = el('tr');
+      tr.appendChild(el('td', {}, x.n + '.'));
+      tr.appendChild(el('td', {}, 'Your answer: ' + (x.given || '(blank)')));
+      tr.appendChild(el('td', {}, 'Key: ' + x.key + (x.correct ? ' (correct)' : ' (incorrect)')));
+      mt.appendChild(tr);
+    });
+    box.appendChild(mt);
+  }
+  box.appendChild(el('p', { class:'muted', style:'margin-top:16px' }, 'This receipt is generated by the examination page on submission. The verification code is derived from your name, section, score, and submission time.'));
+}
+
+$('printBtn').addEventListener('click', () => window.print());
+
+// ===== RESTORE (resume after reload or closed tab) =====
+function restoreSession(){
+  const snap = loadSession();
+  if (!snap || snap.v !== 2 || !snap.name) return;
+  state.name = snap.name; state.section = snap.section;
+  state.started = true;
+  state.startedAt = new Date(snap.startedAt);
+  state.answers = snap.answers || {};
+  if (snap.submitted){
+    state.submittedAt = new Date(snap.submittedAt);
+    state.submitted = false;
+    finalize(snap.reason || 'manual', state.submittedAt,
+      'This exam was already submitted from this browser. Your receipt is shown below.');
+    return;
+  }
+  state.endAt = snap.endAt;
+  $('startScreen').classList.add('hidden');
+  $('examScreen').classList.remove('hidden');
+  $('timer').classList.remove('hidden');
+  buildExam();
+  Object.keys(state.answers).forEach(k => {
+    const n = Number(k);
+    const item = DATA.items.find(i => i.n === n);
+    if (!item) return;
+    if (item.type === 'mc'){
+      const v = state.answers[k];
+      const inp = document.querySelector(`#q${n} input[value="${v}"]`);
+      if (inp) inp.checked = true;
+      document.querySelectorAll(`#q${n} .opt`).forEach(l => l.classList.toggle('sel', l.querySelector('input').value === v));
+    } else {
+      $('a' + n).value = state.answers[k];
+    }
+  });
+  updateProgress();
+  if (state.endAt - Date.now() <= 0){
+    finalize('time', new Date(state.endAt), 'Your time ran out while the page was closed. The exam was auto-submitted.');
+    return;
+  }
+  notice('Your exam has resumed from where you left off. The timer kept running while the page was closed.');
+  tick();
+  state.timerId = setInterval(tick, 1000);
+}
+restoreSession();
+
+// ===== GUARD =====
+window.addEventListener('beforeunload', e => {
+  if (state.started && !state.submitted){ e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>

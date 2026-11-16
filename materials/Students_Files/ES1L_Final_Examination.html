@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ES1L Final Examination</title>
+<style>
+:root{--bg:#f5f7f4;--card:#fff;--ink:#1d2a22;--muted:#5d6b62;--accent:#2d6a4f;--line:#d7dfd9;--warn:#b5402a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121913;--card:#1b241e;--ink:#e6efe8;--muted:#9fb1a5;--accent:#6fbf96;--line:#2e3b33;--warn:#ff8a70;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:5}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.25rem;color:var(--accent)}
+.timer.low{color:var(--warn)}
+main{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+h1{font-size:1.4rem;margin:0 0 6px}
+h2{font-size:1.1rem;margin:28px 0 10px;color:var(--accent)}
+.muted{color:var(--muted);font-size:.92rem}
+.q{padding:14px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:none}
+.qn{font-weight:600;margin-bottom:8px}
+label.opt{display:block;padding:6px 8px;border-radius:8px;cursor:pointer}
+label.opt:hover{background:var(--bg)}
+input[type=text],input[type=number]{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input:focus{outline:2px solid var(--accent)}
+button{font:inherit;padding:10px 18px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.hidden{display:none!important}
+.receipt{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem}
+.receipt dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+.receipt dt{color:var(--muted)}
+.receipt dd{margin:0;font-weight:600}
+.big{font-size:1.6rem;font-weight:700;color:var(--accent)}
+@media print{header.bar,.noprint{display:none!important}body{background:#fff;color:#000}.card{border:1px solid #000}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <strong>ES1L Final Examination</strong>
+  <span class="timer" id="timer">60:00</span>
+</header>
+
+<main>
+  <!-- START SCREEN -->
+  <section id="start" class="card">
+    <h1>Earth Science 1: Geology and Geography</h1>
+    <p class="muted">Final Examination · Weeks 10–18 · 75 items (Part I: 50 multiple choice, Part II: 25 identification)</p>
+    <p>You have <strong>one hour</strong>. Your answers are saved automatically in this browser, so refreshing will not reset the timer. The exam auto-submits when time runs out. Each item is worth 1 point. Identification answers are not case-sensitive. A receipt is generated when you submit; keep it.</p>
+    <div class="row" style="margin-bottom:12px">
+      <div style="flex:1 1 260px"><label class="muted">Full name</label><input type="text" id="sName" autocomplete="name"></div>
+      <div style="flex:1 1 200px"><label class="muted">Student number</label><input type="text" id="sNo"></div>
+    </div>
+    <p id="startErr" class="muted" style="color:var(--warn)"></p>
+    <button id="btnStart">Start exam</button>
+  </section>
+
+  <!-- EXAM SCREEN -->
+  <section id="exam" class="hidden">
+    <div class="card muted" id="progress">Answered 0 / 75</div>
+    <div class="card" id="partI"></div>
+    <div class="card" id="partII"></div>
+    <div class="row noprint">
+      <button id="btnSubmit">Submit exam</button>
+    </div>
+  </section>
+
+  <!-- RECEIPT SCREEN -->
+  <section id="receipt" class="card hidden">
+    <h1>Examination Receipt</h1>
+    <p class="muted">Keep this receipt. It records your submission.</p>
+    <div class="receipt">
+      <dl>
+        <dt>Receipt no.</dt><dd id="rId"></dd>
+        <dt>Course</dt><dd>ES1L Earth Science 1: Geology and Geography</dd>
+        <dt>Name</dt><dd id="rName"></dd>
+        <dt>Student no.</dt><dd id="rNo"></dd>
+        <dt>Submitted</dt><dd id="rWhen"></dd>
+        <dt>Time used</dt><dd id="rUsed"></dd>
+        <dt>Items answered</dt><dd id="rAns"></dd>
+        <dt>Part I (MCQ)</dt><dd id="rP1"></dd>
+        <dt>Part II (Identification)</dt><dd id="rP2"></dd>
+      </dl>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+    <div class="big" id="rTotal"></div>
+    <p>Percentage: <strong id="rPct"></strong> · Grade: <strong id="rGrade"></strong> (<span id="rDesc"></span>)</p>
+    <div class="row noprint"><button class="ghost" onclick="window.print()">Print receipt</button></div>
+  </section>
+</main>
+
+<script>
+// ---------- ANSWER KEY ----------
+// MCQ: [question, [options], index of correct option]
+const MCQ = [
+["A rock slab on a cold mountain face repeatedly freezes and thaws, gradually splitting apart. The dominant weathering process is:",["Hydrolysis", "Carbonation", "Oxidation", "Frost wedging (physical weathering)"],3],
+["Which combination of conditions would produce the fastest chemical weathering?",["Warm, humid climate with abundant water and reactive minerals", "Cold polar climate with thick permafrost", "Hot, dry desert with massive granite", "Cold, arid climate with coarse-grained quartz"],0],
+["Wet clay on a hillside moves downslope over months with no distinct failure plane, tilting fence posts. This is best classified as:",["Rockfall", "Slow mass movement (creep)", "Slump", "Debris flow"],1],
+["Rockfalls are most likely to occur on:",["Gentle slopes with thick soil cover", "Low-relief deltas", "Gently sloping floodplains", "Steep cliff faces with fractured rock"],3],
+["After a typhoon, a saturated hillside suddenly fails. The most direct trigger is:",["Strong desiccation by wind", "Increased frost action", "Lowered groundwater after a long drought", "Rising pore-water pressure from prolonged heavy rainfall"],3],
+["A river moves sand grains by bouncing them along the bed in short hops. This transport mode is:",["Suspension", "Solution", "Saltation", "Traction"],2],
+["Clay and iron compounds leached from the upper layers accumulate in which soil horizon?",["B horizon", "A horizon", "C horizon", "O horizon"],0],
+["A layer of weathered rock fragments still resembles the bedrock beneath, with no humus or root development. Which horizon is this?",["O horizon", "A horizon", "C horizon", "E horizon"],2],
+["Which is NOT one of the five classic soil-forming factors?",["Parent material", "Topography", "Time", "Tectonic plate velocity"],3],
+["An Oxisol is best described as:",["Frozen soil of polar regions with permafrost", "Young, fertile grassland soil rich in calcium", "Highly weathered, low-fertility tropical soil rich in iron and aluminum oxides", "Organic soil formed in waterlogged basins"],2],
+["Physical weathering in high-latitude regions is driven mainly by:",["Oxidation of iron-bearing minerals", "Dissolution by groundwater", "Hydrolysis by acidic rainwater", "Repeated freeze-thaw cycles in water-filled cracks"],3],
+["Which statement correctly distinguishes erosion from weathering?",["Erosion moves material, while weathering breaks rock down in place", "Erosion occurs only in arid regions", "Both processes involve only chemical reactions", "Weathering moves material downslope, while erosion breaks rock in place"],0],
+["The ozone layer lies in the stratosphere. Why does temperature increase with altitude there?",["Water vapor absorbs infrared radiation", "Ozone absorbs ultraviolet radiation", "The layer absorbs visible light", "The layer is closest to outer space"],1],
+["Which is the primary energy driver of global atmospheric circulation?",["Tidal forces from the Moon", "Radioactive decay in the crust", "Geothermal heat from the mantle", "Uneven heating of Earth's surface by solar insolation"],3],
+["Winds in the Northern Hemisphere are deflected to the right of their path. This is due to:",["Surface friction", "The Coriolis effect", "The pressure gradient force", "Centrifugal force"],1],
+["A station has hot temperatures, no dry season, and abundant rain year-round. Its Köppen classification is:",["Af (tropical rainforest)", "Am (tropical monsoon)", "Dfb (humid continental)", "Cfa (humid subtropical)"],0],
+["On a climograph, monthly precipitation is displayed as bars and is paired with:",["Daily solar radiation", "Monthly soil moisture", "A monthly temperature line", "Monthly wind speed"],2],
+["The Intertropical Convergence Zone is a band where:",["Air descends and deserts form", "Trade winds converge, air rises, and heavy rainfall is common", "Subtropical highs dominate year-round", "Polar easterlies meet westerlies"],1],
+["Two adjacent rivers flow in opposite directions from a shared high ridge. The boundary separating their drainage basins is the:",["Topographic divide", "Water table", "Continental shelf edge", "Aquifer contact"],0],
+["A rock unit can freely store and transmit groundwater through pores and fractures. It is a(n):",["Aquitard", "Aquifer", "Aquiclude", "Water table"],1],
+["During an El Niño year, which condition is most likely in parts of the Philippines?",["Increased tectonic uplift", "Below-normal rainfall and increased drought risk", "Above-normal rainfall and flooding across all provinces", "Lower sea-surface temperatures and more typhoons"],1],
+["Which biome supports the greatest number of species per unit area on land?",["Tropical rainforest", "Boreal forest (taiga)", "Tundra", "Temperate grassland"],0],
+["Species found only on Palawan and nowhere else are best explained by:",["Frequent dispersal by strong ocean currents", "Continuous land connection to the Asian mainland", "A uniform climate across all islands", "Long-term geographic isolation limiting gene flow"],3],
+["Replacing forest with cropland and roads most directly leads to:",["Habitat fragmentation and loss of connectivity", "Ecological succession toward old-growth forest", "Higher primary production in all habitats", "Rapid speciation of forest species"],0],
+["Palawan's biota shows its strongest biogeographic affinity with which region?",["Neotropical", "Sundaic (Borneo–Sunda shelf)", "Australasian (New Guinea–Australia)", "Wallacean"],1],
+["Water vapor returned to the atmosphere through leaf stomata is called:",["Sublimation", "Evaporation from open water", "Transpiration", "Infiltration"],2],
+["On a 1:50,000 map, two points are 4 cm apart. The actual ground distance is:",["2 km", "500 m", "20 km", "200 m"],0],
+["Contour lines are spaced very closely together near a summit. This indicates:",["A gentle slope", "A depression", "A steep slope", "Flat terrain"],2],
+["Closed contours with hachure marks pointing inward usually indicate:",["A ridge crest", "A depression", "A hilltop", "A valley floor"],1],
+["How many zones does the Universal Transverse Mercator (UTM) system divide the Earth into?",["12", "24", "180", "60"],3],
+["A GIS analyst must compare land areas across a large region without area distortion. The best choice is:",["An equal-area projection (e.g., Albers)", "Gnomonic", "Mercator", "Equirectangular"],0],
+["Which GIS data model best represents road networks and rivers as line features?",["Raster", "Attribute table", "Vector", "Tabular only"],2],
+["A barangay layer's attribute table contains population and area for each row. The attribute table stores:",["Descriptive data linked to each feature", "The map projection parameters", "The cartographic scale", "Coordinates of feature geometry only"],0],
+["A remote-sensing analyst computes NDVI to assess vegetation health. Which spectral bands are used?",["Thermal infrared and microwave", "Shortwave infrared and ultraviolet", "Red and near-infrared", "Blue and green"],2],
+["A map shading rainfall totals by barangay to show spatial patterns is a:",["Cadastral map", "Thematic map", "Reference map", "Navigation chart"],1],
+["Which map element tells the reader which direction is north?",["Legend", "Scale bar", "North arrow", "Map title"],2],
+["A bearing of S 30° W corresponds to an azimuth of:",["150°", "210°", "240°", "30°"],1],
+["A map uses color bands to show elevation intervals. This is a:",["Dot-density map", "Hypsometric map", "Choropleth map", "Flow map"],1],
+["The Philippines experiences frequent earthquakes and eruptions because it lies in the:",["Alpine-Himalayan belt", "Mid-Atlantic ridge", "Circum-Pacific (Ring of Fire) belt", "East African Rift"],2],
+["A seismologist rates shaking using observed damage and people's reports. The scale used is:",["Modified Mercalli intensity", "Beaufort scale", "Saffir-Simpson scale", "Richter magnitude"],0],
+["A typhoon's low pressure and onshore winds push seawater inland, flooding coastal areas. This is a:",["Tsunami", "Seiche", "Tidal bore", "Storm surge"],3],
+["Tsunamis are most likely triggered by:",["A landslide on land far from the coast", "A shallow undersea megathrust earthquake that displaces the seafloor", "Volcanic ash fall in a city", "Strong winds over a lake"],1],
+["Which law is the Philippine national disaster risk reduction framework?",["RA 7160 (Local Government Code)", "RA 9729 (Climate Change Act)", "RA 10121 (Philippine DRRM Act of 2010)", "RA 9275 (Clean Water Act)"],2],
+["A municipality enforces no-build zones and retrofits bridges before any hazard strikes. This falls under which DRRM phase?",["Recovery", "Rehabilitation", "Response", "Prevention and mitigation"],3],
+["In Risk = (Hazard × Vulnerability) ÷ Capacity, increasing capacity does what to risk?",["Increases the hazard magnitude", "Lowers risk by improving the community's ability to cope and recover", "Has no effect when the hazard is high", "Raises risk by increasing exposure"],1],
+["A prolonged rainfall deficit causing water shortages is classified as a:",["Technological hazard", "Biological hazard", "Geologic hazard", "Hydrometeorological hazard"],3],
+["A steep road cut in weathered volcanic soil keeps failing. The most effective stabilization is:",["Regrading the slope, installing retaining structures, and establishing vegetation", "Removing all vegetation to speed drainage", "Adding heavy loads at the crest without drainage", "Steepening the cut to reduce material"],0],
+["To reduce flood losses over the next decade, a coastal town should adopt:",["Allowing houses in floodplains if they have raised foundations", "Clearing mangroves to widen the shoreline", "Paving all open space to improve drainage", "Zoning that restricts new settlement in high-hazard floodplains"],3],
+["A volcano's flank collapses, producing a fast, hot mixture of gas and rock fragments. The product is a:",["Lava dome", "Tephra fall", "Pyroclastic flow", "Lahar"],2],
+["On a provincial hazard map, shading runs from light yellow to dark red. The darkest red typically indicates:",["The highest hazard", "No data available", "Stable ground", "The lowest hazard"],0]
+];
+
+// ID: [question, [accepted answers, normalized]]
+const ID = [
+// Unit IV
+["Slow downslope movement of soil and rock too gradual to see directly.",["creep"]],
+["Abrupt free fall of rock fragments from a cliff face.",["rockfall","rock fall","rockfalls"]],
+["The topmost mineral soil layer enriched in humus and organic matter.",["a horizon","a-horizon","topsoil"]],
+["Wearing down and removal of rock by water, wind, or ice.",["erosion"]],
+["Breakdown of rock in place without removal of material.",["weathering"]],
+["Clay mineral produced by feldspar weathering in humid, well-drained settings.",["kaolinite","kaolin"]],
+// Unit V
+["Change of water vapor into liquid droplets that form clouds.",["condensation"]],
+["Land area drained by a river system, bounded by a divide.",["watershed","drainage basin","catchment"]],
+["Upward vertical transfer of heat by rising warm air.",["convection","convective lift","convective"]],
+["Global climate classification system developed by Wladimir Köppen.",["koppen","koppen climate classification","koppen system"]],
+["Ratio of water vapor present to the maximum possible at a given temperature, as a percentage.",["relative humidity","rh"]],
+["Biome of treeless cold plains with permafrost.",["tundra"]],
+// Unit VI
+["East-west grid distance in meters from a reference meridian.",["easting","x coordinate"]],
+["Lines joining points of equal elevation on a topographic map.",["contour lines","contour line","contours","contour"]],
+["Shaded-relief layer simulating light falling on terrain.",["hillshade","hill shade","shaded relief"]],
+["Free, open-source GIS software used in this course.",["qgis","quantum gis"]],
+["Ratio of a distance on the map to the corresponding ground distance.",["scale","map scale","representative fraction","rf"]],
+["Vertical difference in elevation between adjacent contour lines.",["contour interval"]],
+// Unit VII
+["Volcanic mudflow composed of volcanic debris mixed with water.",["lahar"]],
+["Philippine agency responsible for volcano and earthquake monitoring.",["phivolcs"]],
+["Philippine agency responsible for geohazard maps and geological surveys.",["mgb","mines and geosciences bureau"]],
+["Sudden release of energy along a fault that produces seismic waves.",["earthquake","earthquakes","seismic event"]],
+["Philippine agency responsible for weather and climate services.",["pagasa"]],
+["Fault type in which the hanging wall moves down relative to the footwall due to extension.",["normal fault"]],
+["People, property, and assets located in an area where a hazard can occur.",["exposure","exposed elements"]]
+];
+
+// ---------- STATE ----------
+const TOTAL_SECONDS = 60 * 60;
+const STORE_KEY = "es1l_final_exam_v1";
+let remaining = TOTAL_SECONDS, timerId = null, submitted = false;
+let startedAt = null, currentUser = null;
+let mcqAns = Array(MCQ.length).fill(null);
+let idAns = Array(ID.length).fill("");
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+
+// ---------- SAVED PROGRESS (browser local storage) ----------
+function loadState(){
+  try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function saveState(extra){
+  try {
+    const state = Object.assign({
+      name: currentUser ? currentUser.name : "",
+      no: currentUser ? currentUser.no : "",
+      startedAt: startedAt, mcq: mcqAns, id: idAns, submitted: false
+    }, extra || {});
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  } catch(e){}
+}
+function setStartMsg(text, isError){
+  $("startErr").textContent = text;
+  $("startErr").style.color = isError ? "var(--warn)" : "var(--muted)";
+}
+
+// ---------- RENDER ----------
+function render(){
+  $("partI").innerHTML = `<h2>Part I: Multiple Choice (50 items)</h2>` + MCQ.map((q,i)=>`
+    <div class="q"><div class="qn">${i+1}. ${esc(q[0])}</div>
+    ${q[1].map((o,j)=>`<label class="opt"><input type="radio" name="m${i}" value="${j}" onchange="setMcq(${i},${j})"> ${String.fromCharCode(65+j)}. ${esc(o)}</label>`).join("")}
+    </div>`).join("");
+  $("partII").innerHTML = `<h2>Part II: Identification (25 items)</h2><p class="muted">Write the correct term or answer.</p>` + ID.map((q,i)=>`
+    <div class="q"><div class="qn">${MCQ.length+i+1}. ${esc(q[0])}</div>
+    <input type="text" id="id${i}" oninput="setId(${i},this.value)" autocomplete="off"></div>`).join("");
+}
+function restoreAnswers(){
+  mcqAns.forEach((a,i)=>{
+    if(a !== null){ const r = document.querySelector(`input[name="m${i}"][value="${a}"]`); if(r) r.checked = true; }
+  });
+  idAns.forEach((v,i)=>{ if(v) $("id"+i).value = v; });
+}
+function setMcq(i,j){ mcqAns[i] = j; updateProgress(); saveState(); }
+function setId(i,v){ idAns[i] = v; updateProgress(); saveState(); }
+function answeredCount(){
+  return mcqAns.filter(a=>a!==null).length + idAns.filter(a=>norm(a)!=="").length;
+}
+function updateProgress(){ $("progress").textContent = `Answered ${answeredCount()} / ${MCQ.length+ID.length}`; }
+
+// ---------- TIMER (based on real start time, so refreshing does not reset it) ----------
+function fmt(s){ const m=Math.floor(s/60), r=s%60; return `${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}`; }
+function computeRemaining(){ return TOTAL_SECONDS - Math.floor((Date.now()-startedAt)/1000); }
+function tick(){
+  remaining = computeRemaining();
+  $("timer").textContent = fmt(Math.max(remaining,0));
+  $("timer").classList.toggle("low", remaining <= 300);
+  if(remaining <= 0){ clearInterval(timerId); submitExam(true); }
+}
+
+// ---------- SHOW SCREENS ----------
+function showExam(){
+  $("start").classList.add("hidden");
+  $("exam").classList.remove("hidden");
+  render(); restoreAnswers(); updateProgress();
+}
+function beginTimer(){
+  remaining = computeRemaining();
+  if(remaining <= 0){ submitExam(true); return; }
+  $("timer").textContent = fmt(remaining);
+  $("timer").classList.toggle("low", remaining <= 300);
+  timerId = setInterval(tick, 1000);
+  window.scrollTo(0,0);
+}
+
+// ---------- START / RESUME ----------
+$("btnStart").onclick = () => {
+  const name = $("sName").value.trim(), no = $("sNo").value.trim();
+  const saved = loadState();
+  if(saved && saved.submitted){ showReceipt(saved.receipt); return; }
+  if(saved && saved.startedAt){
+    if(name !== saved.name || no !== saved.no){
+      setStartMsg("The exam in progress belongs to a different name or student number. Enter the details used when it was started.", true);
+      return;
+    }
+    currentUser = { name: saved.name, no: saved.no };
+    startedAt = saved.startedAt;
+    mcqAns = saved.mcq; idAns = saved.id;
+    showExam(); beginTimer(); return;
+  }
+  if(!name || !no){ setStartMsg("Please enter your full name and student number.", true); return; }
+  currentUser = { name, no };
+  startedAt = Date.now();
+  mcqAns = Array(MCQ.length).fill(null);
+  idAns = Array(ID.length).fill("");
+  saveState();
+  showExam(); beginTimer();
+};
+
+// On page load, restore the right screen
+(function init(){
+  const saved = loadState();
+  if(saved && saved.submitted){ showReceipt(saved.receipt); return; }
+  if(saved && saved.startedAt){
+    $("sName").value = saved.name; $("sNo").value = saved.no;
+    $("btnStart").textContent = "Resume exam";
+    setStartMsg("You have an exam in progress. Click Resume; the timer continues from when you started.", false);
+  }
+})();
+
+// ---------- SUBMIT ----------
+$("btnSubmit").onclick = () => {
+  const left = (MCQ.length+ID.length) - answeredCount();
+  if(left > 0 && !confirm(`You have ${left} unanswered item(s). Submit anyway?`)) return;
+  submitExam(false);
+};
+
+function grade(p){
+  const table=[[97,"1.00","Excellent"],[94,"1.25","Excellent"],[91,"1.50","Very Good"],[88,"1.75","Very Good"],[85,"2.00","Good"],[82,"2.25","Good"],[79,"2.50","Satisfactory"],[76,"2.75","Satisfactory"],[75,"3.00","Passing"]];
+  for(const [min,num,desc] of table) if(p >= min) return [num,desc];
+  return ["5.00","Failed"];
+}
+
+function submitExam(auto){
+  if(submitted) return;
+  submitted = true;
+  clearInterval(timerId);
+  $("btnSubmit").disabled = true;
+
+  // Automatic checking
+  let p1 = 0, p2 = 0;
+  MCQ.forEach((q,i)=>{ if(mcqAns[i] === q[2]) p1++; });
+  ID.forEach((q,i)=>{ const a = norm(idAns[i]); if(a && q[1].includes(a)) p2++; });
+  const total = p1 + p2, max = MCQ.length + ID.length;
+  const pct = Math.floor((total/max)*100 * 100) / 100;
+  const [gNum, gDesc] = grade(Math.floor(pct));
+  const used = Math.min(TOTAL_SECONDS, Math.round((Date.now()-startedAt)/1000));
+  const rid = "ES1L-" + Date.now().toString(36).toUpperCase().slice(-6) + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
+
+  const receipt = {
+    rid, name: currentUser.name, no: currentUser.no,
+    when: new Date().toLocaleString() + (auto ? " (auto-submitted: time expired)" : ""),
+    used: fmt(used) + " of 60:00",
+    ans: `${answeredCount()} of ${max}`,
+    p1: `${p1} / ${MCQ.length}`, p2: `${p2} / ${ID.length}`,
+    total: `Total score: ${total} / ${max}`,
+    pct: pct.toFixed(2) + "%", grade: gNum, desc: gDesc
+  };
+  // Keep only the receipt; clear the answers
+  saveState({ submitted: true, receipt, mcq: null, id: null });
+  showReceipt(receipt);
+}
+
+function showReceipt(r){
+  $("start").classList.add("hidden");
+  $("exam").classList.add("hidden");
+  $("timer").textContent = "Submitted";
+  $("timer").classList.remove("low");
+  $("rId").textContent = r.rid;
+  $("rName").textContent = r.name;
+  $("rNo").textContent = r.no;
+  $("rWhen").textContent = r.when;
+  $("rUsed").textContent = r.used;
+  $("rAns").textContent = r.ans;
+  $("rP1").textContent = r.p1;
+  $("rP2").textContent = r.p2;
+  $("rTotal").textContent = r.total;
+  $("rPct").textContent = r.pct;
+  $("rGrade").textContent = r.grade;
+  $("rDesc").textContent = r.desc;
+  $("receipt").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+// Warn before leaving mid-exam
+window.addEventListener("beforeunload", e => { if(startedAt && !submitted){ e.preventDefault(); e.returnValue = ""; } });
+</script>
+</body>
+</html>

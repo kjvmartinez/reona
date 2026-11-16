@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENS 113/L Final Examination — Environmental Monitoring</title>
+<style>
+  :root{
+    --paper:#EEF1EA;
+    --panel:#FFFFFF;
+    --line:#D7DCD1;
+    --ink:#1C2B24;
+    --muted:#5B665C;
+    --accent:#2F6F5E;
+    --accent-dark:#20503F;
+    --alert:#B4472F;
+    --alert-bg:#FBEAE5;
+    --ok-bg:#E8F1EA;
+    --warn-bg:#FCEFDD;
+    --warn:#A8631E;
+    --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image: linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 32px;
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    min-height:100vh;
+    padding: 28px 16px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:3px;
+    box-shadow: 0 1px 0 rgba(28,43,36,0.04);
+  }
+  a{color:var(--accent-dark);}
+
+  /* ---------- Cover screen ---------- */
+  #cover .card{padding:34px 36px;}
+  .masthead{text-align:center; border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:22px;}
+  .masthead .uni{font-family:var(--serif); font-size:14px; letter-spacing:0.04em; color:var(--muted);}
+  .masthead .college{font-size:13px; color:var(--muted); font-style:italic; margin-top:2px;}
+  .masthead h1{font-family:var(--serif); font-size:26px; margin:14px 0 2px; font-weight:700;}
+  .masthead .course{font-family:var(--serif); font-size:17px; margin:0 0 10px;}
+  .masthead .meta{font-family:var(--mono); font-size:12.5px; color:var(--muted);}
+
+  .instructions{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:16px 18px;
+    font-size:14px;
+    color:var(--ink);
+    margin-bottom:22px;
+  }
+  .instructions strong{display:block; font-family:var(--serif); font-size:13px; letter-spacing:0.02em; margin-bottom:6px; color:var(--accent-dark);}
+
+  .tos{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:24px;}
+  .tos caption{text-align:left; font-family:var(--serif); font-size:14px; margin-bottom:8px; color:var(--ink);}
+  .tos th, .tos td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);}
+  .tos th{font-weight:600; font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em;}
+  .tos td.num{font-family:var(--mono); color:var(--muted); white-space:nowrap;}
+  .tos tfoot td{font-weight:700; border-bottom:none; border-top:1px solid var(--ink);}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12.5px; color:var(--muted); margin-bottom:5px; letter-spacing:0.01em;}
+  .field input{
+    width:100%; padding:10px 12px; font-size:15px; font-family:var(--sans);
+    border:1px solid var(--line); border-radius:3px; background:var(--paper); color:var(--ink);
+  }
+  .field input:focus{outline:2px solid var(--accent); outline-offset:1px; background:#fff;}
+
+  .timer-note{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--warn-bg); border:1px solid #E7CBA3; border-radius:3px;
+    padding:12px 14px; font-size:13px; color:#6E4213; margin-bottom:22px;
+  }
+  .timer-note b{font-family:var(--mono);}
+
+  .btn{
+    display:inline-block; font-family:var(--sans); font-size:15px; font-weight:600;
+    padding:13px 22px; border-radius:3px; border:1px solid var(--accent-dark);
+    background:var(--accent); color:#fff; cursor:pointer; text-align:center;
+  }
+  .btn:hover{background:var(--accent-dark);}
+  .btn:disabled{background:#B7BEB5; border-color:#B7BEB5; cursor:not-allowed;}
+  .btn.secondary{background:transparent; color:var(--accent-dark); border:1px solid var(--line);}
+  .btn.secondary:hover{background:var(--paper);}
+  .btn.block{width:100%;}
+
+  .checkline{display:flex; align-items:center; gap:9px; font-size:13.5px; color:var(--muted); margin-bottom:24px;}
+  .checkline input{width:16px; height:16px;}
+
+  .error-msg{color:var(--alert); font-size:13px; margin:-6px 0 16px; display:none;}
+
+  /* ---------- Exam screen ---------- */
+  #examScreen{display:none;}
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:rgba(238,241,234,0.96); backdrop-filter: blur(3px);
+    border-bottom:1px solid var(--line);
+    margin:0 -16px 22px; padding:12px 16px;
+  }
+  .topbar-inner{max-width:760px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+  .timer-block{display:flex; align-items:baseline; gap:8px;}
+  .timer-label{font-size:11px; letter-spacing:0.05em; color:var(--muted); text-transform:uppercase;}
+  .timer-display{font-family:var(--mono); font-size:26px; font-weight:600; color:var(--accent-dark); font-variant-numeric:tabular-nums;}
+  .timer-display.low{color:var(--alert);}
+  .progress-block{flex:1; min-width:180px;}
+  .progress-text{font-size:12px; color:var(--muted); margin-bottom:4px; font-family:var(--mono);}
+  .progress-bar{height:6px; border-radius:3px; background:var(--line); overflow:hidden;}
+  .progress-fill{height:100%; background:var(--accent); width:0%;}
+
+  .exam-header{padding:0 4px 18px;}
+  .exam-header .course{font-family:var(--serif); font-size:18px; margin:0 0 2px;}
+  .exam-header .who{font-size:13px; color:var(--muted);}
+
+  .section-divider{
+    margin:30px 0 14px; padding-bottom:6px; border-bottom:1px solid var(--ink);
+    font-family:var(--serif); font-size:16px; display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  }
+  .section-divider .range{font-family:var(--mono); font-size:12px; color:var(--muted);}
+
+  .q-card{padding:18px 20px; margin-bottom:12px;}
+  .q-head{display:flex; gap:10px; margin-bottom:10px;}
+  .q-num{font-family:var(--mono); font-weight:700; color:var(--accent-dark); min-width:28px;}
+  .q-text{font-size:15px;}
+  .opt-list{display:flex; flex-direction:column; gap:6px; margin-left:38px;}
+  .opt{
+    display:flex; gap:10px; align-items:flex-start; padding:9px 12px;
+    border:1px solid var(--line); border-radius:3px; cursor:pointer; font-size:14.5px;
+  }
+  .opt:hover{border-color:var(--accent);}
+  .opt input{margin-top:3px;}
+  .opt.checked{background:var(--ok-bg); border-color:var(--accent);}
+  .opt .letter{font-family:var(--mono); font-weight:700; color:var(--muted); min-width:14px;}
+
+  .submit-bar{padding:22px 20px; text-align:center;}
+  .submit-bar .hint{font-size:13px; color:var(--muted); margin-bottom:14px;}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(28,43,36,0.45); z-index:50;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal{background:#fff; border-radius:4px; max-width:420px; width:100%; padding:26px; text-align:center;}
+  .modal h3{font-family:var(--serif); margin:0 0 10px; font-size:19px;}
+  .modal p{font-size:14px; color:var(--muted); margin:0 0 20px;}
+  .modal .row{display:flex; gap:10px;}
+  .modal .row .btn{flex:1;}
+
+  /* ---------- Results screen ---------- */
+  #resultsScreen{display:none;}
+  .receipt{padding:0; overflow:hidden;}
+  .receipt-head{background:var(--accent-dark); color:#fff; padding:22px 26px; text-align:center;}
+  .receipt-head .tag{font-family:var(--mono); font-size:11px; letter-spacing:0.08em; opacity:0.8;}
+  .receipt-head h2{font-family:var(--serif); margin:6px 0 2px; font-size:21px;}
+  .receipt-head .code{font-family:var(--mono); font-size:13px; opacity:0.9; margin-top:6px;}
+
+  .score-band{
+    display:flex; align-items:baseline; justify-content:center; gap:16px;
+    padding:26px 20px 10px; text-align:center;
+  }
+  .score-band .big{font-family:var(--mono); font-size:52px; font-weight:700; color:var(--accent-dark); line-height:1;}
+  .score-band .pct{font-family:var(--mono); font-size:20px; color:var(--muted);}
+
+  .receipt-table{width:100%; border-collapse:collapse; font-size:13.5px; margin:18px 0;}
+  .receipt-table td{padding:7px 26px; border-bottom:1px dashed var(--line);}
+  .receipt-table td:first-child{color:var(--muted); white-space:nowrap; padding-right:14px;}
+  .receipt-table td:last-child{text-align:right; font-family:var(--mono);}
+
+  .breakdown{padding:6px 26px 22px;}
+  .breakdown h4{font-family:var(--serif); font-size:14px; margin:18px 0 10px; font-weight:700;}
+  table.bk{width:100%; border-collapse:collapse; font-size:13px;}
+  table.bk th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; color:var(--muted); padding:5px 6px; border-bottom:1px solid var(--ink);}
+  table.bk td{padding:6px 6px; border-bottom:1px solid var(--line);}
+  table.bk td.num{font-family:var(--mono); text-align:right;}
+  table.bk td.bar-cell{width:36%;}
+  .mini-bar{height:8px; border-radius:2px; background:var(--line); overflow:hidden;}
+  .mini-bar span{display:block; height:100%; background:var(--accent);}
+
+  .receipt-foot{padding:16px 26px 24px; font-size:12px; color:var(--muted); border-top:1px solid var(--line);}
+
+  .results-actions{display:flex; gap:10px; flex-wrap:wrap; margin:18px 0;}
+  .results-actions .btn{flex:1; min-width:160px;}
+
+  .review-toggle{margin:26px 0 12px; text-align:center;}
+  #reviewList{display:none;}
+  .rev-q{padding:16px 20px; margin-bottom:10px;}
+  .rev-q .q-text{font-size:14.5px; margin-bottom:8px;}
+  .rev-opt{padding:7px 10px; border-radius:3px; font-size:13.5px; margin-bottom:4px; border:1px solid var(--line);}
+  .rev-opt.correct{background:var(--ok-bg); border-color:var(--accent); font-weight:600;}
+  .rev-opt.wrong-pick{background:var(--alert-bg); border-color:var(--alert);}
+  .rev-tag{font-family:var(--mono); font-size:10.5px; padding:1px 6px; border-radius:8px; margin-left:8px;}
+  .rev-tag.correct{background:var(--accent); color:#fff;}
+  .rev-tag.incorrect{background:var(--alert); color:#fff;}
+  .rev-tag.unanswered{background:var(--muted); color:#fff;}
+
+  footer.foot{text-align:center; font-size:11.5px; color:var(--muted); margin-top:28px;}
+
+  @media print{
+    body{background:#fff; padding:0;}
+    #cover, #examScreen, .no-print{display:none !important;}
+    #resultsScreen{display:block !important;}
+    .results-actions, .review-toggle{display:none !important;}
+    .card{box-shadow:none; border-color:#999;}
+    .topbar{display:none;}
+  }
+  @media (max-width:520px){
+    .opt-list{margin-left:0;}
+    .score-band .big{font-size:40px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ COVER SCREEN ============ -->
+  <div id="cover">
+    <div class="card">
+      <div class="masthead">
+        <div class="uni">Palawan State University</div>
+        <div class="college">College of Sciences — BS Environmental Science Program</div>
+        <h1>Final Examination</h1>
+        <div class="course">ENS 113/L — Environmental Monitoring</div>
+        <div class="meta">COVERAGE: WEEKS 9–18 (MODULES 7–13) · 1ST SEM A.Y. 2026–2027 · 75 ITEMS</div>
+      </div>
+
+      <div class="instructions">
+        <strong>Instructions</strong>
+        Read each item carefully and select the best answer. Each item is worth one (1) point; there is only one correct choice per item, and none should be left unanswered. Use of programmable calculators, mobile phones, or reference materials is not permitted unless expressly stated by the proctor. This offline version checks and scores your answers automatically as soon as you submit. Good luck.
+      </div>
+
+      <table class="tos">
+        <caption>Table of Specifications</caption>
+        <thead><tr><th>Topic / Coverage</th><th>Items</th><th>No.</th></tr></thead>
+        <tbody id="tosBody"></tbody>
+        <tfoot><tr><td>Total</td><td></td><td class="num">75</td></tr></tfoot>
+      </table>
+
+      <div class="timer-note">
+        <span>⏱</span>
+        <span>This exam is timed at <b>60:00</b>. The countdown starts the moment you click Start Exam and cannot be paused. Your answers are submitted and scored automatically when time runs out.</span>
+      </div>
+
+      <div class="field">
+        <label for="stuName">Full Name</label>
+        <input type="text" id="stuName" placeholder="e.g., Juan D. Dela Cruz" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="stuSection">Program / Year &amp; Section</label>
+        <input type="text" id="stuSection" placeholder="e.g., BS Environmental Science 3A" autocomplete="off">
+      </div>
+      <div class="error-msg" id="coverError">Please enter your name and section before starting.</div>
+
+      <div class="checkline">
+        <input type="checkbox" id="revealToggle" checked>
+        <label for="revealToggle">Show correct answers and a full review on my results page</label>
+      </div>
+
+      <button class="btn block" id="startBtn">Start Exam — Begin 60:00 Timer</button>
+    </div>
+    <footer class="foot">Runs entirely offline in this browser tab. Nothing is uploaded or transmitted anywhere.</footer>
+  </div>
+
+  <!-- ============ EXAM SCREEN ============ -->
+  <div id="examScreen">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="timer-block">
+          <div class="timer-label">Time&nbsp;Left</div>
+          <div class="timer-display" id="timerDisplay">60:00</div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-text" id="progressText">0 / 75 answered</div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-header">
+      <div class="course">ENS 113/L Final Examination — Environmental Monitoring</div>
+      <div class="who" id="examWho"></div>
+    </div>
+
+    <div id="sectionsRoot"></div>
+
+    <div class="card submit-bar">
+      <div class="hint">Review your answers above, then submit when ready. You can also submit before all items are answered.</div>
+      <button class="btn" id="submitBtn">Submit Exam</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS SCREEN ============ -->
+  <div id="resultsScreen">
+    <div class="card receipt" id="receiptCard">
+      <div class="receipt-head">
+        <div class="tag">PSU–SRI · OFFLINE EXAM RECEIPT</div>
+        <h2>ENS 113/L Final Examination</h2>
+        <div class="code" id="confCode"></div>
+      </div>
+      <div class="score-band">
+        <div class="big" id="scoreBig">0/75</div>
+        <div class="pct" id="scorePct">0%</div>
+      </div>
+      <table class="receipt-table">
+        <tr><td>Examinee</td><td id="rName"></td></tr>
+        <tr><td>Program / Year &amp; Section</td><td id="rSection"></td></tr>
+        <tr><td>Course</td><td>ENS 113/L — Environmental Monitoring</td></tr>
+        <tr><td>Coverage</td><td>Weeks 9–18 (Modules 7–13)</td></tr>
+        <tr><td>Started</td><td id="rStart"></td></tr>
+        <tr><td>Submitted</td><td id="rSubmit"></td></tr>
+        <tr><td>Time used</td><td id="rDuration"></td></tr>
+        <tr><td>Unanswered items</td><td id="rUnanswered"></td></tr>
+      </table>
+      <div class="breakdown">
+        <h4>Score by Topic</h4>
+        <table class="bk">
+          <thead><tr><th>Topic</th><th>Score</th><th class="bar-cell">Performance</th></tr></thead>
+          <tbody id="breakdownBody"></tbody>
+        </table>
+      </div>
+      <div class="receipt-foot">
+        Generated offline on this device at submission time. No data was transmitted or saved anywhere. Save or print this receipt and submit a copy to your instructor as directed.
+      </div>
+    </div>
+
+    <div class="results-actions no-print">
+      <button class="btn" id="printBtn">Print / Save as PDF</button>
+      <button class="btn secondary" id="downloadBtn">Download Receipt (.txt)</button>
+    </div>
+
+    <div class="review-toggle no-print">
+      <button class="btn secondary" id="reviewBtn">Show Full Answer Review</button>
+    </div>
+
+    <div id="reviewList"></div>
+
+    <footer class="foot no-print">Runs entirely offline in this browser tab. Nothing is uploaded or transmitted anywhere.</footer>
+  </div>
+
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h3 id="modalTitle">Submit exam?</h3>
+    <p id="modalBody">You still have unanswered items. Submit anyway?</p>
+    <div class="row">
+      <button class="btn secondary" id="modalCancel">Keep Working</button>
+      <button class="btn" id="modalConfirm">Submit Exam</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ======================= DATA ======================= */
+const QUESTIONS = [{"id": 1, "topic": "Soil Quality Monitoring", "text": "A quarry EIA baseline study finds soil at the site has an unusually high mass of dry soil per unit volume after heavy equipment traffic. Which property is being measured, and what does the elevated reading indicate?", "options": [{"k": "A", "v": "Cation Exchange Capacity; it indicates reduced nutrient-holding potential over time"}, {"k": "B", "v": "Soil pH; it indicates increased mobility of soil metals in the profile"}, {"k": "C", "v": "Soil texture; it indicates a shift toward finer clay particles in the profile"}, {"k": "D", "v": "Bulk density; high values indicate compaction and poor infiltration"}], "answer": "D"}, {"id": 2, "topic": "Soil Quality Monitoring", "text": "Heavy metals from industrial discharge and hydrocarbons from fuel spills tend to accumulate in soil rather than disperse quickly, as they would in water or air. This is best explained by which characteristic of soil as an environmental medium?", "options": [{"k": "A", "v": "Soil naturally neutralizes most contaminants through chemical reaction"}, {"k": "B", "v": "Soil has a legally shorter monitoring cycle than water or air"}, {"k": "C", "v": "Contaminants tend to bind to soil particles instead of dispersing"}, {"k": "D", "v": "Soil sampling instruments are less sensitive than water or air sensors"}], "answer": "C"}, {"id": 3, "topic": "Soil Quality Monitoring", "text": "A soil sample shows a strong ability to hold and supply positively charged nutrients such as calcium, magnesium, and potassium, along with greater buffering capacity against contamination. Which property does this describe?", "options": [{"k": "A", "v": "Cation Exchange Capacity (CEC)"}, {"k": "B", "v": "Bulk density"}, {"k": "C", "v": "Soil texture"}, {"k": "D", "v": "Total petroleum hydrocarbon content"}], "answer": "A"}, {"id": 4, "topic": "Soil Quality Monitoring", "text": "A team wants to characterize the average contamination condition of a two-hectare disposal site while keeping laboratory costs manageable. Which sampling approach best fits this goal?", "options": [{"k": "A", "v": "Sampling only along the property boundary, where access is easiest"}, {"k": "B", "v": "Composite sampling of several sub-samples pooled across the site"}, {"k": "C", "v": "One continuous deep core at the most visible disturbance, sampled every 5 cm"}, {"k": "D", "v": "A single grab sample from the site's geographic center, analyzed in full"}], "answer": "B"}, {"id": 5, "topic": "Soil Quality Monitoring", "text": "Soil samples are typically collected in defined depth increments, such as 0-15 cm and 15-30 cm, rather than as a single deep core. What is the main reason for this practice?", "options": [{"k": "A", "v": "Soil augers are mechanically incapable of reaching below 15 cm"}, {"k": "B", "v": "Many soil properties and contaminants vary sharply with depth"}, {"k": "C", "v": "Deeper soil layers are exempt from contamination assessment rules"}, {"k": "D", "v": "Regulatory agencies charge separate laboratory fees per depth interval"}], "answer": "B"}, {"id": 6, "topic": "Soil Quality Monitoring", "text": "A site shows lead concentrations three times higher than a nearby site of similar geology. Before concluding the site is contaminated by human activity, what should the assessment team confirm?", "options": [{"k": "A", "v": "That the Cation Exchange Capacity of both sites is identical and comparable"}, {"k": "B", "v": "That the reference site was analyzed using a different laboratory method entirely"}, {"k": "C", "v": "That both sites were sampled with composite rather than grab methods alone"}, {"k": "D", "v": "A plausible contamination source and pathway near the elevated levels"}], "answer": "D"}, {"id": 7, "topic": "Soil Quality Monitoring", "text": "Which pairing correctly matches a soil sampling method with its best-suited application?", "options": [{"k": "A", "v": "Composite sampling, for pinpointing the exact location of a contamination hotspot"}, {"k": "B", "v": "Grid sampling, for characterizing a plot's average condition at minimum lab cost"}, {"k": "C", "v": "Grid sampling, for mapping spatial variability of contamination across a field"}, {"k": "D", "v": "Depth increments, for mapping spatial variability of contamination across a field"}], "answer": "C"}, {"id": 8, "topic": "Soil Quality Monitoring", "text": "Total petroleum hydrocarbons (TPH) detected in a soil sample are most strongly associated with which source?", "options": [{"k": "A", "v": "Forest clear-cutting operations that expose bare soil to erosion"}, {"k": "B", "v": "Agricultural fertilizer application on nearby rice and corn fields"}, {"k": "C", "v": "Municipal solid waste composting operations at an open dumpsite"}, {"k": "D", "v": "Fuel spills and vehicle maintenance activity, releasing petroleum hydrocarbons into the soil"}], "answer": "D"}, {"id": 9, "topic": "Soil Quality Monitoring", "text": "After heavy construction equipment repeatedly crosses a site, soil bulk density rises sharply. What is the most direct consequence for that soil?", "options": [{"k": "A", "v": "Elevated Cation Exchange Capacity and higher overall soil fertility"}, {"k": "B", "v": "Increased organic matter accumulation over time at the surface layer"}, {"k": "C", "v": "Improved aeration and nutrient retention in the upper soil layers"}, {"k": "D", "v": "Restricted root growth, reduced water infiltration, and higher risk of surface runoff"}], "answer": "D"}, {"id": 10, "topic": "Soil Quality Monitoring", "text": "Which soil chemical property most directly controls the availability of nutrients and the mobility or toxicity of metals?", "options": [{"k": "A", "v": "Soil texture"}, {"k": "B", "v": "Soil pH"}, {"k": "C", "v": "Bulk density"}, {"k": "D", "v": "Soil structure (aggregation into peds)"}], "answer": "B"}, {"id": 11, "topic": "Biodiversity Monitoring", "text": "Two forest plots have identical species richness. Plot A is dominated by a single tree species, while Plot B has individuals evenly distributed among all species present. Which plot will show a higher Shannon-Wiener Index, and why?", "options": [{"k": "A", "v": "Plot B, because the index accounts for evenness as well as richness, so it rewards balanced distribution"}, {"k": "B", "v": "Plot A, because dominance by one species simplifies the overall calculation"}, {"k": "C", "v": "Plot A, because fewer dominant species reduces sampling error in the survey"}, {"k": "D", "v": "Both plots equally, since species richness alone determines the index value"}], "answer": "A"}, {"id": 12, "topic": "Biodiversity Monitoring", "text": "A researcher needs to estimate percent vegetation cover efficiently along a long, narrow habitat corridor rather than at scattered fixed points. Which method is most appropriate?", "options": [{"k": "A", "v": "Quadrat sampling, which estimates cover within fixed square frames"}, {"k": "B", "v": "Point counts, which record birds and mammals at fixed listening stations"}, {"k": "C", "v": "Line-intercept method, which records the length of cover intercepted along a measured transect line"}, {"k": "D", "v": "Pitfall trapping, which captures ground-dwelling animals in buried containers"}], "answer": "C"}, {"id": 13, "topic": "Biodiversity Monitoring", "text": "Camera traps are particularly well-suited for monitoring nocturnal or cryptic mammal species mainly because they:", "options": [{"k": "A", "v": "Cost less to deploy than mist nets in every single survey setting"}, {"k": "B", "v": "Record presence and activity patterns without direct observer disturbance"}, {"k": "C", "v": "Can only operate effectively during daylight hours, when animals are visible"}, {"k": "D", "v": "Eliminate the need for any later species identification by the team"}], "answer": "B"}, {"id": 14, "topic": "Biodiversity Monitoring", "text": "Diameter at Breast Height (DBH), measured at 1.3 m above ground during repeated visits to permanent forest plots, is used mainly to estimate:", "options": [{"k": "A", "v": "Soil compaction levels beneath the forest canopy after repeated visits"}, {"k": "B", "v": "Tree age, biomass, and change in forest carbon stock over time from repeated DBH measurements"}, {"k": "C", "v": "Ambient noise levels produced by wind moving through the forest canopy layer"}, {"k": "D", "v": "Species richness of understory vegetation within each permanent plot"}], "answer": "B"}, {"id": 15, "topic": "Biodiversity Monitoring", "text": "A proposed quarry site needs a passive survey of ground-dwelling invertebrate biodiversity before land clearing. Which fauna monitoring method is most appropriate?", "options": [{"k": "A", "v": "Mist netting over flight paths used by birds and bats"}, {"k": "B", "v": "Point counts conducted from fixed observer stations each morning"}, {"k": "C", "v": "Pitfall traps, set flush with the ground to catch ground-dwelling invertebrates"}, {"k": "D", "v": "Camera traps mounted on trails to record passing wildlife"}], "answer": "C"}, {"id": 16, "topic": "Biodiversity Monitoring", "text": "A biodiversity report for an EIS lists only species richness values with no diversity index. What key limitation does this create?", "options": [{"k": "A", "v": "It cannot be calculated at all for plant communities in tropical forests like Palawan's"}, {"k": "B", "v": "It requires far more field time than a diversity index, and so is rarely used in reports today"}, {"k": "C", "v": "It always yields inaccurate values in tropical ecosystems, whatever the sampling method used"}, {"k": "D", "v": "It cannot show evenness, so a skewed site may look as diverse as a balanced one"}], "answer": "D"}, {"id": 17, "topic": "Biodiversity Monitoring", "text": "Which statement correctly distinguishes point counts from transect surveys as fauna monitoring methods?", "options": [{"k": "A", "v": "Point counts sample from a fixed spot; transects record sightings along a route"}, {"k": "B", "v": "Transect surveys can only be conducted after sunset, when fauna are active"}, {"k": "C", "v": "Point counts apply only to invertebrates, while transects apply only to birds and mammals"}, {"k": "D", "v": "Point counts require underwater equipment, while transects do not, for fauna"}], "answer": "A"}, {"id": 18, "topic": "Biodiversity Monitoring", "text": "Simpson's Diversity Index expresses:", "options": [{"k": "A", "v": "The probability that two random individuals belong to the same species"}, {"k": "B", "v": "The ratio of predator species to prey species present across the study area"}, {"k": "C", "v": "The total count of distinct species recorded in a sample, with no weighting"}, {"k": "D", "v": "The percentage of recorded species considered endemic to the surrounding region"}], "answer": "A"}, {"id": 19, "topic": "Biodiversity Monitoring", "text": "A biodiversity monitoring program in a Palawan protected area reports its results against SDG 14 and SDG 15. These two goals correspond respectively to:", "options": [{"k": "A", "v": "Zero Hunger and Responsible Consumption"}, {"k": "B", "v": "Life on Land and Climate Action"}, {"k": "C", "v": "Climate Action and Clean Water and Sanitation"}, {"k": "D", "v": "Life Below Water and Life on Land"}], "answer": "D"}, {"id": 20, "topic": "Biodiversity Monitoring", "text": "Biodiversity is described as an integrative indicator of ecosystem health, in contrast to a single chemical parameter such as pH, mainly because:", "options": [{"k": "A", "v": "Biodiversity is governed under one dedicated national law covering all taxa and habitats"}, {"k": "B", "v": "Species composition integrates habitat, pollution, climate, and disturbance effects"}, {"k": "C", "v": "Biodiversity surveys are always cheaper than chemical testing for every parameter measured in a site"}, {"k": "D", "v": "Biodiversity monitoring requires no field sampling equipment beyond a notebook and a map"}], "answer": "B"}, {"id": 21, "topic": "Biodiversity Monitoring", "text": "A campus survey compares a forested zone and a landscaped zone with the same number of tree species, but the landscaped zone is dominated by one ornamental species while the forested zone's individuals are evenly spread. The clearest way to demonstrate this difference numerically is to calculate:", "options": [{"k": "A", "v": "Species richness (S) alone for each zone, reported without any further analysis"}, {"k": "B", "v": "Average DBH for each zone, measured at a single height on every tree stem"}, {"k": "C", "v": "A diversity index that incorporates evenness, such as Shannon-Wiener, calculated for each zone"}, {"k": "D", "v": "A raw species checklist with no abundance data recorded for either zone"}], "answer": "C"}, {"id": 22, "topic": "Biodiversity Monitoring", "text": "Quadrat sampling is described as a direct application of the spatial sampling designs covered earlier in the course mainly because:", "options": [{"k": "A", "v": "Frame placement still requires a spatial design such as random, stratified, or systematic"}, {"k": "B", "v": "Every quadrat frame must match the exact size of a permanent monitoring plot in the study area"}, {"k": "C", "v": "Quadrats must always be laid out using systematic sampling only, never random or stratified placement"}, {"k": "D", "v": "Quadrats are valid only for water quality sampling stations, not for vegetation or fauna work at all"}], "answer": "A"}, {"id": 23, "topic": "Biodiversity Monitoring", "text": "Mist netting is most appropriately used in a biodiversity survey when:", "options": [{"k": "A", "v": "Camera traps are simply unavailable on site, due to cost, for this entire survey"}, {"k": "B", "v": "A team needs to measure the DBH of canopy trees in a permanent forest plot survey"}, {"k": "C", "v": "Visual or auditory methods alone cannot confirm the identity of birds or bats"}, {"k": "D", "v": "A site has no vegetation cover of any kind, so no plants or perching surfaces are present"}], "answer": "C"}, {"id": 24, "topic": "Biodiversity Monitoring", "text": "To distinguish a genuinely diverse community from one that is species-rich but heavily dominated by a single species, a biodiversity index must jointly account for:", "options": [{"k": "A", "v": "Species richness and species evenness"}, {"k": "B", "v": "DBH and canopy height"}, {"k": "C", "v": "Point count duration and pitfall trap burial depth"}, {"k": "D", "v": "Transect length and camera trap battery life"}], "answer": "A"}, {"id": 25, "topic": "Noise and Environmental Health Monitoring", "text": "An increase of 10 dB in a sound measurement represents approximately:", "options": [{"k": "A", "v": "A tenfold increase in sound energy, which people perceive as about twice as loud"}, {"k": "B", "v": "A hundredfold increase in both sound energy and perceived loudness together, as a rule"}, {"k": "C", "v": "No meaningful change, since the decibel scale is linear with respect to sound intensity"}, {"k": "D", "v": "A doubling of sound energy that people hardly notice as any change in loudness at all"}], "answer": "A"}, {"id": 26, "topic": "Noise and Environmental Health Monitoring", "text": "Leq is generally preferred over a single instantaneous reading for environmental noise assessment because it:", "options": [{"k": "A", "v": "Is always numerically lower and therefore easier for a facility to comply with"}, {"k": "B", "v": "Can only be recorded during official regulatory inspections by agency staff"}, {"k": "C", "v": "Removes the need to apply A-weighting, since energy is already corrected"}, {"k": "D", "v": "Is the steady level carrying the same total energy as the fluctuating noise"}], "answer": "D"}, {"id": 27, "topic": "Noise and Environmental Health Monitoring", "text": "A monitoring team wants to capture the impact of an intermittent passing truck that briefly spikes far above background levels. Relying only on the Leq for the full period would most likely:", "options": [{"k": "A", "v": "Overstate the truck's contribution to overall noise exposure"}, {"k": "B", "v": "Remain completely unaffected by any single passing event"}, {"k": "C", "v": "Average out the peak event, understating its significance"}, {"k": "D", "v": "Automatically flag the event for exclusion as an outlier"}], "answer": "C"}, {"id": 28, "topic": "Noise and Environmental Health Monitoring", "text": "A full 24-hour monitoring period is often needed to properly characterize community noise exposure near a proposed road expansion mainly because:", "options": [{"k": "A", "v": "dB(A) readings are considered valid only after sunset, under the standard procedure"}, {"k": "B", "v": "Daytime and nighttime noise are usually subject to different guideline values"}, {"k": "C", "v": "A 24-hour period removes the need for A-weighting when comparing sites across the study area"}, {"k": "D", "v": "Sound level meters require a full day to fully calibrate before any measurement is taken"}], "answer": "B"}, {"id": 29, "topic": "Noise and Environmental Health Monitoring", "text": "Standard field procedure for sound level meter operation requires calibrating the instrument against a reference calibrator:", "options": [{"k": "A", "v": "Only after the full measurement period has ended"}, {"k": "B", "v": "Once per month, regardless of when it is used"}, {"k": "C", "v": "Only when a regulatory inspector is present on site"}, {"k": "D", "v": "Immediately before use"}], "answer": "D"}, {"id": 30, "topic": "Noise and Environmental Health Monitoring", "text": "In the Philippines, environmental or community noise is generally addressed through which regulatory approach?", "options": [{"k": "A", "v": "The particulate matter provisions of the Clean Air Act, applied to all noise sources in communities"}, {"k": "B", "v": "National noise standards set by DENR under the Pollution Control Law (PD 984), enforced with local governments"}, {"k": "C", "v": "DOLE's Occupational Safety and Health Standards applied exclusively to all community settings"}, {"k": "D", "v": "Noise is regulated only through barangay ordinances, with no national standards or agency role"}], "answer": "B"}, {"id": 31, "topic": "Noise and Environmental Health Monitoring", "text": "The A-weighted decibel scale, dB(A), is applied to raw sound measurements mainly to:", "options": [{"k": "A", "v": "Approximate human hearing sensitivity across the range of audible frequencies"}, {"k": "B", "v": "Convert the logarithmic decibel scale into a linear one for easier averaging"}, {"k": "C", "v": "Eliminate the need for any reference calibrator check before field measurement"}, {"k": "D", "v": "Increase the apparent loudness of low-frequency sounds for field measurements"}], "answer": "A"}, {"id": 32, "topic": "Noise and Environmental Health Monitoring", "text": "A noise map built from multiple point measurements combined with GIS interpolation would be least useful for:", "options": [{"k": "A", "v": "Evaluating compliance with land-use planning guidelines across a whole district"}, {"k": "B", "v": "Giving an exact single-point Leq reading at one location and moment in time"}, {"k": "C", "v": "Identifying areas needing mitigation near a road or industrial facility"}, {"k": "D", "v": "Communicating spatial noise exposure patterns to non-technical audiences"}], "answer": "B"}, {"id": 33, "topic": "Noise and Environmental Health Monitoring", "text": "Permissible daily occupational noise exposure limits and required hearing protection thresholds for Philippine workers fall primarily under:", "options": [{"k": "A", "v": "DOLE's Occupational Safety and Health Standards (OSHS), which set workplace noise exposure limits"}, {"k": "B", "v": "PAGASA's climate monitoring mandate for national weather observation stations"}, {"k": "C", "v": "DENR-EMB's ambient air quality guidelines for the general population"}, {"k": "D", "v": "Provisions of the Local Government Code on community health and sanitation"}], "answer": "A"}, {"id": 34, "topic": "Noise and Environmental Health Monitoring", "text": "During field measurement, positioning a sound level meter's microphone away from reflective surfaces such as walls is important mainly because reflective surfaces can:", "options": [{"k": "A", "v": "Drain the meter's battery at a faster rate during extended field sessions"}, {"k": "B", "v": "Bias the reading by reflecting sound back into the microphone, inflating the measured level"}, {"k": "C", "v": "Cause the meter to record only Lmin values during the full measurement period"}, {"k": "D", "v": "Interfere only with the meter's A-weighting setting and its display units"}], "answer": "B"}, {"id": 35, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A watershed boundary mapped in a GIS as a closed shape linked to a table of land-use classifications is best represented as:", "options": [{"k": "A", "v": "Vector data, as a closed polygon feature linked to an attribute table of land-use classes"}, {"k": "B", "v": "Vector data, as a point feature with no attributes linked to the land-use table"}, {"k": "C", "v": "Raster data, with no associated attribute table linked to the boundary layer"}, {"k": "D", "v": "Raster data, as a polygon-shaped grid of cells covering the watershed area"}], "answer": "A"}, {"id": 36, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A satellite-derived elevation model of a coastal watershed, where each grid cell holds a continuous elevation value, is an example of:", "options": [{"k": "A", "v": "Vector data"}, {"k": "B", "v": "Attribute data with no spatial component"}, {"k": "C", "v": "Raster data"}, {"k": "D", "v": "A GPS waypoint layer with no spatial extent"}], "answer": "C"}, {"id": 37, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "NDVI is calculated from the red and near-infrared spectral bands because:", "options": [{"k": "A", "v": "Blue and green bands cannot distinguish soil from water surfaces in any scene"}, {"k": "B", "v": "Near-infrared values must be compared across two separate dates to be useful"}, {"k": "C", "v": "Healthy vegetation reflects near-infrared strongly and absorbs red light"}, {"k": "D", "v": "Thermal infrared correlates directly with vegetation reflectance in every band"}], "answer": "C"}, {"id": 38, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "Compared to satellite remote sensing, drone-based mapping of a small watershed offers which primary advantage?", "options": [{"k": "A", "v": "No need for any georeferencing or field validation of the imagery collected in the field"}, {"k": "B", "v": "Wider global coverage achieved in a single flight over the entire watershed and beyond"}, {"k": "C", "v": "Elimination of the photogrammetry processing step before mapping can begin on site"}, {"k": "D", "v": "Higher spatial resolution, fine enough to see individual trees or erosion gullies"}], "answer": "D"}, {"id": 39, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "The general workflow for producing an orthomosaic from drone photographs involves:", "options": [{"k": "A", "v": "Manually tracing feature boundaries onto one reference image without any processing steps at all"}, {"k": "B", "v": "Selecting only the single clearest photograph from the whole flight and discarding all other images"}, {"k": "C", "v": "Converting each photograph individually into a raster elevation model before any merging is done"}, {"k": "D", "v": "Capturing overlapping images on a systematic flight path, then stitching and georeferencing them"}], "answer": "D"}, {"id": 40, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A team wants to evaluate the outcome of a five-year mangrove rehabilitation project using imagery from two dates. The most direct approach is to:", "options": [{"k": "A", "v": "Georeference both images, then compare an index such as NDVI calculated at each date"}, {"k": "B", "v": "Rely solely on ground-based DBH measurements taken only at the project's final end date"}, {"k": "C", "v": "Take a single high-resolution photograph only at the end of the project period, nothing else"}, {"k": "D", "v": "Compare the raw, unprocessed images side by side without computing any index value at all"}], "answer": "A"}, {"id": 41, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "Which statement correctly distinguishes vector from raster GIS data?", "options": [{"k": "A", "v": "Vector data always uses a grid of cells, while raster data uses only points, lines, and polygons"}, {"k": "B", "v": "Vector data represents discrete features with attributes; raster represents continuous surfaces"}, {"k": "C", "v": "Raster data is inherently more spatially precise than vector data for every feature type studied"}, {"k": "D", "v": "Vector and raster data cannot be overlaid together in the same GIS project file, under any circumstances"}], "answer": "B"}, {"id": 42, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "GPS-enabled mobile applications improve field data collection quality mainly by:", "options": [{"k": "A", "v": "Automatically identifying species from photos without any observer input or review"}, {"k": "B", "v": "Recording coordinates with measurements and photos, reducing transcription error"}, {"k": "C", "v": "Removing the need to ground-truth satellite imagery with any field validation step"}, {"k": "D", "v": "Converting raster layers into vector layers automatically during each field visit"}], "answer": "B"}, {"id": 43, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A change-detection analysis comparing forest cover between two satellite images from different years requires, as an essential first step:", "options": [{"k": "A", "v": "Calculating a Shannon-Wiener index for each image, separately, before any analysis"}, {"k": "B", "v": "Discarding the earlier image as soon as the later one becomes available to use"}, {"k": "C", "v": "Georeferencing, or precisely aligning, the two images before comparing an index"}, {"k": "D", "v": "Converting both images to the resolution used for the noise contour map product"}], "answer": "C"}, {"id": 44, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "In QGIS, plotting water quality sampling stations together with a linked table of their measured values illustrates which GIS concept?", "options": [{"k": "A", "v": "Vector data with associated attribute data"}, {"k": "B", "v": "Photogrammetric stitching of overlapping images"}, {"k": "C", "v": "NDVI calculation from spectral bands"}, {"k": "D", "v": "Raster interpolation across a surface"}], "answer": "A"}, {"id": 45, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A project may choose satellite remote sensing over drone mapping, despite its lower resolution, mainly because satellites can:", "options": [{"k": "A", "v": "Detect near-infrared reflectance while drones with standard cameras cannot do so"}, {"k": "B", "v": "Capture imagery with no need for georeferencing at all, so processing is simpler"}, {"k": "C", "v": "Repeatedly cover very large areas without drone flight-time or battery limits"}, {"k": "D", "v": "Always produce higher-resolution imagery than any drone can achieve in any survey"}], "answer": "C"}, {"id": 46, "topic": "GIS, Remote Sensing, and Drone Monitoring", "text": "A pixel-based grid representing interpolated pollution concentration values across a study area, similar in structure to a noise contour map, is best classified as:", "options": [{"k": "A", "v": "An orthomosaic exclusively"}, {"k": "B", "v": "Raster data"}, {"k": "C", "v": "Vector point data"}, {"k": "D", "v": "A GPS track log"}], "answer": "B"}, {"id": 47, "topic": "IoT and Smart Environmental Monitoring", "text": "A remote monitoring station has no Wi-Fi coverage but must transmit small amounts of data over several kilometers using minimal power. Which wireless option is most appropriate?", "options": [{"k": "A", "v": "Bluetooth"}, {"k": "B", "v": "Wi-Fi"}, {"k": "C", "v": "GSM/cellular, chosen for its high bandwidth"}, {"k": "D", "v": "LoRa"}], "answer": "D"}, {"id": 48, "topic": "IoT and Smart Environmental Monitoring", "text": "An ESP32 is often preferred over a basic Arduino for a wireless environmental sensor node mainly because it:", "options": [{"k": "A", "v": "Costs more than an equivalent Arduino setup, even when all modules are counted"}, {"k": "B", "v": "Cannot read analog sensor data at all, so it needs an external converter always"}, {"k": "C", "v": "Requires a full operating system simply to power on and read a single sensor"}, {"k": "D", "v": "Has built-in Wi-Fi and Bluetooth, so no extra communication module is needed"}], "answer": "D"}, {"id": 49, "topic": "IoT and Smart Environmental Monitoring", "text": "A field team needs a local hub capable of running a full operating system to perform on-site data analysis and manage several simpler sensor nodes. The most suitable platform is:", "options": [{"k": "A", "v": "A Raspberry Pi"}, {"k": "B", "v": "A LoRa transmitter module"}, {"k": "C", "v": "An ESP32 used alone"}, {"k": "D", "v": "A basic Arduino"}], "answer": "A"}, {"id": 50, "topic": "IoT and Smart Environmental Monitoring", "text": "The primary advantage of IoT-based environmental monitoring over traditional periodic manual sampling is that it:", "options": [{"k": "A", "v": "Removes the need for any sensor calibration whatsoever across the entire deployment life"}, {"k": "B", "v": "Eliminates the need for a cloud database entirely, storing everything on the device itself"}, {"k": "C", "v": "Is always cheaper to deploy regardless of how remote the monitoring site happens to be"}, {"k": "D", "v": "Shifts monitoring to continuous, automated data streams for near-real-time detection of events"}], "answer": "D"}, {"id": 51, "topic": "IoT and Smart Environmental Monitoring", "text": "A cloud dashboard changes how monitoring data supports decision-making mainly by:", "options": [{"k": "A", "v": "Requiring a technician to retrieve the device physically each time to view any stored data"}, {"k": "B", "v": "Replacing the need for any sensor calibration, since the dashboard corrects values automatically"}, {"k": "C", "v": "Giving real-time access to readings, trends, and threshold alerts on any connected device, from anywhere"}, {"k": "D", "v": "Preventing the use of historical trend analysis by keeping only the latest reading on file"}], "answer": "C"}, {"id": 52, "topic": "IoT and Smart Environmental Monitoring", "text": "PalSU's Bantay Klima Environmental Monitoring Network, spanning the main campus and 17 external campuses, is best described in IoT terms as:", "options": [{"k": "A", "v": "A GIS mapping exercise with no live sensor data feeding into any campus system or dashboard"}, {"k": "B", "v": "A purely manual, non-automated data collection program run separately at each campus each year"}, {"k": "C", "v": "A distributed IoT system of networked sensors, gateways, and communication hardware across all sites"}, {"k": "D", "v": "A single centralized sensor with no communication component installed at one point only"}], "answer": "C"}, {"id": 53, "topic": "IoT and Smart Environmental Monitoring", "text": "Compared to LoRa, GSM/cellular transmission for a remote sensor node typically involves:", "options": [{"k": "A", "v": "Identical data rates and transmission range to LoRa over the same distances covered"}, {"k": "B", "v": "Wider coverage where cellular signal exists, but higher power use and recurring data costs for each node"}, {"k": "C", "v": "No dependence on any existing network infrastructure in the deployment area at all"}, {"k": "D", "v": "Lower power consumption and no ongoing connectivity cost for field deployments anywhere"}], "answer": "B"}, {"id": 54, "topic": "IoT and Smart Environmental Monitoring", "text": "An automatic notification triggered when a dissolved oxygen reading drops below a critical threshold is an example of which capability?", "options": [{"k": "A", "v": "A cloud dashboard's real-time alert function, which notifies users when a threshold is crossed"}, {"k": "B", "v": "Grid-based soil sampling design for mapping spatial variability across a field"}, {"k": "C", "v": "Photogrammetric processing of drone imagery into an orthomosaic and DEM"}, {"k": "D", "v": "NDVI-based change detection over time between two satellite image dates"}], "answer": "A"}, {"id": 55, "topic": "IoT and Smart Environmental Monitoring", "text": "Wi-Fi is generally the most appropriate wireless option for an IoT sensor node when the deployment is:", "options": [{"k": "A", "v": "On-campus or building-level, where existing network infrastructure is available"}, {"k": "B", "v": "In a remote field site with no existing network infrastructure in the area"}, {"k": "C", "v": "Required to transmit data over several kilometers with minimal power draw"}, {"k": "D", "v": "Located where cellular signal is unavailable throughout the entire deployment area"}], "answer": "A"}, {"id": 56, "topic": "IoT and Smart Environmental Monitoring", "text": "Applying sampling frequency concepts from earlier in the course to IoT sensor node design mainly means deciding:", "options": [{"k": "A", "v": "Whether the readings should be stored as vector or raster data in the database"}, {"k": "B", "v": "The physical color of the sensor node's enclosure for weather visibility purposes"}, {"k": "C", "v": "How often the node reads and transmits, based on how fast the parameter changes"}, {"k": "D", "v": "Which programming language to use for the microcontroller firmware and logic"}], "answer": "C"}, {"id": 57, "topic": "Environmental Data Analysis", "text": "A dataset of daily rainfall values is heavily right-skewed, with a few extremely high values. Which descriptive statistic is most distorted by those extreme values?", "options": [{"k": "A", "v": "The 25th percentile"}, {"k": "B", "v": "The mode of the ranked values"}, {"k": "C", "v": "The median"}, {"k": "D", "v": "The mean"}], "answer": "D"}, {"id": 58, "topic": "Environmental Data Analysis", "text": "Monthly average PM2.5 readings show an increasing trend, but the same seasonal pattern repeats every year. Before concluding this reflects a genuine long-term change, the team should:", "options": [{"k": "A", "v": "Ignore the seasonal pattern entirely, since it is irrelevant to trend detection"}, {"k": "B", "v": "Discard all data collected outside the dry season to remove the seasonal effect"}, {"k": "C", "v": "Switch immediately to reporting only the mode of the dataset for clarity and simplicity"}, {"k": "D", "v": "Account for the recurring seasonal cycle before calling the increase a trend"}], "answer": "D"}, {"id": 59, "topic": "Environmental Data Analysis", "text": "A line chart is generally more appropriate than a bar chart for displaying six months of daily dissolved oxygen readings mainly because it:", "options": [{"k": "A", "v": "Makes change over time visible, which a bar chart of that many points would obscure"}, {"k": "B", "v": "Requires fewer data points than a bar chart would need to show the same trend pattern"}, {"k": "C", "v": "Is the only chart type usable for spatial data and for any time-based comparison at all"}, {"k": "D", "v": "Cannot display numeric values, only discrete categories with no time component at all"}], "answer": "A"}, {"id": 60, "topic": "Environmental Data Analysis", "text": "A water quality dataset contains one dissolved oxygen reading far outside the plausible range for that water body. The appropriate QA/QC step is to:", "options": [{"k": "A", "v": "Delete the value immediately, without further review or any written record"}, {"k": "B", "v": "Retain the value in every analysis without any review or documentation of it"}, {"k": "C", "v": "Replace it with the dataset's mean, documenting only the number of values changed"}, {"k": "D", "v": "Investigate the point as a possible outlier before deciding to keep or drop it"}], "answer": "D"}, {"id": 61, "topic": "Environmental Data Analysis", "text": "Which chart type is most appropriate for comparing PM2.5 distributions, including spread and outliers, across five sampling sites in a single compact view?", "options": [{"k": "A", "v": "A box plot"}, {"k": "B", "v": "A raster map with no attribute table"}, {"k": "C", "v": "A single time-series line chart with all sites overlaid"}, {"k": "D", "v": "A pie chart of total emissions by site"}], "answer": "A"}, {"id": 62, "topic": "Environmental Data Analysis", "text": "A sensor goes offline for several days during a monitoring campaign, creating a gap in the record. If this missing data is not handled consistently and transparently, the most likely consequence is:", "options": [{"k": "A", "v": "Bias in the resulting trend analysis"}, {"k": "B", "v": "Improved accuracy of the trend analysis"}, {"k": "C", "v": "Automatic correction through the moving average method"}, {"k": "D", "v": "Elimination of the need for outlier detection"}], "answer": "A"}, {"id": 63, "topic": "Environmental Data Analysis", "text": "Air quality reporting sometimes uses the 90th percentile PM2.5 value rather than the single highest reading because it:", "options": [{"k": "A", "v": "Can only be calculated from raster GIS layers that contain pollutant surfaces across the area"}, {"k": "B", "v": "Always equals the dataset's mean value, so it reduces to the average value of all readings"}, {"k": "C", "v": "Describes poor air quality conditions without being driven by one extreme reading"}, {"k": "D", "v": "Excludes all data collected during the wet season from the statistical summary entirely"}], "answer": "C"}, {"id": 64, "topic": "Environmental Data Analysis", "text": "A moving average is applied to noisy daily water quality readings primarily to:", "options": [{"k": "A", "v": "Convert time-series data directly into spatial map data for mapping purposes"}, {"k": "B", "v": "Smooth short-term fluctuations in noisy daily readings so underlying trends become easier to see"}, {"k": "C", "v": "Replace the need for comparison against a reference standard in every report"}, {"k": "D", "v": "Introduce additional random variation into the dataset for later comparison"}], "answer": "B"}, {"id": 65, "topic": "Environmental Data Analysis", "text": "Linear regression applied to a multi-year PM2.5 time series would allow a team to state, for example, that:", "options": [{"k": "A", "v": "PM2.5 readings above the guideline value must always be discarded from analysis"}, {"k": "B", "v": "PM2.5 has risen by an estimated rate per year, with a measure of trend fit"}, {"k": "C", "v": "PM2.5 cannot be analyzed using any statistical method in environmental work"}, {"k": "D", "v": "PM2.5 values are entirely random, so no interpretable pattern can be detected"}], "answer": "B"}, {"id": 66, "topic": "Environmental Data Analysis", "text": "Comparing results from field duplicates and blanks against expected tolerances during data analysis serves primarily to:", "options": [{"k": "A", "v": "Convert raw monitoring data into raster format for use in GIS software"}, {"k": "B", "v": "Replace the need for basic descriptive statistics in the analysis section"}, {"k": "C", "v": "Confirm data reliability, checking field duplicates and blanks against tolerances, before further analysis"}, {"k": "D", "v": "Increase the sample size available for trend analysis in the final report"}], "answer": "C"}, {"id": 67, "topic": "Environmental Monitoring Report Writing", "text": "An environmental monitoring report for a DENR-EMB compliance submission must serve regulators, institutional decision-makers, and possibly the public at once. This need mainly shapes the report by requiring:", "options": [{"k": "A", "v": "A single technical section written only for regulators, omitting all other readers"}, {"k": "B", "v": "Elimination of the methodology section to shorten the document for quicker review"}, {"k": "C", "v": "Accurate content with an accessible executive summary for non-technical readers"}, {"k": "D", "v": "Removal of all raw data tables from the final report to keep it brief and simple"}], "answer": "C"}, {"id": 68, "topic": "Environmental Monitoring Report Writing", "text": "A student report states, \"DO was 4.2 mg/L at Station 3,\" with no further explanation. What is this report missing?", "options": [{"k": "A", "v": "Interpretation, comparing the value to a standard or baseline and explaining its cause"}, {"k": "B", "v": "A title page identifying the report, its author, and the course section involved in the study"}, {"k": "C", "v": "A raw data table showing the measurement recorded at each station and date of sampling"}, {"k": "D", "v": "An appendix listing the field data sheets used during the sampling survey and analysis"}], "answer": "A"}, {"id": 69, "topic": "Environmental Monitoring Report Writing", "text": "Which recommendation best reflects the course's standard for a specific, actionable statement, compared to a vague call for further study?", "options": [{"k": "A", "v": "\"More data would be helpful for the river in the future, if possible.\""}, {"k": "B", "v": "\"Further study of the river is recommended before any action is taken.\""}, {"k": "C", "v": "Increase monitoring frequency at Station 3 during the wet season to capture peak pollution loads"}, {"k": "D", "v": "\"The river should be studied more thoroughly across all seasons and stations.\""}], "answer": "C"}, {"id": 70, "topic": "Environmental Monitoring Report Writing", "text": "In the standard structure of a monitoring report, which section is written with enough procedural detail that another qualified team could replicate the work?", "options": [{"k": "A", "v": "Appendices"}, {"k": "B", "v": "Methodology"}, {"k": "C", "v": "Conclusions and Recommendations"}, {"k": "D", "v": "Executive Summary"}], "answer": "B"}, {"id": 71, "topic": "Environmental Monitoring Report Writing", "text": "A monitoring report's key finding is a spatial contamination plume. Following the course's data-presentation principles, this finding should primarily be communicated using:", "options": [{"k": "A", "v": "A table listing raw coordinates only"}, {"k": "B", "v": "A lengthy narrative paragraph with no visual"}, {"k": "C", "v": "A bar chart of average site values"}, {"k": "D", "v": "A map"}], "answer": "D"}, {"id": 72, "topic": "Environmental Monitoring Report Writing", "text": "Axes, units, and reference standards should always be labeled directly on a report figure mainly so that:", "options": [{"k": "A", "v": "The figure appears more visually colorful and so draws more attention from readers"}, {"k": "B", "v": "The figure can substitute for the executive summary of the whole report entirely"}, {"k": "C", "v": "A reader can interpret the chart without needing to cross-reference the text"}, {"k": "D", "v": "The report avoids needing a methodology section by showing its results directly"}], "answer": "C"}, {"id": 73, "topic": "Environmental Monitoring Report Writing", "text": "A common weakness identified in student and early-career environmental reports is:", "options": [{"k": "A", "v": "Relying on maps instead of data tables when presenting monitoring results to readers"}, {"k": "B", "v": "Writing an executive summary that is too short to capture the main findings"}, {"k": "C", "v": "Including too many supporting appendices that add length without adding content"}, {"k": "D", "v": "Presenting data without genuine interpretation of what the values mean for the study question"}], "answer": "D"}, {"id": 74, "topic": "Environmental Monitoring Report Writing", "text": "During a group EMP capstone presentation, every team member should be able to speak knowledgeably about the full study rather than only their own section, mainly because:", "options": [{"k": "A", "v": "Only one team member is permitted to speak during the whole presentation session, by rule"}, {"k": "B", "v": "Effective presentations require the whole team to answer questions on the full study"}, {"k": "C", "v": "DENR-EMB requires a single named author to present every report submitted to the agency"}, {"k": "D", "v": "Grading rubrics evaluate a single randomly chosen team member on the day of the defense"}], "answer": "B"}, {"id": 75, "topic": "Environmental Monitoring Report Writing", "text": "Which opening approach reflects the course's guidance for a strong Environmental Monitoring Plan presentation?", "options": [{"k": "A", "v": "Opening with an unrelated icebreaker before any technical content is presented"}, {"k": "B", "v": "Opening with the site, the environmental issue, and the monitoring objective"}, {"k": "C", "v": "Opening with the appendices to establish credibility with the panel before anything else"}, {"k": "D", "v": "Opening with a lengthy methodological preamble before stating any objective at all"}], "answer": "B"}];
+
+const TOPIC_ORDER = [...new Set(QUESTIONS.map(q => q.topic))];
+const EXAM_SECONDS = 60 * 60; // 1 hour, fixed per exam configuration
+
+/* ======================= STATE ======================= */
+let answers = {};        // qid -> letter
+let startTime = null;
+let submitTime = null;
+let remaining = EXAM_SECONDS;
+let timerId = null;
+let studentName = '';
+let studentSection = '';
+let revealAnswers = true;
+
+/* ======================= COVER: build table of specs ======================= */
+(function buildTOS(){
+  const counts = {};
+  TOPIC_ORDER.forEach(t => counts[t] = QUESTIONS.filter(q => q.topic === t));
+  const tbody = document.getElementById('tosBody');
+  TOPIC_ORDER.forEach(t => {
+    const qs = counts[t];
+    const ids = qs.map(q => q.id);
+    const range = ids.length ? (Math.min(...ids) + '–' + Math.max(...ids)) : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${escapeHtml(t)}</td><td class="num">${range}</td><td class="num">${qs.length}</td>`;
+    tbody.appendChild(tr);
+  });
+})();
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ======================= EXAM: build question sections ======================= */
+function buildExam(){
+  const root = document.getElementById('sectionsRoot');
+  root.innerHTML = '';
+  TOPIC_ORDER.forEach(topic => {
+    const qs = QUESTIONS.filter(q => q.topic === topic);
+    const ids = qs.map(q => q.id);
+    const range = Math.min(...ids) + '–' + Math.max(...ids);
+
+    const divider = document.createElement('div');
+    divider.className = 'section-divider';
+    divider.innerHTML = `<span>${escapeHtml(topic)}</span><span class="range">Items ${range}</span>`;
+    root.appendChild(divider);
+
+    qs.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'card q-card';
+      card.id = 'qcard-' + q.id;
+
+      const head = document.createElement('div');
+      head.className = 'q-head';
+      head.innerHTML = `<div class="q-num">${q.id}.</div><div class="q-text">${escapeHtml(q.text)}</div>`;
+      card.appendChild(head);
+
+      const optList = document.createElement('div');
+      optList.className = 'opt-list';
+      q.options.forEach(opt => {
+        const label = document.createElement('label');
+        label.className = 'opt';
+        label.id = 'opt-' + q.id + '-' + opt.k;
+        label.innerHTML = `
+          <input type="radio" name="q${q.id}" value="${opt.k}">
+          <span class="letter">${opt.k}.</span>
+          <span>${escapeHtml(opt.v)}</span>
+        `;
+        const input = label.querySelector('input');
+        input.addEventListener('change', () => selectAnswer(q.id, opt.k));
+        optList.appendChild(label);
+      });
+      card.appendChild(optList);
+      root.appendChild(card);
+    });
+  });
+}
+
+function selectAnswer(qid, letter){
+  answers[qid] = letter;
+  const q = QUESTIONS.find(x => x.id === qid);
+  q.options.forEach(o => {
+    document.getElementById('opt-' + qid + '-' + o.k).classList.toggle('checked', o.k === letter);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = Object.keys(answers).length;
+  document.getElementById('progressText').textContent = answered + ' / ' + QUESTIONS.length + ' answered';
+  document.getElementById('progressFill').style.width = (answered / QUESTIONS.length * 100) + '%';
+}
+
+/* ======================= TIMER ======================= */
+function fmtTime(sec){
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function startTimer(){
+  const disp = document.getElementById('timerDisplay');
+  disp.textContent = fmtTime(remaining);
+  timerId = setInterval(() => {
+    remaining -= 1;
+    disp.textContent = fmtTime(remaining);
+    if (remaining <= 300) disp.classList.add('low');
+    if (remaining <= 0){
+      clearInterval(timerId);
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+/* ======================= SCREEN SWITCHING ======================= */
+function showScreen(id){
+  ['cover','examScreen','resultsScreen'].forEach(s => {
+    document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+  });
+  window.scrollTo(0,0);
+}
+
+/* ======================= START ======================= */
+document.getElementById('startBtn').addEventListener('click', () => {
+  const name = document.getElementById('stuName').value.trim();
+  const section = document.getElementById('stuSection').value.trim();
+  const err = document.getElementById('coverError');
+  if (!name || !section){
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  studentName = name;
+  studentSection = section;
+  revealAnswers = document.getElementById('revealToggle').checked;
+
+  buildExam();
+  document.getElementById('examWho').textContent = studentName + ' · ' + studentSection;
+  startTime = new Date();
+  showScreen('examScreen');
+  startTimer();
+});
+
+/* ======================= SUBMIT FLOW ======================= */
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const unanswered = QUESTIONS.length - Object.keys(answers).length;
+  if (unanswered > 0){
+    document.getElementById('modalTitle').textContent = 'Submit exam?';
+    document.getElementById('modalBody').textContent =
+      unanswered + ' item' + (unanswered === 1 ? '' : 's') + ' still unanswered. Submit anyway?';
+    document.getElementById('confirmModal').style.display = 'flex';
+  } else {
+    finishExam(false);
+  }
+});
+document.getElementById('modalCancel').addEventListener('click', () => {
+  document.getElementById('confirmModal').style.display = 'none';
+});
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  document.getElementById('confirmModal').style.display = 'none';
+  finishExam(false);
+});
+
+function finishExam(autoSubmitted){
+  if (timerId) clearInterval(timerId);
+  submitTime = new Date();
+  buildResults(autoSubmitted);
+  showScreen('resultsScreen');
+}
+
+/* ======================= SCORING & RECEIPT ======================= */
+function hashCode(str){
+  let h = 5381;
+  for (let i = 0; i < str.length; i++){
+    h = ((h << 5) + h) + str.charCodeAt(i);
+    h = h & 0xFFFFFFFF;
+  }
+  return Math.abs(h);
+}
+
+function confirmationCode(){
+  const raw = studentName + '|' + studentSection + '|' + (submitTime ? submitTime.toISOString() : '');
+  const h = hashCode(raw).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
+  return 'ENS113L-' + h;
+}
+
+function fmtDateTime(d){
+  if (!d) return '—';
+  return d.toLocaleString('en-PH', { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+
+function buildResults(autoSubmitted){
+  let correct = 0;
+  const perTopic = {};
+  TOPIC_ORDER.forEach(t => perTopic[t] = {correct:0, total:0});
+
+  QUESTIONS.forEach(q => {
+    perTopic[q.topic].total += 1;
+    if (answers[q.id] === q.answer){
+      correct += 1;
+      perTopic[q.topic].correct += 1;
+    }
+  });
+
+  const total = QUESTIONS.length;
+  const pct = Math.round((correct / total) * 1000) / 10;
+  const unanswered = total - Object.keys(answers).length;
+  const usedSeconds = EXAM_SECONDS - remaining;
+
+  document.getElementById('confCode').textContent = 'Confirmation Code: ' + confirmationCode();
+  document.getElementById('scoreBig').textContent = correct + '/' + total;
+  document.getElementById('scorePct').textContent = pct + '%';
+  document.getElementById('rName').textContent = studentName;
+  document.getElementById('rSection').textContent = studentSection;
+  document.getElementById('rStart').textContent = fmtDateTime(startTime);
+  document.getElementById('rSubmit').textContent = fmtDateTime(submitTime) + (autoSubmitted ? '  (time expired — auto-submitted)' : '');
+  document.getElementById('rDuration').textContent = fmtTime(usedSeconds) + ' of 60:00 used';
+  document.getElementById('rUnanswered').textContent = unanswered;
+
+  const bkBody = document.getElementById('breakdownBody');
+  bkBody.innerHTML = '';
+  TOPIC_ORDER.forEach(t => {
+    const d = perTopic[t];
+    const p = d.total ? Math.round((d.correct / d.total) * 100) : 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(t)}</td>
+      <td class="num">${d.correct}/${d.total}</td>
+      <td class="bar-cell"><div class="mini-bar"><span style="width:${p}%"></span></div></td>
+    `;
+    bkBody.appendChild(tr);
+  });
+
+  buildReview();
+  document.getElementById('reviewBtn').style.display = revealAnswers ? 'inline-block' : 'none';
+
+  window._examReceiptData = { correct, total, pct, unanswered, usedSeconds, autoSubmitted,
+    code: confirmationCode(), perTopic };
+}
+
+/* ======================= REVIEW ======================= */
+function buildReview(){
+  const root = document.getElementById('reviewList');
+  root.innerHTML = '';
+  if (!revealAnswers) return;
+
+  TOPIC_ORDER.forEach(topic => {
+    const qs = QUESTIONS.filter(q => q.topic === topic);
+    const divider = document.createElement('div');
+    divider.className = 'section-divider';
+    divider.innerHTML = `<span>${escapeHtml(topic)}</span>`;
+    root.appendChild(divider);
+
+    qs.forEach(q => {
+      const picked = answers[q.id];
+      const isCorrect = picked === q.answer;
+      const tagClass = !picked ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect');
+      const tagText = !picked ? 'Unanswered' : (isCorrect ? 'Correct' : 'Incorrect');
+
+      const card = document.createElement('div');
+      card.className = 'card rev-q';
+      let html = `<div class="q-text">${q.id}. ${escapeHtml(q.text)} <span class="rev-tag ${tagClass}">${tagText}</span></div>`;
+      q.options.forEach(opt => {
+        let cls = 'rev-opt';
+        if (opt.k === q.answer) cls += ' correct';
+        else if (opt.k === picked) cls += ' wrong-pick';
+        html += `<div class="${cls}">${opt.k}. ${escapeHtml(opt.v)}</div>`;
+      });
+      card.innerHTML = html;
+      root.appendChild(card);
+    });
+  });
+}
+
+document.getElementById('reviewBtn').addEventListener('click', () => {
+  const list = document.getElementById('reviewList');
+  const showing = list.style.display === 'block';
+  list.style.display = showing ? 'none' : 'block';
+  document.getElementById('reviewBtn').textContent = showing ? 'Show Full Answer Review' : 'Hide Full Answer Review';
+});
+
+/* ======================= PRINT / DOWNLOAD ======================= */
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const d = window._examReceiptData;
+  if (!d) return;
+  let lines = [];
+  lines.push('PSU–SRI OFFLINE EXAM RECEIPT');
+  lines.push('ENS 113/L Final Examination — Environmental Monitoring');
+  lines.push('Coverage: Weeks 9-18 (Modules 7-13)');
+  lines.push('----------------------------------------------------');
+  lines.push('Confirmation Code : ' + d.code);
+  lines.push('Examinee          : ' + studentName);
+  lines.push('Program/Year/Sec. : ' + studentSection);
+  lines.push('Started           : ' + fmtDateTime(startTime));
+  lines.push('Submitted         : ' + fmtDateTime(submitTime) + (d.autoSubmitted ? ' (time expired)' : ''));
+  lines.push('Time used         : ' + fmtTime(d.usedSeconds) + ' of 60:00');
+  lines.push('Unanswered items  : ' + d.unanswered);
+  lines.push('----------------------------------------------------');
+  lines.push('SCORE: ' + d.correct + ' / ' + d.total + '  (' + d.pct + '%)');
+  lines.push('----------------------------------------------------');
+  lines.push('Score by topic:');
+  TOPIC_ORDER.forEach(t => {
+    const b = d.perTopic[t];
+    lines.push('  ' + t + ': ' + b.correct + '/' + b.total);
+  });
+  lines.push('----------------------------------------------------');
+  lines.push('Generated offline on this device. Not transmitted anywhere.');
+  lines.push('Submit this receipt to your instructor as directed.');
+
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ENS113L_Receipt_' + studentName.replace(/[^a-z0-9]+/gi,'_') + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
